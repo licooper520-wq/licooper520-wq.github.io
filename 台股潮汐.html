@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER TIDE TERMINAL V16.0 - 宏觀經濟與稅負戰略終端</title>
+    <title>CYBER TIDE TERMINAL V16.1 - 宏觀經濟與稅負戰略終端 (Debugged)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -23,22 +23,22 @@
             <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-3 rounded-xl text-slate-950 font-black text-xl shadow-lg shadow-blue-500/30">🌐</div>
             <div>
                 <h1 class="text-xl font-black tracking-wider flex items-center gap-2 text-white">
-                    CYBER TIDE <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/40 tracking-widest font-mono">V16.0 MACRO & TAX PRO</span>
+                    CYBER TIDE <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/40 tracking-widest font-mono">V16.1 DEBUGGED PRO</span>
                 </h1>
                 <p class="text-[11px] text-slate-400">Institutional Macro Stress-Testing & Real Purchasing Power Terminal</p>
             </div>
         </div>
         
         <div class="bg-slate-950/80 px-3.5 py-2 rounded-xl border border-slate-800 text-[11px] text-slate-300 flex items-center gap-2">
-            <span class="text-cyan-400 font-bold">✨ 設計與宏觀升級：</span>
-            <span>支援實質購買力折算（通膨調整）、二代健保與稅務摩擦係數。</span>
+            <span class="text-cyan-400 font-bold">🛠️ 系統狀態：</span>
+            <span>已修復過濾篩選邏輯與圖表聯動，確保效能平穩。</span>
         </div>
     </header>
 
     <!-- 主版面 -->
     <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-4 gap-4">
         
-        <!-- 左側欄：升級版智慧複利模擬器（含總經與稅務進階模組） -->
+        <!-- 左側欄：升級版智慧複利模擬器 -->
         <div class="space-y-4 flex flex-col lg:col-span-1">
             <div class="glass-card p-4 rounded-2xl space-y-4 flex flex-col justify-between">
                 <div>
@@ -117,20 +117,20 @@
             <div class="mt-4 pt-3 border-t border-slate-800">
                 <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">請選擇下方類別過濾檢視：</div>
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                    <button onclick="switchCategory('all')" id="btnAll" class="bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs py-2 px-3 rounded-xl transition font-bold text-center">
-                        🔥 全部 20 檔
+                    <button onclick="switchCategory('all', this)" id="btnAll" class="filter-btn bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs py-2 px-3 rounded-xl transition font-bold text-center">
+                        🔥 全部標的
                     </button>
-                    <button onclick="switchCategory('global')" id="btnGlobal" class="bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🇺🇸 美股科技與大盤
+                    <button onclick="switchCategory('global', this)" id="btnGlobal" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
+                        🇺🇸 美股科技
                     </button>
-                    <button onclick="switchCategory('tw')" id="btnTw" class="bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🇹🇼 台股權值與高息
+                    <button onclick="switchCategory('tw', this)" id="btnTw" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
+                        🇹🇼 台股權值高息
                     </button>
-                    <button onclick="switchCategory('innovate')" id="btnInnovate" class="bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🌐 全球主題創新
+                    <button onclick="switchCategory('innovate', this)" id="btnInnovate" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
+                        🌐 全球主題
                     </button>
-                    <button onclick="switchCategory('defend')" id="btnDefend" class="bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🛡️ 防禦債券REITs
+                    <button onclick="switchCategory('defend', this)" id="btnDefend" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
+                        🛡️ 防禦債券
                     </button>
                 </div>
             </div>
@@ -158,13 +158,13 @@
             </div>
 
             <div class="mt-3 pt-3 border-t border-slate-800 text-[10px] text-slate-500 text-center flex justify-between items-center font-mono">
-                <span>V16.0 MACRO PRO</span>
+                <span>V16.1 DEBUGGED PRO</span>
                 <span class="text-emerald-400">SECURE</span>
             </div>
         </div>
     </main>
 
-    <!-- 邏輯核心 -->
+    <!-- 邏輯核心 (Fixed & Optimized) -->
     <script>
         Chart.register(ChartDataLabels);
 
@@ -276,9 +276,21 @@
             runCustomSimulation();
         }
 
-        function switchCategory(cat) {
-            // 簡化過濾
-            tideBubbleChart.data.datasets[0].data = globalEtfDb20;
+        function switchCategory(cat, btnElement) {
+            // 修正分類過濾邏輯與按鈕互動狀態
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = "filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center";
+            });
+            if (btnElement) {
+                btnElement.className = "filter-btn bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs py-2 px-3 rounded-xl transition font-bold text-center";
+            }
+
+            let filteredData = globalEtfDb20;
+            if (cat !== 'all') {
+                filteredData = globalEtfDb20.filter(item => item.category === cat);
+            }
+
+            tideBubbleChart.data.datasets[0].data = filteredData;
             tideBubbleChart.update();
         }
 
@@ -290,14 +302,12 @@
             const inflationRate = parseFloat(document.getElementById('simInflation').value) || 2.0;
             const hasTax = document.getElementById('simTaxToggle').checked;
 
-            // 若勾選稅負與摩擦成本，內扣與二代健保/海外稅摩擦扣除 0.5% 效能
             if (hasTax) {
                 annualRatePct = Math.max(0, annualRatePct - 0.5);
             }
 
             const months = years * 12;
             const monthlyRate = (annualRatePct / 100) / 12;
-            const monthlyInflation = (inflationRate / 100) / 12;
 
             let totalInvested = monthly * months;
             let futureValue = 0;
@@ -316,7 +326,6 @@
                     realData.push(0);
                 } else {
                     futureValue = (futureValue + monthly) * (1 + monthlyRate);
-                    // 實質購買力折現（以複利公式折回現值）
                     let currentReal = futureValue / Math.pow(1 + (inflationRate / 100), i / 12);
 
                     if (i % 12 === 0 || i === months) {
@@ -328,8 +337,6 @@
                     }
                 }
             }
-
-            const profit = futureValue - totalInvested;
 
             document.getElementById('customSimResult').innerHTML = `
                 <div class="text-cyan-400 font-bold mb-1">🎯 標的：${ticker} (淨年化 ${annualRatePct.toFixed(1)}%)</div>
