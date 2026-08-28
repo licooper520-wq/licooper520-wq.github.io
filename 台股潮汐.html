@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股資金潮汐與長期核心旗艦終端 V7</title>
+    <title>台股資金潮汐與長期核心旗艦終端 V8</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -26,26 +26,28 @@
             <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-2.5 rounded-xl text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/30">⚡</div>
             <div>
                 <h1 class="text-xl font-black tracking-wider flex items-center gap-2">
-                    CYBER TIDE <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full border border-cyan-500/40 tracking-widest font-mono">TERMINAL V7.0</span>
+                    CYBER TIDE <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full border border-cyan-500/40 tracking-widest font-mono">TERMINAL V8.0</span>
                 </h1>
-                <p class="text-[11px] text-slate-400">Integrated Short-Term Flow & Long-Term Core Asset Matrix</p>
+                <p class="text-[11px] text-slate-400">Advanced ETF Flow & Multi-Date Historical Matrix</p>
             </div>
         </div>
         
-        <!-- 全局工具列 -->
+        <!-- 全局工具列 (擴增多日期選單) -->
         <div class="flex flex-wrap items-center gap-2.5">
             <div class="flex items-center space-x-1.5 bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-xl">
                 <span class="text-[11px] text-slate-400 font-medium">基準日期：</span>
                 <select id="dateSelect" onchange="changeDateData()" class="bg-slate-900 text-cyan-400 font-bold text-xs px-2.5 py-1 rounded-lg border border-slate-700 focus:outline-none focus:border-cyan-500">
-                    <option value="20260828">2026-08-28 (盤後)</option>
-                    <option value="20260827">2026-08-27</option>
+                    <option value="20260828">2026-08-28 (最新盤後)</option>
+                    <option value="20260731">2026-07-31 (7月底結算)</option>
+                    <option value="20260630">2026-06-30 (Q2季底結算)</option>
+                    <option value="20260529">2026-05-29 (5月底月結)</option>
                 </select>
             </div>
             <button onclick="switchView('sector')" id="btnSector" class="bg-cyan-600/20 text-cyan-400 border border-cyan-500/40 text-xs px-3.5 py-2 rounded-xl transition font-bold shadow-sm flex items-center gap-1.5">
                 <span>🚀</span> 短線資金潮汐 (Sector)
             </button>
             <button onclick="switchView('longterm')" id="btnLongterm" class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5">
-                <span>🏛️</span> 長期核心清單 (Core ETF)
+                <span>🏛️</span> 長期核心 ETF (Core)
             </button>
         </div>
     </header>
@@ -74,7 +76,7 @@
                 <div class="text-xs font-bold text-slate-200 mb-2.5 border-b border-slate-800 pb-2 flex items-center gap-1.5"><span>🧭</span> 資金明燈指引</div>
                 <ul class="space-y-2 text-[11px] text-slate-400 list-disc list-inside">
                     <li><strong class="text-cyan-400">短線潮汐：</strong>追蹤法人資金淨流入與動能加速度，鎖定強勢主流。</li>
-                    <li><strong class="text-amber-400">長期核心：</strong>對應 0050、00919、QQQ、00770、00858 等資產成分與權重，利於槓桿配置與定期定額。</li>
+                    <li><strong class="text-amber-400">長期 ETF：</strong>對應 0050、00919、QQQ、00770、00858 等成分股權重與即時資金流向。</li>
                 </ul>
             </div>
         </div>
@@ -85,7 +87,7 @@
                 <span id="current-view-label" class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-3 py-1.5 rounded-xl border border-cyan-500/30 shadow-sm">
                     🚀 短線資金潮汐分佈圖
                 </span>
-                <span class="text-[11px] text-slate-400 flex items-center gap-1"><span>💡</span> 點擊泡泡展開完整成分股與權重</span>
+                <span class="text-[11px] text-slate-400 flex items-center gap-1"><span>💡</span> 點擊泡泡展開完整成分股與資金流向</span>
             </div>
 
             <!-- 圖表容器 -->
@@ -94,12 +96,12 @@
             </div>
         </div>
 
-        <!-- 右側欄：完整成分股與權重佔比清單 -->
+        <!-- 右側欄：完整成分股與 ETF 資金流向清單 -->
         <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col justify-between">
             <div class="flex flex-col h-full">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
                     <div>
-                        <div class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Complete Component Matrix</div>
+                        <div class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Component & ETF Flow Matrix</div>
                         <div id="selected-board-tag" class="text-sm font-black text-slate-100">未選取項目</div>
                     </div>
                 </div>
@@ -108,14 +110,14 @@
                 <div id="drilldown-content" class="flex-1 overflow-y-auto pr-1 space-y-2 text-xs max-h-[420px]">
                     <div class="h-full flex flex-col items-center justify-center text-center py-20 text-slate-500 space-y-3">
                         <span class="text-3xl animate-pulse">🎯</span>
-                        <p class="text-xs leading-relaxed max-w-[220px]">請點擊中間圖表的任一泡泡<br>即可在此處檢視**全部成分股與權重佔比**</p>
+                        <p class="text-xs leading-relaxed max-w-[220px]">請點擊中間圖表的任一泡泡<br>即可在此處檢視**ETF資金流向與全部成分股權重**</p>
                     </div>
                 </div>
             </div>
 
             <div class="mt-3 pt-3 border-t border-slate-800 text-[10px] text-slate-500 text-center flex justify-between items-center font-mono">
                 <span>SYSTEM STATUS</span>
-                <span class="text-emerald-400">ONLINE (V7.0)</span>
+                <span class="text-emerald-400">ONLINE (V8.0)</span>
             </div>
         </div>
     </main>
@@ -124,12 +126,16 @@
     <script>
         Chart.register(ChartDataLabels);
 
-        // 完整資料庫：包含短線板塊與完整核心 ETF/資產清單與所有成分股
+        // 多日期完整資料庫 (包含各歷史時期的短線板塊與長期 ETF 資金流向/成分清單)
         const db = {
             "20260828": {
+                statusTitle: "資金加速流入主流板塊與核心資產",
+                statusDesc: "半導體、AI概念群與市值型長期核心（如0050/QQQ鏈）同步吸金，多方資金動能強勁。",
+                tideIndex: "+68.5",
                 sectorData: [
                     { 
                         x: 16, y: 13, r: 18, name: '半導體業', 
+                        flow: "淨流入 +65.4億",
                         stocks: [
                             {s:'台積電 (2330)', val:'+45.2億', pct: '52.5%'},
                             {s:'聯發科 (2454)', val:'+12.8億', pct: '18.2%'},
@@ -142,6 +148,7 @@
                     },
                     { 
                         x: 13, y: 16, r: 22, name: 'AI 概念群', 
+                        flow: "淨流入 +48.9億",
                         stocks: [
                             {s:'台光電 (2383)', val:'+9.5億', pct: '34.0%'},
                             {s:'奇鋐 (3017)', val:'+6.8億', pct: '26.2%'},
@@ -151,6 +158,7 @@
                     },
                     { 
                         x: 9, y: -4, r: 14, name: '電腦及週邊', 
+                        flow: "淨流入 +11.3億",
                         stocks: [
                             {s:'廣達 (2382)', val:'+8.3億', pct: '45.0%'},
                             {s:'緯創 (3231)', val:'+3.2億', pct: '24.1%'},
@@ -161,6 +169,7 @@
                     },
                     { 
                         x: -4, y: 9, r: 10, name: '生技醫療', 
+                        flow: "淨流入 +4.6億",
                         stocks: [
                             {s:'美時 (1795)', val:'+2.1億', pct: '42.0%'},
                             {s:'保瑞 (6472)', val:'+1.5億', pct: '31.5%'},
@@ -170,6 +179,7 @@
                     },
                     { 
                         x: -13, y: 3, r: 9, name: '金融保險', 
+                        flow: "淨流出 -1.2億",
                         stocks: [
                             {s:'富邦金 (2881)', val:'-2.1億', pct: '38.0%'},
                             {s:'國泰金 (2882)', val:'+1.8億', pct: '35.0%'},
@@ -178,6 +188,7 @@
                     },
                     { 
                         x: -11, y: -16, r: 12, name: '航運業', 
+                        flow: "淨流出 -23.8億",
                         stocks: [
                             {s:'長榮 (2603)', val:'-14.2億', pct: '55.3%'},
                             {s:'陽明 (2609)', val:'-6.5億', pct: '28.1%'},
@@ -187,36 +198,84 @@
                 ],
                 longtermData: [
                     { 
-                        x: 16, y: 15, r: 22, name: '台股市值核心 (0050)', 
+                        x: 17, y: 16, r: 24, name: '0050 元大台灣 50', 
+                        flow: "本週淨申購 +34.2億 (規模擴增)",
                         stocks: [
-                            {s:'台積電 (2330)', val:'穩定吸金', pct: '53.2%'},
-                            {s:'鴻海 (2317)', val:'穩定配置', pct: '6.1%'},
-                            {s:'聯發科 (2454)', val:'核心權值', pct: '4.8%'},
-                            {s:'廣達 (2382)', val:'AI 核心', pct: '2.5%'},
-                            {s:'富邦金 (2881)', val:'金融權值', pct: '2.1%'},
-                            {s:'其他成分股總計', val:'多元分散', pct: '31.3%'}
+                            {s:'台積電 (2330)', val:'權值核心', pct: '53.2%'},
+                            {s:'鴻海 (2317)', val:'第二大權值', pct: '6.1%'},
+                            {s:'聯發科 (2454)', val:'AI IC龍頭', pct: '4.8%'},
+                            {s:'廣達 (2382)', val:'AI伺服器', pct: '2.5%'},
+                            {s:'富邦金 / 國泰金', val:'金融雙雄', pct: '4.1%'},
+                            {s:'其他45檔權值股', val:'大盤分散', pct: '29.3%'}
                         ] 
                     },
                     { 
-                        x: 14, y: 12, r: 18, name: '高股息現金流 (00919)', 
+                        x: 15, y: 14, r: 20, name: '00919 群益台灣精選高息', 
+                        flow: "本週淨申購 +28.5億 (高息人氣王)",
                         stocks: [
-                            {s:'聯電 (2303)', val:'高息主力的', pct: '10.5%'},
-                            {s:'聯發科 (2454)', val:'高殖利率', pct: '9.2%'},
-                            {s:'長榮 (2603)', val:'航運現金流', pct: '8.5%'},
-                            {s:'日月光投控 (3711)', val:'封測龍頭', pct: '7.8%'},
+                            {s:'聯電 (2303)', val:'高息主成分', pct: '10.5%'},
+                            {s:'聯發科 (2454)', val:'高息現金流', pct: '9.2%'},
+                            {s:'長榮 (2603)', val:'航運高殖利率', pct: '8.5%'},
+                            {s:'日月光投控 (3711)', val:'封測權值', pct: '7.8%'},
                             {s:'其他成分股總計', val:'高息組合', pct: '64.0%'}
                         ] 
                     },
                     { 
-                        x: 15, y: 17, r: 20, name: '美股科技/QQQ 鏈 (含 00770/00858)', 
+                        x: 18, y: 18, r: 22, name: 'QQQ / 美股科技鏈 (含 00770/00858)', 
+                        flow: "海外複委託/ETF 淨流入 +42.0億",
                         stocks: [
-                            {s:'Apple / 微軟 (美股)', val:'全球科技核心', pct: '22.0%'},
-                            {s:'NVIDIA / 輝達', val:'AI 晶片主軸', pct: '18.5%'},
+                            {s:'Apple / Microsoft', val:'全球科技雙巨頭', pct: '22.0%'},
+                            {s:'NVIDIA (輝達)', val:'AI晶片霸主', pct: '18.5%'},
                             {s:'台積電 ADR (TSM)', val:'半導體中樞', pct: '9.0%'},
-                            {s:'Alphabet / Amazon', val:'雲端與電商', pct: '15.0%'},
-                            {s:'其他頂尖科技企業', val:'成長引擎', pct: '35.5%'}
+                            {s:'Alphabet / Amazon', val:'雲端巨獸', pct: '15.0%'},
+                            {s:'其他美股核心科技', val:'創新引擎', pct: '35.5%'}
                         ] 
                     }
+                ]
+            },
+            "20260731": {
+                statusTitle: "7月底季底月結：權值股震盪洗盤",
+                statusDesc: "歷經7月除權息旺季，資金在大盤權值與高股息ETF間進行動態調節。",
+                tideIndex: "+45.0",
+                sectorData: [
+                    { x: 12, y: 9, r: 16, name: '半導體業', flow: "淨流入 +32.1億", stocks: [{s:'台積電 (2330)', val:'+22.1億', pct:'51.0%'}, {s:'聯發科 (2454)', val:'+6.0億', pct:'19.0%'}] },
+                    { x: 10, y: 11, r: 19, name: 'AI 概念群', flow: "淨流入 +25.4億", stocks: [{s:'台光電 (2383)', val:'+5.0億', pct:'35.0%'}, {s:'奇鋐 (3017)', val:'+4.2億', pct:'28.0%'}] },
+                    { x: 5, y: -2, r: 12, name: '電腦及週邊', flow: "淨流入 +5.2億", stocks: [{s:'廣達 (2382)', val:'+3.1億', pct:'46.0%'}, {s:'緯創 (3231)', val:'+1.2億', pct:'25.0%'}] },
+                    { x: -8, y: -10, r: 14, name: '航運業', flow: "淨流出 -15.4億", stocks: [{s:'長榮 (2603)', val:'-10.2億', pct:'58.0%'}, {s:'陽明 (2609)', val:'-3.2億', pct:'26.0%'}] }
+                ],
+                longtermData: [
+                    { x: 14, y: 13, r: 22, name: '0050 元大台灣 50', flow: "7月淨申購 +18.5億", stocks: [{s:'台積電 (2330)', val:'權值核心', pct:'52.8%'}, {s:'鴻海 (2317)', val:'權值', pct:'6.2%'}, {s:'其他', val:'分散', pct:'41.0%'}] },
+                    { x: 13, y: 12, r: 19, name: '00919 群益台灣精選高息', flow: "7月除權息再投入強勁", stocks: [{s:'聯電 (2303)', val:'高息', pct:'11.0%'}, {s:'其他', val:'高息組合', pct:'89.0%'}] },
+                    { x: 15, y: 15, r: 20, name: 'QQQ / 美股科技鏈 (含 00770/00858)', flow: "海外科技持續吸金", stocks: [{s:'NVIDIA / Apple', val:'科技巨頭', pct:'40.0%'}, {s:'其他', val:'美股核心', pct:'60.0%'}] }
+                ]
+            },
+            "20260630": {
+                statusTitle: "2026 上半年季底結算：法人作帳與結帳並存",
+                statusDesc: "6月底面臨半年報結算，投信與外資針對上半年強勢股進行獲利入袋與換股潮。",
+                tideIndex: "+52.3",
+                sectorData: [
+                    { x: 14, y: 12, r: 17, name: '半導體業', flow: "淨流入 +41.0億", stocks: [{s:'台積電 (2330)', val:'+30.0億', pct:'53.0%'}, {s:'聯發科 (2454)', val:'+8.0億', pct:'18.0%'}] },
+                    { x: 11, y: 14, r: 20, name: 'AI 概念群', flow: "淨流入 +38.5億", stocks: [{s:'世芯-KY (3661)', val:'+9.0億', pct:'30.0%'}, {s:'奇鋐 (3017)', val:'+7.1億', pct:'25.0%'}] },
+                    { x: -10, y: -8, r: 13, name: '金融保險', flow: "淨流出 -4.5億", stocks: [{s:'富邦金 (2881)', val:'-3.0億', pct:'40.0%'}, {s:'國泰金 (2882)', val:'-1.5億', pct:'35.0%'}] }
+                ],
+                longtermData: [
+                    { x: 15, y: 14, r: 22, name: '0050 元大台灣 50', flow: "Q2季底配置資金 +22.0億", stocks: [{s:'台積電 (2330)', val:'核心', pct:'53.0%'}, {s:'其他', val:'大盤', pct:'47.0%'}] },
+                    { x: 14, y: 13, r: 19, name: '00919 群益台灣精選高息', flow: "Q2高息換股潮湧入", stocks: [{s:'長榮 / 聯電', val:'高息', pct:'20.0%'}, {s:'其他', val:'高息', pct:'80.0%'}] },
+                    { x: 16, y: 16, r: 21, name: 'QQQ / 美股科技鏈 (含 00770/00858)', flow: "上半年美科強勢吸金", stocks: [{s:'科技巨頭組合', val:'AI/雲端', pct:'100.0%'}] }
+                ]
+            },
+            "20260529": {
+                statusTitle: "5月底月結：春季行情尾聲與新台幣匯率波動",
+                statusDesc: "台股歷經5月驚驚漲格局，外資在匯率波動下於權值股進行多空拉鋸。",
+                tideIndex: "+38.1",
+                sectorData: [
+                    { x: 10, y: 8, r: 15, name: '半導體業', flow: "淨流入 +20.5億", stocks: [{s:'台積電 (2330)', val:'+15.0億', pct:'52.0%'}, {s:'聯電 (2303)', val:'+3.0億', pct:'15.0%'}] },
+                    { x: 8, y: 10, r: 18, name: 'AI 概念群', flow: "淨流入 +19.2億", stocks: [{s:'雙鴻 (3324)', val:'+4.1億', pct:'28.0%'}, {s:'奇鋐 (3017)', val:'+5.0億', pct:'32.0%'}] }
+                ],
+                longtermData: [
+                    { x: 13, y: 12, r: 21, name: '0050 元大台灣 50', flow: "5月定期定額穩健流入 +12.4億", stocks: [{s:'台積電 (2330)', val:'核心', pct:'52.5%'}, {s:'其他', val:'權值', pct:'47.5%'}] },
+                    { x: 12, y: 11, r: 18, name: '00919 群益台灣精選高息', flow: "5月高息買盤持續", stocks: [{s:'高息成分股', val:'組合', pct:'100.0%'}] },
+                    { x: 14, y: 13, r: 20, name: 'QQQ / 美股科技鏈 (含 00770/00858)', flow: "美股AI供應鏈連動", stocks: [{s:'美科權值', val:'核心', pct:'100.0%'}] }
                 ]
             }
         };
@@ -267,7 +326,7 @@
                 plugins: {
                     legend: { display: false },
                     datalabels: { align: 'top', formatter: (val) => val.name, color: '#f8fafc', font: { size: 11, weight: 'bold' } },
-                    tooltip: { callbacks: { label: (ctx) => ` [${ctx.raw.name}] 強度: ${ctx.raw.x} | 動能: ${ctx.raw.y}` } }
+                    tooltip: { callbacks: { label: (ctx) => ` [${ctx.raw.name}] ${ctx.raw.flow || ''}` } }
                 },
                 onClick: (event, elements) => {
                     if (elements.length > 0) {
@@ -284,19 +343,13 @@
             const container = document.getElementById('drilldown-content');
             
             let html = `
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-2.5 flex justify-between items-center shadow-inner">
-                    <div>
-                        <div class="text-[10px] text-slate-400">強度指數 / 動能</div>
-                        <div class="text-xs font-bold text-slate-200 font-mono">${board.x} / <span class="text-emerald-400">${board.y}</span></div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-[10px] text-slate-400">完整成分股數</div>
-                        <div class="text-xs font-bold text-cyan-400 font-mono">${board.stocks.length} 項/檔</div>
-                    </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-2.5 shadow-inner">
+                    <div class="text-[10px] text-slate-400">資金流向動態總覽</div>
+                    <div class="text-xs font-bold text-cyan-400 font-mono mt-0.5">${board.flow || '資金穩定配置'}</div>
                 </div>
                 <div class="text-[11px] font-bold text-slate-300 mb-1.5 flex justify-between items-center px-1">
-                    <span>完整成分清單與權重</span>
-                    <span>狀態 / 佔比 %</span>
+                    <span>成分股 / 權重配置</span>
+                    <span>性質 / 佔比 %</span>
                 </div>
                 <div class="space-y-2">
             `;
@@ -306,7 +359,7 @@
                     <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center hover:border-cyan-500/50 transition">
                         <div>
                             <div class="text-slate-200 font-bold text-xs">${st.s}</div>
-                            <div class="text-[10px] text-slate-400">性質: <span class="text-cyan-400 font-mono">${st.val}</span></div>
+                            <div class="text-[10px] text-slate-400">明細: <span class="text-cyan-400 font-mono">${st.val}</span></div>
                         </div>
                         <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold border text-cyan-400 bg-cyan-500/10 border-cyan-500/30">${st.pct}</span>
                     </div>
@@ -322,7 +375,8 @@
             const btnSector = document.getElementById('btnSector');
             const btnLongterm = document.getElementById('btnLongterm');
             const label = document.getElementById('current-view-label');
-            const info = db["20260828"];
+            const selectedDate = document.getElementById('dateSelect').value;
+            const info = db[selectedDate] || db["20260828"];
 
             if (mode === 'sector') {
                 btnSector.className = "bg-cyan-600/20 text-cyan-400 border border-cyan-500/40 text-xs px-3.5 py-2 rounded-xl transition font-bold shadow-sm flex items-center gap-1.5";
@@ -332,13 +386,22 @@
             } else {
                 btnLongterm.className = "bg-amber-600/20 text-amber-400 border border-amber-500/40 text-xs px-3.5 py-2 rounded-xl transition font-bold shadow-sm flex items-center gap-1.5";
                 btnSector.className = "bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5";
-                label.innerText = "🏛️ 長期核心投資配置 (0050 / 00919 / QQQ 鏈)";
+                label.innerText = "🏛️ 長期核心 ETF (0050 / 00919 / QQQ 鏈)";
                 tideBubbleChart.data.datasets[0].data = info.longtermData;
             }
             tideBubbleChart.update();
         }
 
         function changeDateData() {
+            const selectedDate = document.getElementById('dateSelect').value;
+            const info = db[selectedDate] || db["20260828"];
+            
+            // 更新左側面板文字
+            document.getElementById('market-status-title').innerText = info.statusTitle;
+            document.getElementById('market-status-desc').innerText = info.statusDesc;
+            document.getElementById('market-tide-index').innerText = info.tideIndex;
+
+            // 重新載入當前模式的圖表資料
             switchView(currentMode);
         }
     </script>
