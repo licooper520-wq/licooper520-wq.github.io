@@ -3,96 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股板塊資金潮汐模仿版 (Tide Clone)</title>
+    <title>台股資金潮汐 - 歷史比對與回放原型</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js 用於繪製泡泡圖 (Bubble Chart) -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-4 flex flex-col items-center">
 
-    <!-- 頂部標題 -->
-    <header class="w-full max-w-4xl mb-6 text-center">
-        <h1 class="text-3xl font-bold tracking-wider">🌊 台股板塊資金潮汐地圖</h1>
-        <p class="text-sm text-slate-400 mt-1">盤後法人資金流向視覺化工具（模擬原型）</p>
+    <!-- 頂部標題與日期控制列 -->
+    <header class="w-full max-w-4xl mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h1 class="text-2xl font-bold tracking-wider">🌊 資金潮汐・歷史比對工具</h1>
+            <p class="text-xs text-slate-400 mt-1">透過切換不同交易日，觀察板塊資金的移轉軌跡</p>
+        </div>
+        
+        <!-- 日期選擇與比對按鈕 -->
+        <div class="flex items-center space-x-2 bg-slate-900 border border-slate-800 p-2 rounded-xl">
+            <label for="dateSelect" class="text-xs text-slate-400">選擇日期：</label>
+            <select id="dateSelect" onchange="changeDateData()" class="bg-slate-800 text-slate-200 text-sm px-3 py-1.5 rounded-lg border border-slate-700 focus:outline-none">
+                <option value="20260828">2026-08-28 (今日盤後)</option>
+                <option value="20260827">2026-08-27 (昨日)</option>
+                <option value="20260826">2026-08-26 (前日)</option>
+            </select>
+        </div>
     </header>
 
     <!-- 主要圖表區塊 -->
     <main class="w-full max-w-4xl bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-2xl">
         <div class="flex justify-between items-center mb-4">
-            <span class="text-sm font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/25">
-                ● 泡泡大小代表近 20 日資金規模
-            </span>
-            <span class="text-xs text-slate-400">更新日期：2026.08.28 (盤後)</span>
+            <div id="current-date-label" class="text-sm font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/25">
+                📅 目前顯示：2026-08-28 資金分佈
+            </div>
+            <span class="text-xs text-slate-400">提示：切換上方日期可觀察板塊泡泡移動方向</span>
         </div>
 
         <!-- 泡泡圖容器 -->
-        <div class="relative w-full h-[450px]">
+        <div class="relative w-full h-[420px]">
             <canvas id="tideBubbleChart"></canvas>
         </div>
     </main>
 
-    <!-- 說明小卡 -->
-    <footer class="w-full max-w-4xl mt-6 grid grid-cols-1 md:grid-cols-4 gap-3 text-xs text-slate-400">
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <strong class="text-emerald-400 block mb-1">🚀 加速流入</strong> 資金持續湧入且動能增強的強勢板塊
-        </div>
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <strong class="text-blue-400 block mb-1">📈 流入但放緩</strong> 雖然買超但力道開始減弱
-        </div>
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <strong class="text-amber-400 block mb-1">⚠️ 流出但放緩</strong> 賣超力道減輕，可能有打底機會
-        </div>
-        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-            <strong class="text-rose-400 block mb-1">🔻 加速流出</strong> 法人提款、資金急速撤離的弱勢板塊
-        </div>
-    </footer>
+    <!-- 狀態變化提示面板 -->
+    <section class="w-full max-w-4xl mt-4 bg-slate-900 border border-slate-800 p-4 rounded-xl text-xs text-slate-300">
+        <h3 class="font-bold text-slate-200 mb-1">🔍 跨日資金移轉觀察重點：</h3>
+        <p id="trend-summary" class="text-slate-400">半導體與 AI 概念群維持在「加速流入」象限，航運業持續在退潮區打底。</p>
+    </section>
 
-    <!-- JavaScript 邏輯：渲染泡泡圖 -->
+    <!-- JavaScript 邏輯：多日期數據切換與圖表更新 -->
     <script>
-        const ctx = document.getElementById('tideBubbleChart').getContext('2d');
-
-        // 模擬台股各板塊數據
-        // x軸: 資金累積量 (流入/流出), y軸: 資金動能 (加速/減速), r: 資金規模
-        const bubbleData = {
-            datasets: [{
-                label: '台股產業板塊',
+        // 模擬不同日期的歷史資料庫
+        const historicalDataMap = {
+            "20260828": {
+                label: "📅 目前顯示：2026-08-28 資金分佈",
+                summary: "半導體與 AI 概念群維持在「加速流入」象限，航運業持續在退潮區。",
                 data: [
                     { x: 15, y: 12, r: 18, name: '半導體業' },
                     { x: 8, y: -5, r: 14, name: '電腦及週邊' },
                     { x: -10, y: -15, r: 12, name: '航運業' },
                     { x: -5, y: 8, r: 10, name: '生技醫療' },
                     { x: 12, y: 15, r: 22, name: 'AI 概念群' },
-                    { x: -14, y: 4, r: 9, name: '金融保險' },
-                    { x: 3, y: -2, r: 11, name: '通信網路' }
-                ],
-                backgroundColor: function(context) {
-                    const val = context.raw;
-                    if (!val) return 'rgba(56, 189, 248, 0.6)';
-                    // 依據象限自動上色
-                    if (val.x >= 0 && val.y >= 0) return 'rgba(52, 211, 153, 0.7)'; // 加速流入 (綠/藍)
-                    if (val.x >= 0 && val.y < 0)  return 'rgba(56, 189, 248, 0.7)'; // 流入放緩
-                    if (val.x < 0 && val.y >= 0)  return 'rgba(251, 191, 36, 0.7)';  // 放緩
-                    return 'rgba(244, 63, 94, 0.7)'; // 加速流出 (紅)
-                },
-                borderColor: '#ffffff',
-                borderWidth: 1
-            }]
+                    { x: -14, y: 4, r: 9, name: '金融保險' }
+                ]
+            },
+            "20260827": {
+                label: "📅 目前顯示：2026-08-27 歷史數據",
+                summary: "昨日半導體動能稍微偏弱，AI 族群剛從「輪動」轉強進入「加速流入」。",
+                data: [
+                    { x: 10, y: 5, r: 17, name: '半導體業' },
+                    { x: 6, y: -8, r: 14, name: '電腦及週邊' },
+                    { x: -8, y: -12, r: 13, name: '航運業' },
+                    { x: -2, y: 5, r: 10, name: '生技醫療' },
+                    { x: 5, y: 10, r: 20, name: 'AI 概念群' },
+                    { x: -10, y: 2, r: 9, name: '金融保險' }
+                ]
+            },
+            "20260826": {
+                label: "📅 目前顯示：2026-08-26 歷史數據",
+                summary: "航運業昨日遭遇較大調節，金融保險逆勢有資金進駐防守。",
+                data: [
+                    { x: 5, y: -2, r: 16, name: '半導體業' },
+                    { x: 2, y: -10, r: 15, name: '電腦及週邊' },
+                    { x: -5, y: -8, r: 14, name: '航運業' },
+                    { x: 1, y: 2, r: 10, name: '生技醫療' },
+                    { x: 2, y: 4, r: 19, name: 'AI 概念群' },
+                    { x: -4, y: 8, r: 10, name: '金融保險' }
+                ]
+            }
         };
 
+        const ctx = document.getElementById('tideBubbleChart').getContext('2d');
+
+        // 初始化圖表
         const tideBubbleChart = new Chart(ctx, {
             type: 'bubble',
-            data: bubbleData,
+            data: {
+                datasets: [{
+                    label: '板塊資金',
+                    data: historicalDataMap["20260828"].data,
+                    backgroundColor: function(context) {
+                        const val = context.raw;
+                        if (!val) return 'rgba(56, 189, 248, 0.6)';
+                        if (val.x >= 0 && val.y >= 0) return 'rgba(52, 211, 153, 0.7)'; // 漲潮 (綠)
+                        if (val.x >= 0 && val.y < 0)  return 'rgba(56, 189, 248, 0.7)'; // 輪動 (藍)
+                        if (val.x < 0 && val.y >= 0)  return 'rgba(251, 191, 36, 0.7)';  // 觀望 (黃)
+                        return 'rgba(244, 63, 94, 0.7)'; // 退潮 (紅)
+                    },
+                    borderColor: '#ffffff',
+                    borderWidth: 1
+                }]
+            },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
                     x: {
+                        min: -20, max: 20,
                         title: { display: true, text: '← 資金流出 | 資金流入 →', color: '#94a3b8' },
                         grid: { color: 'rgba(255, 255, 255, 0.05)' },
                         ticks: { color: '#94a3b8' }
                     },
                     y: {
+                        min: -20, max: 20,
                         title: { display: true, text: '← 動能減緩 | 動能加速 →', color: '#94a3b8' },
                         grid: { color: 'rgba(255, 255, 255, 0.05)' },
                         ticks: { color: '#94a3b8' }
@@ -104,13 +136,27 @@
                         callbacks: {
                             label: function(context) {
                                 const pt = context.raw;
-                                return `${pt.name}: 資金累積 ${pt.x}, 動能 ${pt.y}`;
+                                return `${pt.name}: 累積流量 ${pt.x}, 動能 ${pt.y}`;
                             }
                         }
                     }
                 }
             }
         });
+
+        // 切換日期資料的函式
+        function changeDateData() {
+            const selectedDate = document.getElementById('dateSelect').value;
+            const targetData = historicalDataMap[selectedDate];
+
+            // 更新圖表數據
+            tideBubbleChart.data.datasets[0].data = targetData.data;
+            tideBubbleChart.update();
+
+            // 更新文字標籤與摘要
+            document.getElementById('current-date-label').innerText = targetData.label;
+            document.getElementById('trend-summary').innerText = targetData.summary;
+        }
     </script>
 </body>
 </html>
