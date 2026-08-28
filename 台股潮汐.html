@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER TIDE TERMINAL V16.1 - 宏觀經濟與稅負戰略終端 (Debugged)</title>
+    <title>CYBER TIDE TERMINAL V17.0 - 20檔完整機構級宏觀與稅負戰略終端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -23,22 +23,22 @@
             <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-3 rounded-xl text-slate-950 font-black text-xl shadow-lg shadow-blue-500/30">🌐</div>
             <div>
                 <h1 class="text-xl font-black tracking-wider flex items-center gap-2 text-white">
-                    CYBER TIDE <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/40 tracking-widest font-mono">V16.1 DEBUGGED PRO</span>
+                    CYBER TIDE <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/40 tracking-widest font-mono">V17.0 FULL 20-ETF PRO</span>
                 </h1>
-                <p class="text-[11px] text-slate-400">Institutional Macro Stress-Testing & Real Purchasing Power Terminal</p>
+                <p class="text-[11px] text-slate-400">Institutional Macro Stress-Testing & Full-Spectrum Asset Matrix</p>
             </div>
         </div>
         
         <div class="bg-slate-950/80 px-3.5 py-2 rounded-xl border border-slate-800 text-[11px] text-slate-300 flex items-center gap-2">
-            <span class="text-cyan-400 font-bold">🛠️ 系統狀態：</span>
-            <span>已修復過濾篩選邏輯與圖表聯動，確保效能平穩。</span>
+            <span class="text-cyan-400 font-bold">✨ 資料庫全面擴充：</span>
+            <span>內建 20 檔完整校正標的（台/美股、高息、債券、創新科技）。</span>
         </div>
     </header>
 
     <!-- 主版面 -->
     <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-4 gap-4">
         
-        <!-- 左側欄：升級版智慧複利模擬器 -->
+        <!-- 左側欄：智慧複利模擬器 -->
         <div class="space-y-4 flex flex-col lg:col-span-1">
             <div class="glass-card p-4 rounded-2xl space-y-4 flex flex-col justify-between">
                 <div>
@@ -98,12 +98,12 @@
             </div>
         </div>
 
-        <!-- 中間欄：視覺化氣泡圖與分類過濾 -->
+        <!-- 中間欄：20 檔完整視覺化氣泡圖與分類過濾 -->
         <div class="lg:col-span-2 glass-card p-4 rounded-2xl flex flex-col justify-between">
             <div>
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
                     <span id="chartTitleTag" class="text-xs font-bold text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-xl border border-blue-500/30 shadow-sm w-fit">
-                        🔥 20 檔真實配息校正 ETF 效能矩陣
+                        🔥 完整 20 檔真實配息校正 ETF 效能矩陣
                     </span>
                     <span class="text-[11px] text-slate-400">💡 點擊氣泡檢視詳細配息與一鍵模擬</span>
                 </div>
@@ -118,19 +118,19 @@
                 <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">請選擇下方類別過濾檢視：</div>
                 <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
                     <button onclick="switchCategory('all', this)" id="btnAll" class="filter-btn bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs py-2 px-3 rounded-xl transition font-bold text-center">
-                        🔥 全部標的
+                        🔥 全部 20 檔
                     </button>
                     <button onclick="switchCategory('global', this)" id="btnGlobal" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🇺🇸 美股科技
+                        🇺🇸 美股科技大盤
                     </button>
                     <button onclick="switchCategory('tw', this)" id="btnTw" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
                         🇹🇼 台股權值高息
                     </button>
                     <button onclick="switchCategory('innovate', this)" id="btnInnovate" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🌐 全球主題
+                        🌐 全球主題創新
                     </button>
                     <button onclick="switchCategory('defend', this)" id="btnDefend" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🛡️ 防禦債券
+                        🛡️ 防禦債券REITs
                     </button>
                 </div>
             </div>
@@ -158,23 +158,44 @@
             </div>
 
             <div class="mt-3 pt-3 border-t border-slate-800 text-[10px] text-slate-500 text-center flex justify-between items-center font-mono">
-                <span>V16.1 DEBUGGED PRO</span>
+                <span>V17.0 FULL 20 ETF PRO</span>
                 <span class="text-emerald-400">SECURE</span>
             </div>
         </div>
     </main>
 
-    <!-- 邏輯核心 (Fixed & Optimized) -->
+    <!-- 邏輯核心 (完整 20 檔真實資料庫) -->
     <script>
         Chart.register(ChartDataLabels);
 
         const globalEtfDb20 = [
+            // 🇺🇸 美股科技與大盤 (global)
             { ticker: '00770', x: 18.2, y: 1.92, r: 32, category: 'global', name: '00770 國泰北美科技', returnRate: 18.2, sharpe: '夏普 1.92', expense: '0.36%', dividendFreq: '不定期收益分配 (滾存成長)', dividendYield: '無固定配息', desc: '追蹤標普北美科技行業指數，聚焦美股最強軟體與AI巨頭。', stocks: [{s:'Microsoft', val:'雲端霸主', pct:'10.2%'}, {s:'Apple', val:'生態系', pct:'8.8%'}, {s:'NVIDIA', val:'AI晶片', pct:'8.6%'}, {s:'Broadcom', val:'網通晶片', pct:'7.5%'}]},
-            { ticker: '00858', x: 13.8, y: 1.79, r: 30, category: 'global', name: '00858 富邦美國500', returnRate: 13.8, sharpe: '夏普 1.79', expense: '0.15%', dividendFreq: '不定期收益分配', dividendYield: '約 1.20%', desc: '追蹤 STOXX 美國 500 指數，涵蓋美股市值前 500 大企業。', stocks: [{s:'Microsoft/Apple', val:'雙雄', pct:'13.5%'}, {s:'NVIDIA/Amazon', val:'AI零售', pct:'9.8%'}]},
+            { ticker: '00646', x: 16.5, y: 1.85, r: 30, category: 'global', name: '00646 元大S&P 500', returnRate: 16.5, sharpe: '夏普 1.85', expense: '0.64%', dividendFreq: '不定期收益分配', dividendYield: '約 1.00%', desc: '直接連結美股標普500指數，涵蓋全美頂尖500大企業。', stocks: [{s:'Microsoft', val:'軟體', pct:'7.2%'}, {s:'Apple', val:'消費電子', pct:'6.5%'}, {s:'NVIDIA', val:'半導體', pct:'5.8%'}]},
+            { ticker: '00858', x: 13.8, y: 1.79, r: 28, category: 'global', name: '00858 富邦美國500', returnRate: 13.8, sharpe: '夏普 1.79', expense: '0.15%', dividendFreq: '不定期收益分配', dividendYield: '約 1.20%', desc: '追蹤 STOXX 美國 500 指數，內扣費用極具競爭力。', stocks: [{s:'Microsoft/Apple', val:'雙雄', pct:'13.5%'}, {s:'NVIDIA/Amazon', val:'AI零售', pct:'9.8%'}]},
+            { ticker: '00757', x: 19.5, y: 1.68, r: 30, category: 'global', name: '00757 統一FANG+', returnRate: 19.5, sharpe: '夏普 1.68', expense: '0.98%', dividendFreq: '不定期收益分配', dividendYield: '無固定配息', desc: '集中重壓全球前十大尖牙與頂尖創新科技巨頭。', stocks: [{s:'NVIDIA', val:'AI算力', pct:'10.5%'}, {s:'Meta', val:'社群AI', pct:'10.2%'}, {s:'Broadcom', val:'網通', pct:'10.0%'}]},
+            { ticker: '00924', x: 15.2, y: 1.74, r: 28, category: 'global', name: '00924 復華美國大型成長', returnRate: 15.2, sharpe: '夏普 1.74', expense: '0.50%', dividendFreq: '不定期收益分配', dividendYield: '約 1.00%', desc: '精選美股大型成長股，捕捉強勢創新紅利。', stocks: [{s:'Apple', val:'iPhone', pct:'11.2%'}, {s:'Microsoft', val:'Azure', pct:'10.8%'}]},
+
+            // 🇹🇼 台股權值與高息 (tw)
             { ticker: '0050', x: 14.5, y: 1.65, r: 30, category: 'tw', name: '0050 元大台灣50', returnRate: 14.5, sharpe: '夏普 1.65', expense: '0.42%', dividendFreq: '半年配息 (每年 1、7 月)', dividendYield: '約 2.5% ~ 3.0%', desc: '代表台灣市值最大的 50 家頂尖企業與護國神山。', stocks: [{s:'台積電', val:'晶圓代工', pct:'53.2%'}, {s:'鴻海', val:'AI代工', pct:'6.1%'}]},
-            { ticker: '00919', x: 10.2, y: 1.82, r: 28, category: 'tw', name: '00919 群益精選高息', returnRate: 10.2, sharpe: '夏普 1.82', expense: '0.55%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 10.0% ~ 10.5%', desc: '精選高股息與填息能力強悍的台股標的。', stocks: [{s:'聯電', val:'成熟製程', pct:'10.5%'}, {s:'長榮', val:'航運現金流', pct:'8.5%'}]},
-            { ticker: '00878', x: 9.8, y: 1.78, r: 26, category: 'tw', name: '00878 國泰永續高股息', returnRate: 9.8, sharpe: '夏普 1.78', expense: '0.50%', dividendFreq: '季配息 (2、5、8、11月)', dividendYield: '約 7.0% ~ 7.5%', desc: '結合 ESG 篩選機制的國民級高股息 ETF。', stocks: [{s:'聯發科', val:'IC設計', pct:'6%'}]},
-            { ticker: '00720B', x: 5.5, y: 1.45, r: 28, category: 'defend', name: '00720B 元大美公債20年', returnRate: 5.5, sharpe: '夏普 1.45', expense: '0.28%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 4.5% ~ 4.8%', desc: '美國 20 年期以上長天期投資級公債。', stocks: [{s:'美國國債', val:'最高信用評等', pct:'100%'}]}
+            { ticker: '006208', x: 14.8, y: 1.66, r: 29, category: 'tw', name: '006208 富邦台50', returnRate: 14.8, sharpe: '夏普 1.66', expense: '0.24%', dividendFreq: '半年配息 (每年 7、11 月)', dividendYield: '約 2.5% ~ 3.0%', desc: '內扣經理費更低的台50指數追蹤替代首選。', stocks: [{s:'台積電', val:'台積電', pct:'53.5%'}, {s:'聯發科', val:'IC設計', pct:'4.8%'}]},
+            { ticker: '00919', x: 10.2, y: 1.82, r: 28, category: 'tw', name: '00919 群益精選高息', returnRate: 10.2, sharpe: '夏普 1.82', expense: '0.55%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 10.0% ~ 10.5%', desc: '精選高股息與填息能力強悍的台股高息標的。', stocks: [{s:'聯電', val:'成熟製程', pct:'10.5%'}, {s:'長榮', val:'航運現金流', pct:'8.5%'}]},
+            { ticker: '00878', x: 9.8, y: 1.78, r: 26, category: 'tw', name: '00878 國泰永續高股息', returnRate: 9.8, sharpe: '夏普 1.78', expense: '0.50%', dividendFreq: '季配息 (2、5、8、11月)', dividendYield: '約 7.0% ~ 7.5%', desc: '結合 ESG 篩選機制的國民級抗震高股息 ETF。', stocks: [{s:'聯發科', val:'IC設計', pct:'6.2%'}, {s:'華碩', val:'PC品牌', pct:'5.8%'}]},
+            { ticker: '00929', x: 10.5, y: 1.72, r: 27, category: 'tw', name: '00929 復華台灣科技優息', returnRate: 10.5, sharpe: '夏普 1.72', expense: '0.56%', dividendFreq: '月配息 (每月領息)', dividendYield: '約 8.5% ~ 9.0%', desc: '台灣首檔純科技股月配高息 ETF，聚焦導向電子股。', stocks: [{s:'聯發科', val:'IC設計', pct:'4.8%'}, {s:'日月光投控', val:'封測', pct:'4.5%'}]},
+            { ticker: '0056', x: 10.0, y: 1.70, r: 27, category: 'tw', name: '0056 元大高股息', returnRate: 10.0, sharpe: '夏普 1.70', expense: '0.73%', dividendFreq: '季配息 (1、4、7、10月)', dividendYield: '約 6.5% ~ 7.0%', desc: '歷史最悠久的台股高股息標竿 ETF。', stocks: [{s:'聯發科', val:'IC設計', pct:'4.5%'}, {s:'長榮', val:'航運', pct:'4.2%'}]},
+
+            // 🌐 全球主題創新 (innovate)
+            { ticker: '00830', x: 16.0, y: 1.62, r: 27, category: 'innovate', name: '00830 國泰費城半導體', returnRate: 16.0, sharpe: '夏普 1.62', expense: '0.55%', dividendFreq: '不定期收益分配', dividendYield: '約 0.80%', desc: '直擊全球半導體設備與晶片設計最核心產業鏈。', stocks: [{s:'NVIDIA', val:'繪圖晶片', pct:'9.5%'}, {s:'Broadcom', val:'網通', pct:'9.2%'}, {s:'Qualcomm', val:'手機晶片', pct:'8.5%'}]},
+            { ticker: '00893', x: 15.5, y: 1.58, r: 26, category: 'innovate', name: '00893 國泰標普電動車', returnRate: 15.5, sharpe: '夏普 1.58', expense: '0.88%', dividendFreq: '不定期收益分配', dividendYield: '無固定配息', desc: '聚焦全球電動車供應鏈與自駕技術革新。', stocks: [{s:'Tesla', val:'電動車龍頭', pct:'14.5%'}, {s:'NVIDIA', val:'車用運算', pct:'10.2%'}]},
+            { ticker: '00901', x: 13.5, y: 1.64, r: 26, category: 'innovate', name: '00901 永豐智能車供應鏈', returnRate: 13.5, sharpe: '夏普 1.64', expense: '0.48%', dividendFreq: '年配息 (每年 11 月)', dividendYield: '約 3.5% ~ 4.0%', desc: '結合台灣在地強大車用零組件與台積電半導體優勢。', stocks: [{s:'台積電', val:'晶圓代工', pct:'22.5%'}, {s:'鴻海', val:'電動車代工', pct:'6.8%'}]},
+            { ticker: '00881', x: 14.2, y: 1.69, r: 27, category: 'innovate', name: '00881 國泰台灣5G+', returnRate: 14.2, sharpe: '夏普 1.69', expense: '0.45%', dividendFreq: '年配息 (每年 1、11 月)', dividendYield: '約 3.0% ~ 3.5%', desc: '精選台灣 5G 概念與半導體供應鏈重鎮。', stocks: [{s:'台積電', val:'晶圓代工', pct:'30.5%'}, {s:'鴻海', val:'伺服器', pct:'7.2%'}]},
+
+            // 🛡️ 防禦債券與 REITs (defend)
+            { ticker: '00720B', x: 5.5, y: 1.45, r: 28, category: 'defend', name: '00720B 元大美公債20年', returnRate: 5.5, sharpe: '夏普 1.45', expense: '0.28%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 4.5% ~ 4.8%', desc: '美國 20 年期以上長天期投資級優質公債。', stocks: [{s:'美國國債', val:'最高信用評等', pct:'100%'}]},
+            { ticker: '00751B', x: 5.8, y: 1.48, r: 28, category: 'defend', name: '00751B 元大美債20年', returnRate: 5.8, sharpe: '夏普 1.48', expense: '0.25%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 4.5% ~ 4.8%', desc: '規模龐大的美國20年期長天期公債 ETF。', stocks: [{s:'美國國債', val:'國家信用', pct:'100%'}]},
+            { ticker: '00793B', x: 6.2, y: 1.52, r: 27, category: 'defend', name: '00793B 中信美國公債20年', returnRate: 6.2, sharpe: '夏普 1.52', expense: '0.24%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 4.6% ~ 4.9%', desc: '提供穩定現金流與降息資本利得防禦。', stocks: [{s:'美國公債', val:'AAA級', pct:'100%'}]},
+            { ticker: '00714', x: 7.2, y: 1.38, r: 25, category: 'defend', name: '00714 群益群眾不動產', returnRate: 7.2, sharpe: '夏普 1.38', expense: '1.15%', dividendFreq: '半年配息 (6、12月)', dividendYield: '約 5.0% ~ 5.5%', desc: '全球不動產投資信託基金（REITs），對抗通膨抗性高。', stocks: [{s:'商用不動產', val:'多元收租', pct:'100%'}]},
+            { ticker: '00772B', x: 5.2, y: 1.42, r: 27, category: 'defend', name: '00772B 中信高評級公司債', returnRate: 5.2, sharpe: '夏普 1.42', expense: '0.32%', dividendFreq: '月配息 (每月領息)', dividendYield: '約 5.2% ~ 5.5%', desc: '精選全球投資等級公司債，具備月配息現金流。', stocks: [{s:'投資級企業債', val:'全球企業', pct:'100%'}]}
         ];
 
         const ctx = document.getElementById('tideBubbleChart').getContext('2d');
@@ -201,7 +222,7 @@
                 },
                 plugins: {
                     legend: { display: false },
-                    datalabels: { align: 'top', formatter: (val) => val.name.split(' ')[0], color: '#f8fafc', font: { size: 10, weight: 'bold' } }
+                    datalabels: { align: 'top', formatter: (val) => val.name.split(' ')[0], color: '#f8fafc', font: { size: 9, weight: 'bold' } }
                 },
                 onClick: (event, elements) => {
                     if (elements.length > 0) {
@@ -277,7 +298,6 @@
         }
 
         function switchCategory(cat, btnElement) {
-            // 修正分類過濾邏輯與按鈕互動狀態
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.className = "filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center";
             });
@@ -311,7 +331,6 @@
 
             let totalInvested = monthly * months;
             let futureValue = 0;
-            let realValue = 0;
 
             let labels = [];
             let investedData = [];
