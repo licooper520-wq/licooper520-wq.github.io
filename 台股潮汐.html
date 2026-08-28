@@ -3,42 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股資金潮汐旗艦版 (Tide Ultimate Clone)</title>
+    <title>台股資金潮汐旗艦版 v2 - 板塊輪動與大盤建議</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Chart.js Datalabels 插件 (用於在泡泡上直接顯示名稱) -->
+    <!-- Chart.js Datalabels 插件 -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-4 flex flex-col items-center">
 
-    <!-- 頂部標題與日期控制 -->
-    <header class="w-full max-w-5xl mb-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-lg">
+    <!-- 頂部標題與功能切換 -->
+    <header class="w-full max-w-6xl mb-4 flex flex-col lg:flex-row justify-between items-center gap-4 bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-lg">
         <div>
             <h1 class="text-2xl font-bold tracking-wider flex items-center gap-2">
-                🌊 台股資金潮汐 <span class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-1 rounded-full border border-blue-500/30">旗艦優化版</span>
+                🌊 台股資金潮汐 <span class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/30">Pro 專業版</span>
             </h1>
-            <p class="text-xs text-slate-400 mt-1">盤後法人資金流向、板塊輪動與歷史軌跡追蹤</p>
+            <p class="text-xs text-slate-400 mt-1">盤後板塊輪動、法人資金動能、大盤多空建議與高CP值篩選</p>
         </div>
         
-        <div class="flex items-center space-x-3">
-            <div class="flex items-center space-x-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl">
+        <div class="flex flex-wrap items-center gap-2">
+            <!-- 日期選擇 -->
+            <div class="flex items-center space-x-1.5 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl">
                 <label for="dateSelect" class="text-xs text-slate-400">日期：</label>
-                <select id="dateSelect" onchange="changeDateData()" class="bg-slate-900 text-slate-200 text-sm px-2 py-1 rounded-lg border border-slate-700 focus:outline-none">
+                <select id="dateSelect" onchange="changeDateData()" class="bg-slate-900 text-slate-200 text-xs px-2 py-1 rounded-lg border border-slate-700 focus:outline-none">
                     <option value="20260828">2026-08-28 (今日)</option>
                     <option value="20260827">2026-08-27 (昨日)</option>
                     <option value="20260826">2026-08-26 (前日)</option>
                 </select>
             </div>
+            <!-- 功能切換按鈕 -->
             <button onclick="toggleTrail()" id="trailBtn" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-2 rounded-xl transition font-medium shadow-md">
-                開啟歷史軌跡
+                歷史軌跡
+            </button>
+            <button onclick="openValueScanner()" class="bg-amber-600 hover:bg-amber-500 text-white text-xs px-3 py-2 rounded-xl transition font-medium shadow-md">
+                潛力潛伏榜
             </button>
         </div>
     </header>
 
-    <!-- 主要內容區：圖表 + 側邊資訊 -->
-    <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <!-- 新增功能 1：大盤動向綜合建議橫幅 (Market Sentiment Banner) -->
+    <section class="w-full max-w-6xl mb-4 bg-gradient-to-r from-slate-900 via-slate-900 to-blue-950 border border-slate-800 p-4 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center space-x-4">
+            <div id="sentiment-icon" class="text-3xl bg-emerald-500/10 p-3 rounded-2xl border border-emerald-500/20">🔥</div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-400">大盤綜合動向研判：</span>
+                    <span id="market-status-title" class="text-sm font-bold text-emerald-400">資金聚焦強勢主流，多方格局延續</span>
+                </div>
+                <p id="market-status-desc" class="text-xs text-slate-300 mt-1">半導體與 AI 概念群資金淨流入加速，盤面主流清晰，適合順勢操作強勢類股。</p>
+            </div>
+        </div>
+        <div class="bg-slate-800/80 border border-slate-700 px-4 py-2 rounded-xl text-right min-w-[160px]">
+            <div class="text-[11px] text-slate-400">潮汐多空指數 (Tide Index)</div>
+            <div id="market-tide-index" class="text-lg font-extrabold text-emerald-400">+68.5 <span class="text-xs text-slate-400 font-normal">(偏多漲潮)</span></div>
+        </div>
+    </section>
+
+    <!-- 主要內容區：圖表 + 側邊多元面板 -->
+    <main class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-4">
         
         <!-- 左側：泡泡圖主畫面 (佔 2 欄) -->
         <div class="lg:col-span-2 bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col">
@@ -46,7 +69,7 @@
                 <span id="current-date-label" class="text-xs font-semibold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/25">
                     📅 2026-08-28 資金分佈
                 </span>
-                <span class="text-[11px] text-slate-400">💡 點擊泡泡可檢視板塊成分股明細</span>
+                <span class="text-[11px] text-slate-400">💡 點擊泡泡檢視成分股 / 支援自選追蹤</span>
             </div>
 
             <!-- 圖表容器 -->
@@ -55,15 +78,43 @@
             </div>
         </div>
 
-        <!-- 右側：板塊成分股鑽研 (Drill-down Panel) -->
+        <!-- 右側：複合式面板 (支援切換：成分股鑽研 / 自選股追蹤清單) -->
         <div class="bg-slate-900 border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col justify-between">
             <div>
-                <h2 class="text-sm font-bold text-slate-200 border-b border-slate-800 pb-2 mb-3 flex items-center justify-between">
-                    <span>🔍 板塊成分股鑽研</span>
-                    <span id="selected-board-tag" class="text-xs text-blue-400 font-normal">未選取板塊</span>
-                </h2>
-                <div id="drilldown-content" class="text-xs text-slate-400 space-y-3">
-                    <p class="italic py-8 text-center">請點擊左側圖表中的任意板塊泡泡，以檢視其內部核心權值股的法人買賣超貢獻。</p>
+                <!-- 分頁切換 Tab -->
+                <div class="flex border-b border-slate-800 pb-2 mb-3">
+                    <button onclick="switchTab('drilldown')" id="tab-drilldown" class="text-xs font-bold text-blue-400 pb-1 border-b-2 border-blue-400 mr-4 transition">板塊鑽研</button>
+                    <button onclick="switchTab('watchlist')" id="tab-watchlist" class="text-xs font-semibold text-slate-400 pb-1 border-b-2 border-transparent transition">我的自選追蹤 (2)</button>
+                </div>
+
+                <!-- 內容區 A：板塊鑽研 -->
+                <div id="panel-drilldown" class="text-xs text-slate-400 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span id="selected-board-tag" class="text-sm font-bold text-slate-200">未選取板塊</span>
+                        <button id="watchlist-btn" onclick="toggleCurrentWatchlist()" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700 transition">⭐ 加入追蹤</button>
+                    </div>
+                    <div id="drilldown-content">
+                        <p class="italic py-8 text-center text-slate-500">請點擊左側圖表中的任意板塊泡泡，以檢視其內部核心權值股的法人買賣超貢獻。</p>
+                    </div>
+                </div>
+
+                <!-- 內容區 B：自選追蹤清單 (預設示範) -->
+                <div id="panel-watchlist" class="hidden text-xs text-slate-400 space-y-2">
+                    <p class="text-[11px] text-slate-400 mb-2">您已追蹤的板塊即時狀態：</p>
+                    <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60 flex justify-between items-center">
+                        <div>
+                            <div class="text-slate-200 font-bold">半導體業</div>
+                            <div class="text-[10px] text-emerald-400">目前狀態：加速流入 (主流)</div>
+                        </div>
+                        <span class="text-emerald-400 font-bold">+16 / +13</span>
+                    </div>
+                    <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60 flex justify-between items-center">
+                        <div>
+                            <div class="text-slate-200 font-bold">AI 概念群</div>
+                            <div class="text-[10px] text-emerald-400">目前狀態：加速流入 (主流)</div>
+                        </div>
+                        <span class="text-emerald-400 font-bold">+13 / +16</span>
+                    </div>
                 </div>
             </div>
 
@@ -77,15 +128,48 @@
         </div>
     </main>
 
-    <!-- JavaScript 邏輯與核心架構 -->
+    <!-- 潛力潛伏榜彈跳視窗 (Modal) -->
+    <div id="scannerModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden justify-center items-center p-4 z-50">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-lg p-5 rounded-2xl shadow-2xl">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">🎯 潛力潛伏榜 (低基期/資金剛進駐)</h3>
+                <button onclick="closeValueScanner()" class="text-slate-400 hover:text-white text-sm">✕</button>
+            </div>
+            <p class="text-xs text-slate-400 mb-3">自動篩選出「動能轉正（橫軸轉強）」但短線漲幅尚未過熱的潛力板塊：</p>
+            <div class="space-y-2 text-xs">
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <div class="font-bold text-slate-200">生技醫療</div>
+                        <div class="text-[11px] text-amber-400">剛從觀望區翻正，法人低接佈局</div>
+                    </div>
+                    <span class="bg-amber-500/20 text-amber-400 px-2 py-1 rounded border border-amber-500/30 font-bold">潛伏中</span>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <div class="font-bold text-slate-200">電腦及週邊</div>
+                        <div class="text-[11px] text-blue-400">資金穩定流入，具備補漲契機</div>
+                    </div>
+                    <span class="bg-blue-500/20 text-blue-400 px-2 py-1 rounded border border-blue-500/30 font-bold">穩定吸金</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 核心邏輯 -->
     <script>
-        // 註冊 DataLabels 插件
         Chart.register(ChartDataLabels);
 
-        // 模擬多日歷史資料庫與成分股細節
+        // 資料庫與大盤建議設定
         const db = {
             "20260828": {
                 label: "📅 2026-08-28 資金分佈",
+                marketSentiment: {
+                    title: "資金聚焦強勢主流，多方格局延續",
+                    desc: "半導體與 AI 概念群資金淨流入加速，盤面主流清晰，適合順勢操作強勢類股。",
+                    index: "+68.5",
+                    icon: "🔥",
+                    color: "text-emerald-400"
+                },
                 data: [
                     { x: 16, y: 13, r: 18, name: '半導體業', stocks: [{s:'台積電', val:'+45.2億'}, {s:'聯發科', val:'+12.8億'}, {s:'日月光投控', val:'+5.1億'}] },
                     { x: 9, y: -4, r: 14, name: '電腦及週邊', stocks: [{s:'廣達', val:'+8.3億'}, {s:'緯創', val:'+3.2億'}, {s:'英業達', val:'-1.5億'}] },
@@ -97,6 +181,13 @@
             },
             "20260827": {
                 label: "📅 2026-08-27 歷史數據",
+                marketSentiment: {
+                    title: "盤面類股輪動加速，觀望氣氛濃厚",
+                    desc: "多空交織，資金在主流與防守板塊間快速切換，建議控制部位、留意追高風險。",
+                    index: "+12.1",
+                    icon: "⚖️",
+                    color: "text-blue-400"
+                },
                 data: [
                     { x: 11, y: 6, r: 17, name: '半導體業', stocks: [{s:'台積電', val:'+25.1億'}, {s:'聯發科', val:'+6.2億'}] },
                     { x: 7, y: -7, r: 14, name: '電腦及週邊', stocks: [{s:'廣達', val:'+4.1億'}, {s:'緯創', val:'-0.8億'}] },
@@ -108,6 +199,13 @@
             },
             "20260826": {
                 label: "📅 2026-08-26 歷史數據",
+                marketSentiment: {
+                    title: "法人調節力道增強，資金偏向保守",
+                    desc: "多數板塊移往流出區，盤勢短線修正，防守型類股與低接打底標的為觀察重點。",
+                    index: "-34.8",
+                    icon: "⚠️",
+                    color: "text-amber-400"
+                },
                 data: [
                     { x: 6, y: -1, r: 16, name: '半導體業', stocks: [{s:'台積電', val:'+8.1億'}, {s:'聯發科', val:'-2.1億'}] },
                     { x: 3, y: -9, r: 15, name: '電腦及週邊', stocks: [{s:'廣達', val:'-1.2億'}, {s:'緯創', val:'-2.5億'}] },
@@ -120,9 +218,10 @@
         };
 
         let showTrailMode = false;
+        let activeBoard = null;
         const ctx = document.getElementById('tideBubbleChart').getContext('2d');
 
-        // 自定義象限背景繪製插件
+        // 四象限背景繪製插件
         const quadrantBackgroundPlugin = {
             id: 'quadrantBackground',
             beforeDraw(chart) {
@@ -131,24 +230,12 @@
                 const midY = y.getPixelForValue(0);
 
                 ctx.save();
-                // 右上：加速流入 (極淡綠)
-                ctx.fillStyle = 'rgba(52, 211, 153, 0.03)';
-                ctx.fillRect(midX, top, right - midX, midY - top);
-                // 右下：流入放緩 (極淡藍)
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.03)';
-                ctx.fillRect(midX, midY, right - midX, bottom - midY);
-                // 左上：流出放緩 (極淡黃)
-                ctx.fillStyle = 'rgba(251, 191, 36, 0.03)';
-                ctx.fillRect(left, top, midX - left, midY - top);
-                // 左下：加速流出 (極淡紅)
-                ctx.fillStyle = 'rgba(244, 63, 94, 0.03)';
-                ctx.fillRect(left, midY, midX - left, bottom - midY);
+                ctx.fillStyle = 'rgba(52, 211, 153, 0.03)'; ctx.fillRect(midX, top, right - midX, midY - top);
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.03)'; ctx.fillRect(midX, midY, right - midX, bottom - midY);
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.03)'; ctx.fillRect(left, top, midX - left, midY - top);
+                ctx.fillStyle = 'rgba(244, 63, 94, 0.03)'; ctx.fillRect(left, midY, midX - left, bottom - midY);
 
-                // 十字分隔線
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-                ctx.lineWidth = 1;
-                ctx.setLineDash([4, 4]);
-                
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
                 ctx.beginPath();
                 ctx.moveTo(midX, top); ctx.lineTo(midX, bottom);
                 ctx.moveTo(left, midY); ctx.lineTo(right, midY);
@@ -157,130 +244,12 @@
             }
         };
 
-        // 初始化圖表
         const tideBubbleChart = new Chart(ctx, {
             type: 'bubble',
             data: {
                 datasets: [{
                     label: '板塊資金',
                     data: db["20260828"].data,
-                    backgroundColor: function(context) {
-                        const val = context.raw;
-                        if (!val) return 'rgba(56, 189, 248, 0.6)';
-                        if (val.x >= 0 && val.y >= 0) return 'rgba(52, 211, 153, 0.75)'; // 綠
-                        if (val.x >= 0 && val.y < 0)  return 'rgba(56, 189, 248, 0.75)'; // 藍
-                        if (val.x < 0 && val.y >= 0)  return 'rgba(251, 191, 36, 0.75)';  // 黃
-                        return 'rgba(244, 63, 94, 0.75);'; // 紅
-                    },
-                    borderColor: '#ffffff',
-                    borderWidth: 1.5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        min: -20, max: 20,
-                        title: { display: true, text: '← 資金流出 | 資金流入 →', color: '#94a3b8', font: { size: 11 } },
-                        grid: { color: 'rgba(255, 255, 255, 0.04)' },
-                        ticks: { color: '#94a3b8' }
-                    },
-                    y: {
-                        min: -20, max: 20,
-                        title: { display: true, text: '← 動能減緩 | 動能加速 →', color: '#94a3b8', font: { size: 11 } },
-                        grid: { color: 'rgba(255, 255, 255, 0.04)' },
-                        ticks: { color: '#94a3b8' }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    // 直接在泡泡上標註板塊名稱
-                    datalabels: {
-                        align: 'top',
-                        formatter: function(value, context) {
-                            return value.name;
-                        },
-                        color: '#f8fafc',
-                        font: { size: 11, weight: 'bold' }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const pt = context.raw;
-                                return ` [${pt.name}] 累積流量: ${pt.x} | 動能: ${pt.y}`;
-                            }
-                        }
-                    }
-                },
-                onClick: (event, elements) => {
-                    if (elements.length > 0) {
-                        const index = elements[0].index;
-                        const currentDataset = tideBubbleChart.data.datasets[0].data;
-                        const selectedBoard = currentDataset[index];
-                        renderDrilldown(selectedBoard);
-                    }
-                }
-            },
-            plugins: [quadrantBackgroundPlugin]
-        });
-
-        // 渲染右側成分股鑽研面板
-        function renderDrilldown(board) {
-            document.getElementById('selected-board-tag').innerText = board.name;
-            const container = document.getElementById('drilldown-content');
-            
-            let html = `<div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60 mb-2">
-                <div class="text-slate-300 font-bold mb-1">${board.name} 資金摘要</div>
-                <div class="flex justify-between text-slate-400"><span>資金總流量: <strong class="text-blue-400">${board.x}</strong></span><span>動能指數: <strong class="text-emerald-400">${board.y}</strong></span></div>
-            </div>`;
-
-            html += `<div class="text-slate-300 font-semibold mb-1.5">核心成分股表現：</div><div class="space-y-1.5">`;
-            board.stocks.forEach(st => {
-                const isPositive = st.val.includes('+');
-                const colorClass = isPositive ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20';
-                html += `<div class="flex justify-between items-center bg-slate-800/40 px-3 py-2 rounded-lg border border-slate-800">
-                    <span class="text-slate-200 font-medium">${st.s}</span>
-                    <span class="px-2 py-0.5 rounded text-xs border ${colorClass}">${st.val}</span>
-                </div>`;
-            });
-            html += `</div>`;
-            container.innerHTML = html;
-        }
-
-        // 切換日期資料
-        function changeDateData() {
-            const selectedDate = document.getElementById('dateSelect').value;
-            const target = db[selectedDate];
-            document.getElementById('current-date-label').innerText = target.label;
-            
-            tideBubbleChart.data.datasets[0].data = target.data;
-            
-            // 如果開著歷史軌跡模式，順便更新軌跡資料集
-            if (showTrailMode) {
-                updateTrailDatasets();
-            } else {
-                tideBubbleChart.update();
-            }
-        }
-
-        // 開啟/關閉歷史軌跡按鈕邏輯
-        function toggleTrail() {
-            showTrailMode = !showTrailMode;
-            const btn = document.getElementById('trailBtn');
-            
-            if (showTrailMode) {
-                btn.innerText = "關閉歷史軌跡";
-                btn.className = "bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl transition font-medium shadow-md";
-                updateTrailDatasets();
-            } else {
-                btn.innerText = "開啟歷史軌跡";
-                btn.className = "bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-2 rounded-xl transition font-medium shadow-md";
-                // 回復單一資料集
-                const selectedDate = document.getElementById('dateSelect').value;
-                tideBubbleChart.data.datasets = [{
-                    label: '板塊資金',
-                    data: db[selectedDate].data,
                     backgroundColor: function(context) {
                         const val = context.raw;
                         if (!val) return 'rgba(56, 189, 248, 0.75)';
@@ -291,44 +260,130 @@
                     },
                     borderColor: '#ffffff',
                     borderWidth: 1.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { min: -20, max: 20, title: { display: true, text: '← 資金流出 | 資金流入 →', color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#94a3b8' } },
+                    y: { min: -20, max: 20, title: { display: true, text: '← 動能減緩 | 動能加速 →', color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    datalabels: { align: 'top', formatter: (val) => val.name, color: '#f8fafc', font: { size: 11, weight: 'bold' } },
+                    tooltip: { callbacks: { label: (ctx) => ` [${ctx.raw.name}] 累積流量: ${ctx.raw.x} | 動能: ${ctx.raw.y}` } }
+                },
+                onClick: (event, elements) => {
+                    if (elements.length > 0) {
+                        const board = tideBubbleChart.data.datasets[0].data[elements[0].index];
+                        activeBoard = board;
+                        renderDrilldown(board);
+                        document.getElementById('watchlist-btn').classList.remove('hidden');
+                    }
+                }
+            },
+            plugins: [quadrantBackgroundPlugin]
+        });
+
+        // 渲染板塊鑽研
+        function renderDrilldown(board) {
+            document.getElementById('selected-board-tag').innerText = board.name;
+            const container = document.getElementById('drilldown-content');
+            let html = `<div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-700/60 mb-2">
+                <div class="text-slate-300 font-bold mb-1">${board.name} 資金摘要</div>
+                <div class="flex justify-between text-slate-400"><span>資金總流量: <strong class="text-blue-400">${board.x}</strong></span><span>動能指數: <strong class="text-emerald-400">${board.y}</strong></span></div>
+            </div><div class="text-slate-300 font-semibold mb-1.5">核心成分股表現：</div><div class="space-y-1.5">`;
+            board.stocks.forEach(st => {
+                const isPos = st.val.includes('+');
+                const col = isPos ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20';
+                html += `<div class="flex justify-between items-center bg-slate-800/40 px-3 py-2 rounded-lg border border-slate-800"><span class="text-slate-200 font-medium">${st.s}</span><span class="px-2 py-0.5 rounded text-xs border ${col}">${st.val}</span></div>`;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // 切換面板 Tab
+        function switchTab(tab) {
+            const dBtn = document.getElementById('tab-drilldown');
+            const wBtn = document.getElementById('tab-watchlist');
+            const dPanel = document.getElementById('panel-drilldown');
+            const wPanel = document.getElementById('panel-watchlist');
+
+            if (tab === 'drilldown') {
+                dBtn.className = "text-xs font-bold text-blue-400 pb-1 border-b-2 border-blue-400 mr-4 transition";
+                wBtn.className = "text-xs font-semibold text-slate-400 pb-1 border-b-2 border-transparent transition";
+                dPanel.classList.remove('hidden'); wPanel.classList.add('hidden');
+            } else {
+                wBtn.className = "text-xs font-bold text-blue-400 pb-1 border-b-2 border-blue-400 mr-4 transition";
+                dBtn.className = "text-xs font-semibold text-slate-400 pb-1 border-b-2 border-transparent transition";
+                wPanel.classList.remove('hidden'); dPanel.classList.add('hidden');
+            }
+        }
+
+        // 更新大盤動向建議區塊
+        function updateMarketSentiment(sentiment) {
+            document.getElementById('market-status-title').innerText = sentiment.title;
+            document.getElementById('market-status-title').className = `text-sm font-bold ${sentiment.color}`;
+            document.getElementById('market-status-desc').innerText = sentiment.desc;
+            document.getElementById('market-tide-index').innerHTML = `${sentiment.index} <span class="text-xs text-slate-400 font-normal">(潮汐綜合指數)</span>`;
+            document.getElementById('market-tide-index').className = `text-lg font-extrabold ${sentiment.color}`;
+            document.getElementById('sentiment-icon').innerText = sentiment.icon;
+        }
+
+        // 切換日期
+        function changeDateData() {
+            const date = document.getElementById('dateSelect').value;
+            const info = db[date];
+            document.getElementById('current-date-label').innerText = info.label;
+            updateMarketSentiment(info.marketSentiment);
+            
+            tideBubbleChart.data.datasets[0].data = info.data;
+            if (showTrailMode) {
+                updateTrailDatasets();
+            } else {
+                tideBubbleChart.update();
+            }
+        }
+
+        // 歷史軌跡切換
+        function toggleTrail() {
+            showTrailMode = !showTrailMode;
+            const btn = document.getElementById('trailBtn');
+            if (showTrailMode) {
+                btn.innerText = "關閉軌跡";
+                btn.className = "bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-xl transition font-medium shadow-md";
+                updateTrailDatasets();
+            } else {
+                btn.innerText = "歷史軌跡";
+                btn.className = "bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-2 rounded-xl transition font-medium shadow-md";
+                const date = document.getElementById('dateSelect').value;
+                tideBubbleChart.data.datasets = [{
+                    label: '板塊資金', data: db[date].data,
+                    backgroundColor: (ctx) => ctx.raw?.x >= 0 && ctx.raw?.y >= 0 ? 'rgba(52, 211, 153, 0.75)' : 'rgba(56, 189, 248, 0.75)',
+                    borderColor: '#ffffff', borderWidth: 1.5
                 }];
                 tideBubbleChart.update();
             }
         }
 
-        // 建立跨日移動軌跡資料集
         function updateTrailDatasets() {
-            const currentSelected = document.getElementById('dateSelect').value;
-            const currentData = db[currentSelected].data;
-            
-            // 建立過去三日的歷史路徑模擬（以半導體業與AI群為例顯示軌跡）
+            const date = document.getElementById('dateSelect').value;
             tideBubbleChart.data.datasets = [
-                {
-                    label: '當日板塊分佈',
-                    data: currentData,
-                    backgroundColor: 'rgba(56, 189, 248, 0.8)',
-                    borderColor: '#ffffff',
-                    borderWidth: 1.5,
-                    order: 2
-                },
-                {
-                    label: '半導體 3 日資金移動軌跡',
-                    type: 'line',
-                    data: [
-                        {x: 6, y: -1},   // 26日
-                        {x: 11, y: 6},  // 27日
-                        {x: 16, y: 13}  // 28日
-                    ],
-                    borderColor: '#34d399',
-                    borderWidth: 2,
-                    borderDash: [4, 4],
-                    pointRadius: 4,
-                    pointBackgroundColor: '#34d399',
-                    fill: false,
-                    order: 1
-                }
+                { label: '當日板塊分佈', data: db[date].data, backgroundColor: 'rgba(56, 189, 248, 0.8)', borderColor: '#ffffff', borderWidth: 1.5, order: 2 },
+                { label: '半導體 3 日軌跡', type: 'line', data: [{x:6, y:-1}, {x:11, y:6}, {x:16, y:13}], borderColor: '#34d399', borderWidth: 2, borderDash: [4, 4], pointRadius: 4, pointBackgroundColor: '#34d399', fill: false, order: 1 }
             ];
             tideBubbleChart.update();
+        }
+
+        // 潛力潛伏榜 Modal 控制
+        function openValueScanner() { document.getElementById('scannerModal').classList.remove('hidden'); document.getElementById('scannerModal').classList.add('flex'); }
+        function closeValueScanner() { document.getElementById('scannerModal').classList.add('hidden'); document.getElementById('scannerModal').classList.remove('flex'); }
+        
+        function toggleCurrentWatchlist() {
+            if (activeBoard) {
+                alert(`已成功將 [${activeBoard.name}] 加入您的自選追蹤清單！`);
+            }
         }
     </script>
 </body>
