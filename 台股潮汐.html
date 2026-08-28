@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股資金潮汐旗艦終端 V5</title>
+    <title>台股資金潮汐與長期核心配置終端 V6</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -11,16 +11,11 @@
     <!-- Chart.js Datalabels 插件 -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
     <style>
-        /* 專屬高質感微型捲軸 */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
         ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
-        
-        /* 霓虹發光背景效果 */
-        .cyber-glow {
-            box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.15);
-        }
+        .cyber-glow { box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.15); }
     </style>
 </head>
 <body class="bg-[#030712] text-slate-100 min-h-screen p-3 md:p-5 flex flex-col items-center font-sans selection:bg-blue-500 selection:text-white">
@@ -31,9 +26,9 @@
             <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-2.5 rounded-xl text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/30">⚡</div>
             <div>
                 <h1 class="text-xl font-black tracking-wider flex items-center gap-2">
-                    CYBER TIDE <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full border border-cyan-500/40 tracking-widest font-mono">TERMINAL V5.0</span>
+                    CYBER TIDE <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full border border-cyan-500/40 tracking-widest font-mono">TERMINAL V6.0</span>
                 </h1>
-                <p class="text-[11px] text-slate-400">Institutional Sector Flow & Complete Weight Matrix</p>
+                <p class="text-[11px] text-slate-400">Sector Flow & Long-Term Core Investment Matrix</p>
             </div>
         </div>
         
@@ -47,8 +42,11 @@
                     <option value="20260826">2026-08-26</option>
                 </select>
             </div>
-            <button onclick="toggleTrail()" id="trailBtn" class="bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-2 rounded-xl transition border border-slate-700 font-medium shadow-sm flex items-center gap-1.5">
-                <span>📌</span> 歷史軌跡
+            <button onclick="switchView('sector')" id="btnSector" class="bg-cyan-600/20 text-cyan-400 border border-cyan-500/40 text-xs px-3.5 py-2 rounded-xl transition font-bold shadow-sm flex items-center gap-1.5">
+                <span>📊</span> 板塊資金潮汐
+            </button>
+            <button onclick="switchView('longterm')" id="btnLongterm" class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5">
+                <span>🏛️</span> 長期核心清單
             </button>
             <button onclick="openValueScanner()" class="bg-gradient-to-r from-amber-500/25 to-orange-500/25 hover:from-amber-500/35 hover:to-orange-500/35 text-amber-400 border border-amber-500/40 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5">
                 <span>🎯</span> 潛伏榜篩選
@@ -59,17 +57,16 @@
     <!-- 終端主版面配置 -->
     <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-4 gap-4">
         
-        <!-- 左側攔：大盤動向與指南 -->
+        <!-- 左側攔：動向與快速指南 -->
         <div class="space-y-4 flex flex-col">
-            <!-- 大盤情緒卡片 -->
             <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl flex-1 flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2.5">
-                        <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5"><span>📊</span> 大盤動向研判</span>
+                        <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5"><span>📊</span> 市場總覽研判</span>
                         <span id="sentiment-icon" class="text-lg">🔥</span>
                     </div>
                     <div id="market-status-title" class="text-xs font-bold text-emerald-400 mb-1.5">資金聚焦強勢主流，多方格局延續</div>
-                    <p id="market-status-desc" class="text-[11px] text-slate-400 leading-relaxed mb-4">半導體與 AI 概念群資金淨流入加速，盤面主流清晰，適合順勢操作強勢類股。</p>
+                    <p id="market-status-desc" class="text-[11px] text-slate-400 leading-relaxed mb-4">半導體與 AI 概念群資金淨流入加速，長期核心資產配置維持穩定吸金態勢。</p>
                 </div>
                 <div class="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex justify-between items-center shadow-inner">
                     <span class="text-[11px] text-slate-400">潮汐多空指數</span>
@@ -77,25 +74,22 @@
                 </div>
             </div>
 
-            <!-- 象限快速說明卡片 -->
             <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl">
-                <div class="text-xs font-bold text-slate-200 mb-2.5 border-b border-slate-800 pb-2 flex items-center gap-1.5"><span>🧭</span> 象限解讀指南</div>
-                <div class="space-y-2 text-[11px]">
-                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-emerald-400 font-bold">🚀 加速流入</span><span class="text-slate-400">強勢主流</span></div>
-                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-cyan-400 font-bold">📈 流入放緩</span><span class="text-slate-400">高檔輪動</span></div>
-                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-amber-400 font-bold">⚠️ 流出放緩</span><span class="text-slate-400">低接打底</span></div>
-                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-rose-400 font-bold">🔻 加速流出</span><span class="text-slate-400">資金撤離</span></div>
-                </div>
+                <div class="text-xs font-bold text-slate-200 mb-2.5 border-b border-slate-800 pb-2 flex items-center gap-1.5"><span>🧭</span> 操作核心邏輯</div>
+                <ul class="space-y-2 text-[11px] text-slate-400 list-disc list-inside">
+                    <li><strong class="text-cyan-400">短線資金流向：</strong>捕捉法人與主力短期強勢追價板塊。</li>
+                    <li><strong class="text-amber-400">長期核心清單：</strong>對應台股優質市值與高股息資產，適合作為定期定額佈局參考。</li>
+                </ul>
             </div>
         </div>
 
-        <!-- 中間欄：泡泡圖主畫面 (佔 2 欄) -->
+        <!-- 中間欄：主圖表畫面 (佔 2 欄) -->
         <div class="lg:col-span-2 bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col">
             <div class="flex justify-between items-center mb-3">
-                <span id="current-date-label" class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-3 py-1.5 rounded-xl border border-cyan-500/30 shadow-sm">
-                    📅 2026-08-28 資金分佈圖
+                <span id="current-view-label" class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-3 py-1.5 rounded-xl border border-cyan-500/30 shadow-sm">
+                    📅 2026-08-28 板塊資金分佈圖
                 </span>
-                <span class="text-[11px] text-slate-400 flex items-center gap-1"><span>💡</span> 點擊泡泡載入全部成分股與百分比</span>
+                <span class="text-[11px] text-slate-400 flex items-center gap-1"><span>💡</span> 點擊項目載入詳細成分與配置權重</span>
             </div>
 
             <!-- 圖表容器 -->
@@ -104,32 +98,27 @@
             </div>
         </div>
 
-        <!-- 右側欄：互動整合面板 (完整成分股清單與比例) -->
+        <!-- 右側欄：互動整合面板 (支援捲軸) -->
         <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col justify-between">
             <div class="flex flex-col h-full">
-                <!-- 標題與選取狀態 -->
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
                     <div>
-                        <div class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Active Sector Matrix</div>
-                        <div id="selected-board-tag" class="text-sm font-black text-slate-100">未選取板塊</div>
+                        <div class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Matrix Details</div>
+                        <div id="selected-board-tag" class="text-sm font-black text-slate-100">未選取項目</div>
                     </div>
-                    <button id="watchlist-btn" onclick="toggleCurrentWatchlist()" class="hidden bg-blue-600/20 hover:bg-blue-600/30 text-cyan-400 px-3 py-1.5 rounded-xl border border-cyan-500/40 transition text-[11px] font-bold shadow-sm">
-                        ⭐ 釘選
-                    </button>
                 </div>
 
-                <!-- 內容呈現區 (支援捲軸) -->
                 <div id="drilldown-content" class="flex-1 overflow-y-auto pr-1 space-y-2 text-xs max-h-[420px]">
                     <div class="h-full flex flex-col items-center justify-center text-center py-20 text-slate-500 space-y-3">
                         <span class="text-3xl animate-pulse">🎯</span>
-                        <p class="text-xs leading-relaxed max-w-[220px]">請點擊中間圖表中的任意板塊泡泡<br>即可在此處展開**所有核心成分股與佔比%**</p>
+                        <p class="text-xs leading-relaxed max-w-[220px]">請點擊中間圖表的任一節點<br>即可在此處展開**完整成分股與資金配置佔比**</p>
                     </div>
                 </div>
             </div>
 
             <div class="mt-3 pt-3 border-t border-slate-800 text-[10px] text-slate-500 text-center flex justify-between items-center font-mono">
-                <span>DATA REFRESHED</span>
-                <span class="text-cyan-400">2026.08.28</span>
+                <span>SYSTEM VERSION</span>
+                <span class="text-cyan-400">V6.0 FLAGSHIP</span>
             </div>
         </div>
     </main>
@@ -138,24 +127,23 @@
     <div id="scannerModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-lg p-5 rounded-2xl shadow-2xl">
             <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-                <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">🎯 潛力潛伏榜 (低基期 / 資金剛進駐)</h3>
+                <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">🎯 潛力潛伏榜 (低基期 / 長短期共振)</h3>
                 <button onclick="closeValueScanner()" class="text-slate-400 hover:text-white text-sm">✕</button>
             </div>
-            <p class="text-xs text-slate-400 mb-3">自動過濾出動能翻正但短線尚未過熱的潛力板塊：</p>
             <div class="space-y-2.5 text-xs">
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
                     <div>
-                        <div class="font-bold text-slate-200">生技醫療</div>
-                        <div class="text-[11px] text-amber-400">剛從觀望區翻正，法人低接佈局</div>
+                        <div class="font-bold text-slate-200">市值型長期核心 (如 0050 相關鏈)</div>
+                        <div class="text-[11px] text-cyan-400">權值股獲資金穩健回補，適合定期定額</div>
                     </div>
-                    <span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg border border-amber-500/30 font-bold text-[11px]">潛伏中</span>
+                    <span class="bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded-lg border border-cyan-500/30 font-bold text-[11px]">長期看好</span>
                 </div>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
                     <div>
-                        <div class="font-bold text-slate-200">電腦及週邊</div>
-                        <div class="text-[11px] text-cyan-400">資金穩定流入，具備補漲契機</div>
+                        <div class="font-bold text-slate-200">生技醫療與防守板塊</div>
+                        <div class="text-[11px] text-amber-400">剛從觀望區翻正，法人低接佈局中</div>
                     </div>
-                    <span class="bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded-lg border border-cyan-500/30 font-bold text-[11px]">穩定吸金</span>
+                    <span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg border border-amber-500/30 font-bold text-[11px]">潛伏中</span>
                 </div>
             </div>
         </div>
@@ -165,98 +153,28 @@
     <script>
         Chart.register(ChartDataLabels);
 
-        // 完整資料庫（含所有成分股與佔比百分比）
+        // 資料庫：包含短線板塊與長期核心清單
         const db = {
             "20260828": {
-                label: "📅 2026-08-28 資金分佈圖",
-                sentiment: { title: "資金聚焦強勢主流，多方格局延續", desc: "半導體與 AI 概念群資金淨流入加速，盤面主流清晰，適合順勢操作強勢類股。", index: "+68.5", icon: "🔥", color: "text-emerald-400" },
-                data: [
-                    { 
-                        x: 16, y: 13, r: 18, name: '半導體業', 
-                        stocks: [
-                            {s:'台積電 (2330)', val:'+45.2億', pct: '52.5%'},
-                            {s:'聯發科 (2454)', val:'+12.8億', pct: '18.2%'},
-                            {s:'日月光投控 (3711)', val:'+5.1億', pct: '9.4%'},
-                            {s:'聯電 (2303)', val:'+3.2億', pct: '7.1%'},
-                            {s:'創意 (3443)', val:'+2.0億', pct: '4.8%'},
-                            {s:'世芯-KY (3661)', val:'+1.5億', pct: '4.2%'},
-                            {s:'瑞昱 (2379)', val:'+1.2億', pct: '3.8%'}
-                        ] 
-                    },
-                    { 
-                        x: 9, y: -4, r: 14, name: '電腦及週邊', 
-                        stocks: [
-                            {s:'廣達 (2382)', val:'+8.3億', pct: '45.0%'},
-                            {s:'緯創 (3231)', val:'+3.2億', pct: '24.1%'},
-                            {s:'英業達 (2356)', val:'-1.5億', pct: '15.2%'},
-                            {s:'技嘉 (2376)', val:'+1.1億', pct: '10.5%'},
-                            {s:'仁寶 (2324)', val:'-0.4億', pct: '5.2%'}
-                        ] 
-                    },
-                    { 
-                        x: -11, y: -16, r: 12, name: '航運業', 
-                        stocks: [
-                            {s:'長榮 (2603)', val:'-14.2億', pct: '55.3%'},
-                            {s:'陽明 (2609)', val:'-6.5億', pct: '28.1%'},
-                            {s:'萬海 (2615)', val:'-3.1億', pct: '16.6%'}
-                        ] 
-                    },
-                    { 
-                        x: -4, y: 9, r: 10, name: '生技醫療', 
-                        stocks: [
-                            {s:'美時 (1795)', val:'+2.1億', pct: '42.0%'},
-                            {s:'保瑞 (6472)', val:'+1.5億', pct: '31.5%'},
-                            {s:'合一 (4743)', val:'+0.6億', pct: '15.0%'},
-                            {s:'中裕 (4147)', val:'+0.4億', pct: '11.5%'}
-                        ] 
-                    },
-                    { 
-                        x: 13, y: 16, r: 22, name: 'AI 概念群', 
-                        stocks: [
-                            {s:'台光電 (2383)', val:'+9.5億', pct: '34.0%'},
-                            {s:'奇鋐 (3017)', val:'+6.8億', pct: '26.2%'},
-                            {s:'世芯-KY (3661)', val:'+7.2億', pct: '22.8%'},
-                            {s:'雙鴻 (3324)', val:'+3.1億', pct: '17.0%'}
-                        ] 
-                    },
-                    { 
-                        x: -13, y: 3, r: 9, name: '金融保險', 
-                        stocks: [
-                            {s:'富邦金 (2881)', val:'-2.1億', pct: '38.0%'},
-                            {s:'國泰金 (2882)', val:'+1.8億', pct: '35.0%'},
-                            {s:'中信金 (2891)', val:'-0.9億', pct: '27.0%'}
-                        ] 
-                    }
-                ]
-            },
-            "20260827": {
-                label: "📅 2026-08-27 歷史數據",
-                sentiment: { title: "盤面類股輪動加速，觀望氣氛濃厚", desc: "多空交織，資金在主流與防守板塊間快速切換，建議控制部位、留意追高風險。", index: "+12.1", icon: "⚖️", color: "text-cyan-400" },
-                data: [
-                    { x: 11, y: 6, r: 17, name: '半導體業', stocks: [{s:'台積電 (2330)', val:'+25.1億', pct:'65%'}, {s:'聯發科 (2454)', val:'+6.2億', pct:'35%'}] },
-                    { x: 7, y: -7, r: 14, name: '電腦及週邊', stocks: [{s:'廣達 (2382)', val:'+4.1億', pct:'70%'}, {s:'緯創 (3231)', val:'-0.8億', pct:'30%'}] },
-                    { x: -9, y: -13, r: 13, name: '航運業', stocks: [{s:'長榮 (2603)', val:'-10.5億', pct:'70%'}, {s:'陽明 (2609)', val:'-4.2億', pct:'30%'}] },
-                    { x: -2, y: 6, r: 10, name: '生技醫療', stocks: [{s:'美時 (1795)', val:'+1.2億', pct:'100%'}] },
-                    { x: 6, y: 11, r: 20, name: 'AI 概念群', stocks: [{s:'台光電 (2383)', val:'+5.1億', pct:'55%'}, {s:'世芯-KY (3661)', val:'+4.3億', pct:'45%'}] },
-                    { x: -10, y: 2, r: 9, name: '金融保險', stocks: [{s:'富邦金 (2881)', val:'-1.1億', pct:'100%'}] }
-                ]
-            },
-            "20260826": {
-                label: "📅 2026-08-26 歷史數據",
-                sentiment: { title: "法人調節力道增強，資金偏向保守", desc: "多數板塊移往流出區，盤勢短線修正，防守型類股與低接打底標的為觀察重點。", index: "-34.8", icon: "⚠️", color: "text-amber-400" },
-                data: [
-                    { x: 6, y: -1, r: 16, name: '半導體業', stocks: [{s:'台積電 (2330)', val:'+8.1億', pct:'80%'}, {s:'聯發科 (2454)', val:'-2.1億', pct:'20%'}] },
-                    { x: 3, y: -9, r: 15, name: '電腦及週邊', stocks: [{s:'廣達 (2382)', val:'-1.2億', pct:'35%'}, {s:'緯創 (3231)', val:'-2.5億', pct:'65%'}] },
-                    { x: -6, y: -9, r: 14, name: '航運業', stocks: [{s:'長榮 (2603)', val:'-8.2億', pct:'75%'}, {s:'陽明 (2609)', val:'-3.1億', pct:'25%'}] },
-                    { x: 1, y: 3, r: 10, name: '生技醫療', stocks: [{s:'美時 (1795)', val:'+0.5億', pct:'100%'}] },
-                    { x: 3, y: 5, r: 19, name: 'AI 概念群', stocks: [{s:'台光電 (2383)', val:'+2.1億', pct:'52%'}, {s:'世芯-KY (3661)', val:'+1.9億', pct:'48%'}] },
-                    { x: -5, y: 7, r: 10, name: '金融保險', stocks: [{s:'富邦金 (2881)', val:'+3.2億', pct:'100%'}] }
+                label: "📅 2026-08-28 板塊資金分佈圖",
+                sentiment: { title: "資金聚焦強勢主流，多方格局延續", desc: "半導體與 AI 概念群資金淨流入加速，長期核心資產配置維持穩定吸金態勢。", index: "+68.5", icon: "🔥", color: "text-emerald-400" },
+                sectorData: [
+                    { x: 16, y: 13, r: 18, name: '半導體業', stocks: [{s:'台積電 (2330)', val:'+45.2億', pct:'52.5%'}, {s:'聯發科 (2454)', val:'+12.8億', pct:'18.2%'}, {s:'日月光投控 (3711)', val:'+5.1億', pct:'9.4%'}] },
+                    { x: 9, y: -4, r: 14, name: '電腦及週邊', stocks: [{s:'廣達 (2382)', val:'+8.3億', pct:'45.0%'}, {s:'緯創 (3231)', val:'+3.2億', pct:'24.1%'}] },
+                    { x: -11, y: -16, r: 12, name: '航運業', stocks: [{s:'長榮 (2603)', val:'-14.2億', pct:'55.3%'}, {s:'陽明 (2609)', val:'-6.5億', pct:'28.1%'}] },
+                    { x: -4, y: 9, r: 10, name: '生技醫療', stocks: [{s:'美時 (1795)', val:'+2.1億', pct:'42.0%'}, {s:'保瑞 (6472)', val:'+1.5億', pct:'31.5%'}] },
+                    { x: 13, y: 16, r: 22, name: 'AI 概念群', stocks: [{s:'台光電 (2383)', val:'+9.5億', pct:'34.0%'}, {s:'奇鋐 (3017)', val:'+6.8億', pct:'26.2%'}] },
+                    { x: -13, y: 3, r: 9, name: '金融保險', stocks: [{s:'富邦金 (2881)', val:'-2.1億', pct:'38.0%'}, {s:'國泰金 (2882)', val:'+1.8億', pct:'35.0%'}] }
+                ],
+                longtermData: [
+                    { x: 15, y: 14, r: 20, name: '台股市值核心 (如 0050 概念)', stocks: [{s:'台積電 (2330)', val:'53.2%', pct:'核心主 53%'}, {s:'鴻海 (2317)', val:'6.1%', pct:'權值 6%'}, {s:'聯發科 (2454)', val:'4.8%', pct:'權值 5%'}] },
+                    { x: 10, y: 11, r: 16, name: '高股息現金流 (如 0056/00919 概念)', stocks: [{s:'聯電 (2303)', val:'7.5%', pct:'高息標的'}, {s:'聯發科 (2454)', val:'6.2%', pct:'高息標的'}, {s:'長榮 (2603)', val:'5.8%', pct:'高息標的'}] },
+                    { x: 12, y: 15, r: 18, name: '科技成長核心 (如 QQQ/科技型)', stocks: [{s:'台積電 (2330)', val:'40.0%', pct:'成長引擎'}, {s:'台光電 (2383)', val:'15.0%', pct:'AI 基礎'}, {s:'世芯-KY (3661)', val:'12.0%', pct:'ASIC 核心'}] }
                 ]
             }
         };
 
-        let showTrailMode = false;
-        let activeBoard = null;
+        let currentMode = 'sector'; // 'sector' 或 'longterm'
         const ctx = document.getElementById('tideBubbleChart').getContext('2d');
 
         const quadrantBackgroundPlugin = {
@@ -285,16 +203,9 @@
             type: 'bubble',
             data: {
                 datasets: [{
-                    label: '板塊資金',
-                    data: db["20260828"].data,
-                    backgroundColor: function(context) {
-                        const val = context.raw;
-                        if (!val) return 'rgba(56, 189, 248, 0.8)';
-                        if (val.x >= 0 && val.y >= 0) return 'rgba(52, 211, 153, 0.8)';
-                        if (val.x >= 0 && val.y < 0)  return 'rgba(56, 189, 248, 0.8)';
-                        if (val.x < 0 && val.y >= 0)  return 'rgba(251, 191, 36, 0.8)';
-                        return 'rgba(244, 63, 94, 0.8)';
-                    },
+                    label: '資金流向',
+                    data: db["20260828"].sectorData,
+                    backgroundColor: 'rgba(56, 189, 248, 0.8)',
                     borderColor: '#ffffff',
                     borderWidth: 1.5
                 }]
@@ -309,21 +220,19 @@
                 plugins: {
                     legend: { display: false },
                     datalabels: { align: 'top', formatter: (val) => val.name, color: '#f8fafc', font: { size: 11, weight: 'bold' } },
-                    tooltip: { callbacks: { label: (ctx) => ` [${ctx.raw.name}] 累積流量: ${ctx.raw.x} | 動能: ${ctx.raw.y}` } }
+                    tooltip: { callbacks: { label: (ctx) => ` [${ctx.raw.name}] 配置強度: ${ctx.raw.x} | 動能: ${ctx.raw.y}` } }
                 },
                 onClick: (event, elements) => {
                     if (elements.length > 0) {
-                        const board = tideBubbleChart.data.datasets[0].data[elements[0].index];
-                        activeBoard = board;
+                        const dataset = tideBubbleChart.data.datasets[elements[0].datasetIndex];
+                        const board = dataset.data[elements[0].index];
                         renderDrilldown(board);
-                        document.getElementById('watchlist-btn').classList.remove('hidden');
                     }
                 }
             },
             plugins: [quadrantBackgroundPlugin]
         });
 
-        // 渲染完整成分股與比例百分比
         function renderDrilldown(board) {
             document.getElementById('selected-board-tag').innerText = board.name;
             const container = document.getElementById('drilldown-content');
@@ -331,32 +240,29 @@
             let html = `
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-2.5 flex justify-between items-center shadow-inner">
                     <div>
-                        <div class="text-[10px] text-slate-400">總流量 / 動能</div>
+                        <div class="text-[10px] text-slate-400">強度指數 / 動能</div>
                         <div class="text-xs font-bold text-slate-200 font-mono">${board.x} / <span class="text-emerald-400">${board.y}</span></div>
                     </div>
                     <div class="text-right">
-                        <div class="text-[10px] text-slate-400">成分股總數</div>
+                        <div class="text-[10px] text-slate-400">核心成分數</div>
                         <div class="text-xs font-bold text-cyan-400 font-mono">${board.stocks.length} 檔</div>
                     </div>
                 </div>
                 <div class="text-[11px] font-bold text-slate-300 mb-1.5 flex justify-between items-center px-1">
-                    <span>核心成分股清單</span>
-                    <span>貢獻金額 / 佔比</span>
+                    <span>${currentMode === 'sector' ? '核心成分股清單' : '長期資產配置組成'}</span>
+                    <span>數值 / 佔比</span>
                 </div>
                 <div class="space-y-2">
             `;
 
             board.stocks.forEach(st => {
-                const isPos = st.val.includes('+');
-                const valCol = isPos ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' : 'text-rose-400 bg-rose-500/10 border-rose-500/30';
-                
                 html += `
                     <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center hover:border-cyan-500/50 transition">
                         <div>
                             <div class="text-slate-200 font-bold text-xs">${st.s}</div>
-                            <div class="text-[10px] text-slate-400">權重佔比: <strong class="text-cyan-400 font-mono">${st.pct}</strong></div>
+                            <div class="text-[10px] text-slate-400">標籤: <strong class="text-cyan-400 font-mono">${st.pct}</strong></div>
                         </div>
-                        <span class="px-2 py-1 rounded-lg text-xs font-mono font-bold border ${valCol}">${st.val}</span>
+                        <span class="px-2 py-1 rounded-lg text-xs font-mono font-bold border text-emerald-400 bg-emerald-500/10 border-emerald-500/30">${st.val}</span>
                     </div>
                 `;
             });
@@ -365,66 +271,34 @@
             container.innerHTML = html;
         }
 
-        function updateSentiment(s) {
-            document.getElementById('market-status-title').innerText = s.title;
-            document.getElementById('market-status-title').className = `text-xs font-bold ${s.color} mb-1.5`;
-            document.getElementById('market-status-desc').innerText = s.desc;
-            document.getElementById('market-tide-index').innerText = s.index;
-            document.getElementById('market-tide-index').className = `text-sm font-black ${s.color} font-mono`;
-            document.getElementById('sentiment-icon').innerText = s.icon;
+        function switchView(mode) {
+            currentMode = mode;
+            const btnSector = document.getElementById('btnSector');
+            const btnLongterm = document.getElementById('btnLongterm');
+            const label = document.getElementById('current-view-label');
+            const date = document.getElementById('dateSelect').value;
+            const info = db[date];
+
+            if (mode === 'sector') {
+                btnSector.className = "bg-cyan-600/20 text-cyan-400 border border-cyan-500/40 text-xs px-3.5 py-2 rounded-xl transition font-bold shadow-sm flex items-center gap-1.5";
+                btnLongterm.className = "bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5";
+                label.innerText = "📅 2026-08-28 板塊資金分佈圖";
+                tideBubbleChart.data.datasets[0].data = info.sectorData;
+            } else {
+                btnLongterm.className = "bg-amber-600/20 text-amber-400 border border-amber-500/40 text-xs px-3.5 py-2 rounded-xl transition font-bold shadow-sm flex items-center gap-1.5";
+                btnSector.className = "bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5";
+                label.innerText = "🏛️ 長期核心投資配置矩陣";
+                tideBubbleChart.data.datasets[0].data = info.longtermData;
+            }
+            tideBubbleChart.update();
         }
 
         function changeDateData() {
-            const date = document.getElementById('dateSelect').value;
-            const info = db[date];
-            document.getElementById('current-date-label').innerText = info.label;
-            updateSentiment(info.sentiment);
-            
-            tideBubbleChart.data.datasets[0].data = info.data;
-            if (showTrailMode) {
-                updateTrailDatasets();
-            } else {
-                tideBubbleChart.update();
-            }
-        }
-
-        function toggleTrail() {
-            showTrailMode = !showTrailMode;
-            const btn = document.getElementById('trailBtn');
-            if (showTrailMode) {
-                btn.innerHTML = "<span>📌</span> 關閉軌跡";
-                btn.className = "bg-emerald-600/20 text-emerald-400 text-xs px-3.5 py-2 rounded-xl transition border border-emerald-500/40 flex items-center gap-1.5 font-medium shadow-sm";
-                updateTrailDatasets();
-            } else {
-                btn.innerHTML = "<span>📌</span> 歷史軌跡";
-                btn.className = "bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-2 rounded-xl transition border border-slate-700 font-medium shadow-sm flex items-center gap-1.5";
-                const date = document.getElementById('dateSelect').value;
-                tideBubbleChart.data.datasets = [{
-                    label: '板塊資金', data: db[date].data,
-                    backgroundColor: (ctx) => ctx.raw?.x >= 0 && ctx.raw?.y >= 0 ? 'rgba(52, 211, 153, 0.8)' : 'rgba(56, 189, 248, 0.8)',
-                    borderColor: '#ffffff', borderWidth: 1.5
-                }];
-                tideBubbleChart.update();
-            }
-        }
-
-        function updateTrailDatasets() {
-            const date = document.getElementById('dateSelect').value;
-            tideBubbleChart.data.datasets = [
-                { label: '當日板塊分佈', data: db[date].data, backgroundColor: 'rgba(56, 189, 248, 0.8)', borderColor: '#ffffff', borderWidth: 1.5, order: 2 },
-                { label: '半導體 3 日軌跡', type: 'line', data: [{x:6, y:-1}, {x:11, y:6}, {x:16, y:13}], borderColor: '#34d399', borderWidth: 2, borderDash: [4, 4], pointRadius: 4, pointBackgroundColor: '#34d399', fill: false, order: 1 }
-            ];
-            tideBubbleChart.update();
+            switchView(currentMode);
         }
 
         function openValueScanner() { document.getElementById('scannerModal').classList.remove('hidden'); document.getElementById('scannerModal').classList.add('flex'); }
         function closeValueScanner() { document.getElementById('scannerModal').classList.add('hidden'); document.getElementById('scannerModal').classList.remove('flex'); }
-        
-        function toggleCurrentWatchlist() {
-            if (activeBoard) {
-                alert(`已成功將 [${activeBoard.name}] 釘選至您的自選追蹤面板！`);
-            }
-        }
     </script>
 </body>
 </html>
