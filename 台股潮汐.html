@@ -3,42 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>台股資金潮汐旗艦終端 (Cyber Tide Terminal)</title>
+    <title>台股資金潮汐旗艦終端 V5</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Chart.js Datalabels 插件 -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <style>
+        /* 專屬高質感微型捲軸 */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
+        
+        /* 霓虹發光背景效果 */
+        .cyber-glow {
+            box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.15);
+        }
+    </style>
 </head>
-<body class="bg-[#090d16] text-slate-100 min-h-screen p-3 md:p-5 flex flex-col items-center font-sans selection:bg-blue-500 selection:text-white">
+<body class="bg-[#030712] text-slate-100 min-h-screen p-3 md:p-5 flex flex-col items-center font-sans selection:bg-blue-500 selection:text-white">
 
     <!-- 頂部終端導航列 -->
-    <header class="w-full max-w-7xl mb-4 bg-slate-900/80 backdrop-blur-md border border-slate-800/80 p-4 rounded-2xl shadow-2xl flex flex-col md:flex-row justify-between items-center gap-3">
+    <header class="w-full max-w-7xl mb-4 bg-slate-900/90 backdrop-blur-xl border border-blue-500/30 p-4 rounded-2xl shadow-2xl cyber-glow flex flex-col md:flex-row justify-between items-center gap-3">
         <div class="flex items-center gap-3">
-            <div class="bg-gradient-to-br from-blue-600 to-indigo-600 p-2.5 rounded-xl text-white font-bold text-lg shadow-lg shadow-blue-500/20">⚡</div>
+            <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-2.5 rounded-xl text-slate-950 font-black text-lg shadow-lg shadow-cyan-500/30">⚡</div>
             <div>
                 <h1 class="text-xl font-black tracking-wider flex items-center gap-2">
-                    CYBER TIDE <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/40 tracking-widest">ULTIMATE 4.0</span>
+                    CYBER TIDE <span class="text-[10px] bg-cyan-500/20 text-cyan-400 px-2.5 py-0.5 rounded-full border border-cyan-500/40 tracking-widest font-mono">TERMINAL V5.0</span>
                 </h1>
-                <p class="text-[11px] text-slate-400">Institutional Sector Flow & Weight Terminal</p>
+                <p class="text-[11px] text-slate-400">Institutional Sector Flow & Complete Weight Matrix</p>
             </div>
         </div>
         
         <!-- 全局工具列 -->
         <div class="flex flex-wrap items-center gap-2.5">
-            <div class="flex items-center space-x-1.5 bg-slate-950/60 border border-slate-800 px-3 py-1.5 rounded-xl">
+            <div class="flex items-center space-x-1.5 bg-slate-950/80 border border-slate-800 px-3 py-1.5 rounded-xl">
                 <span class="text-[11px] text-slate-400 font-medium">基準日期：</span>
-                <select id="dateSelect" onchange="changeDateData()" class="bg-slate-900 text-blue-400 font-bold text-xs px-2.5 py-1 rounded-lg border border-slate-700/80 focus:outline-none focus:border-blue-500">
+                <select id="dateSelect" onchange="changeDateData()" class="bg-slate-900 text-cyan-400 font-bold text-xs px-2.5 py-1 rounded-lg border border-slate-700 focus:outline-none focus:border-cyan-500">
                     <option value="20260828">2026-08-28 (盤後)</option>
                     <option value="20260827">2026-08-27</option>
                     <option value="20260826">2026-08-26</option>
                 </select>
             </div>
-            <button onclick="toggleTrail()" id="trailBtn" class="bg-slate-900/80 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-2 rounded-xl transition border border-slate-700/80 font-medium shadow-sm flex items-center gap-1.5">
+            <button onclick="toggleTrail()" id="trailBtn" class="bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-2 rounded-xl transition border border-slate-700 font-medium shadow-sm flex items-center gap-1.5">
                 <span>📌</span> 歷史軌跡
             </button>
-            <button onclick="openValueScanner()" class="bg-gradient-to-r from-amber-600/20 to-orange-600/20 hover:from-amber-600/30 hover:to-orange-600/30 text-amber-400 border border-amber-500/40 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5">
+            <button onclick="openValueScanner()" class="bg-gradient-to-r from-amber-500/25 to-orange-500/25 hover:from-amber-500/35 hover:to-orange-500/35 text-amber-400 border border-amber-500/40 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm flex items-center gap-1.5">
                 <span>🎯</span> 潛伏榜篩選
             </button>
         </div>
@@ -50,40 +62,40 @@
         <!-- 左側攔：大盤動向與指南 -->
         <div class="space-y-4 flex flex-col">
             <!-- 大盤情緒卡片 -->
-            <div class="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 p-4 rounded-2xl shadow-xl flex-1 flex flex-col justify-between">
+            <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl flex-1 flex flex-col justify-between">
                 <div>
-                    <div class="flex items-center justify-between mb-3 border-b border-slate-800/80 pb-2.5">
+                    <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2.5">
                         <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5"><span>📊</span> 大盤動向研判</span>
                         <span id="sentiment-icon" class="text-lg">🔥</span>
                     </div>
                     <div id="market-status-title" class="text-xs font-bold text-emerald-400 mb-1.5">資金聚焦強勢主流，多方格局延續</div>
                     <p id="market-status-desc" class="text-[11px] text-slate-400 leading-relaxed mb-4">半導體與 AI 概念群資金淨流入加速，盤面主流清晰，適合順勢操作強勢類股。</p>
                 </div>
-                <div class="bg-slate-950/80 border border-slate-800/80 p-3 rounded-xl flex justify-between items-center shadow-inner">
+                <div class="bg-slate-950 border border-slate-800/80 p-3 rounded-xl flex justify-between items-center shadow-inner">
                     <span class="text-[11px] text-slate-400">潮汐多空指數</span>
-                    <span id="market-tide-index" class="text-sm font-black text-emerald-400">+68.5</span>
+                    <span id="market-tide-index" class="text-sm font-black text-emerald-400 font-mono">+68.5</span>
                 </div>
             </div>
 
             <!-- 象限快速說明卡片 -->
-            <div class="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 p-4 rounded-2xl shadow-xl">
-                <div class="text-xs font-bold text-slate-200 mb-2.5 border-b border-slate-800/80 pb-2 flex items-center gap-1.5"><span>🧭</span> 象限解讀指南</div>
+            <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl">
+                <div class="text-xs font-bold text-slate-200 mb-2.5 border-b border-slate-800 pb-2 flex items-center gap-1.5"><span>🧭</span> 象限解讀指南</div>
                 <div class="space-y-2 text-[11px]">
-                    <div class="flex justify-between items-center bg-slate-950/40 px-2.5 py-1.5 rounded-lg"><span class="text-emerald-400 font-bold">🚀 加速流入</span><span class="text-slate-400">強勢主流</span></div>
-                    <div class="flex justify-between items-center bg-slate-950/40 px-2.5 py-1.5 rounded-lg"><span class="text-blue-400 font-bold">📈 流入放緩</span><span class="text-slate-400">高檔輪動</span></div>
-                    <div class="flex justify-between items-center bg-slate-950/40 px-2.5 py-1.5 rounded-lg"><span class="text-amber-400 font-bold">⚠️ 流出放緩</span><span class="text-slate-400">低接打底</span></div>
-                    <div class="flex justify-between items-center bg-slate-950/40 px-2.5 py-1.5 rounded-lg"><span class="text-rose-400 font-bold">🔻 加速流出</span><span class="text-slate-400">資金撤離</span></div>
+                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-emerald-400 font-bold">🚀 加速流入</span><span class="text-slate-400">強勢主流</span></div>
+                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-cyan-400 font-bold">📈 流入放緩</span><span class="text-slate-400">高檔輪動</span></div>
+                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-amber-400 font-bold">⚠️ 流出放緩</span><span class="text-slate-400">低接打底</span></div>
+                    <div class="flex justify-between items-center bg-slate-950/60 px-2.5 py-1.5 rounded-lg border border-slate-800/50"><span class="text-rose-400 font-bold">🔻 加速流出</span><span class="text-slate-400">資金撤離</span></div>
                 </div>
             </div>
         </div>
 
         <!-- 中間欄：泡泡圖主畫面 (佔 2 欄) -->
-        <div class="lg:col-span-2 bg-slate-900/60 backdrop-blur-md border border-slate-800/80 p-4 rounded-2xl shadow-xl flex flex-col">
+        <div class="lg:col-span-2 bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col">
             <div class="flex justify-between items-center mb-3">
-                <span id="current-date-label" class="text-xs font-bold text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-xl border border-blue-500/25 shadow-sm">
+                <span id="current-date-label" class="text-xs font-bold text-cyan-400 bg-cyan-500/10 px-3 py-1.5 rounded-xl border border-cyan-500/30 shadow-sm">
                     📅 2026-08-28 資金分佈圖
                 </span>
-                <span class="text-[11px] text-slate-400 flex items-center gap-1"><span>💡</span> 點擊泡泡檢視全部成分股比例</span>
+                <span class="text-[11px] text-slate-400 flex items-center gap-1"><span>💡</span> 點擊泡泡載入全部成分股與百分比</span>
             </div>
 
             <!-- 圖表容器 -->
@@ -92,38 +104,38 @@
             </div>
         </div>
 
-        <!-- 右側欄：互動整合面板 (完整成分股 + 比例 %) -->
-        <div class="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 p-4 rounded-2xl shadow-xl flex flex-col justify-between">
+        <!-- 右側欄：互動整合面板 (完整成分股清單與比例) -->
+        <div class="bg-slate-900/80 backdrop-blur-md border border-slate-800 p-4 rounded-2xl shadow-xl flex flex-col justify-between">
             <div class="flex flex-col h-full">
                 <!-- 標題與選取狀態 -->
-                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3 mb-3">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
                     <div>
-                        <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Active Board</div>
+                        <div class="text-[10px] text-cyan-400 uppercase tracking-widest font-bold">Active Sector Matrix</div>
                         <div id="selected-board-tag" class="text-sm font-black text-slate-100">未選取板塊</div>
                     </div>
-                    <button id="watchlist-btn" onclick="toggleCurrentWatchlist()" class="hidden bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 px-2.5 py-1.5 rounded-xl border border-blue-500/40 transition text-[11px] font-bold shadow-sm">
+                    <button id="watchlist-btn" onclick="toggleCurrentWatchlist()" class="hidden bg-blue-600/20 hover:bg-blue-600/30 text-cyan-400 px-3 py-1.5 rounded-xl border border-cyan-500/40 transition text-[11px] font-bold shadow-sm">
                         ⭐ 釘選
                     </button>
                 </div>
 
-                <!-- 內容呈現區 -->
-                <div id="drilldown-content" class="flex-1 overflow-y-auto pr-1 space-y-2 text-xs max-h-[400px]">
-                    <div class="h-full flex flex-col items-center justify-center text-center py-16 text-slate-500 space-y-2">
-                        <span class="text-2xl">🔍</span>
-                        <p class="text-xs leading-relaxed">請點擊中間圖表中的任意板塊泡泡<br>以展開該板塊的**所有核心成分股與佔比%**</p>
+                <!-- 內容呈現區 (支援捲軸) -->
+                <div id="drilldown-content" class="flex-1 overflow-y-auto pr-1 space-y-2 text-xs max-h-[420px]">
+                    <div class="h-full flex flex-col items-center justify-center text-center py-20 text-slate-500 space-y-3">
+                        <span class="text-3xl animate-pulse">🎯</span>
+                        <p class="text-xs leading-relaxed max-w-[220px]">請點擊中間圖表中的任意板塊泡泡<br>即可在此處展開**所有核心成分股與佔比%**</p>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-3 pt-3 border-t border-slate-800/80 text-[10px] text-slate-500 text-center flex justify-between items-center">
-                <span>Cyber Terminal Engine</span>
-                <span class="text-blue-400 font-mono">ONLINE</span>
+            <div class="mt-3 pt-3 border-t border-slate-800 text-[10px] text-slate-500 text-center flex justify-between items-center font-mono">
+                <span>DATA REFRESHED</span>
+                <span class="text-cyan-400">2026.08.28</span>
             </div>
         </div>
     </main>
 
     <!-- 潛力潛伏榜 Modal -->
-    <div id="scannerModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden justify-center items-center p-4 z-50">
+    <div id="scannerModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden justify-center items-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-lg p-5 rounded-2xl shadow-2xl">
             <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
                 <h3 class="text-sm font-bold text-slate-100 flex items-center gap-2">🎯 潛力潛伏榜 (低基期 / 資金剛進駐)</h3>
@@ -131,19 +143,19 @@
             </div>
             <p class="text-xs text-slate-400 mb-3">自動過濾出動能翻正但短線尚未過熱的潛力板塊：</p>
             <div class="space-y-2.5 text-xs">
-                <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
                     <div>
                         <div class="font-bold text-slate-200">生技醫療</div>
                         <div class="text-[11px] text-amber-400">剛從觀望區翻正，法人低接佈局</div>
                     </div>
                     <span class="bg-amber-500/20 text-amber-400 px-2.5 py-1 rounded-lg border border-amber-500/30 font-bold text-[11px]">潛伏中</span>
                 </div>
-                <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
                     <div>
                         <div class="font-bold text-slate-200">電腦及週邊</div>
-                        <div class="text-[11px] text-blue-400">資金穩定流入，具備補漲契機</div>
+                        <div class="text-[11px] text-cyan-400">資金穩定流入，具備補漲契機</div>
                     </div>
-                    <span class="bg-blue-500/20 text-blue-400 px-2.5 py-1 rounded-lg border border-blue-500/30 font-bold text-[11px]">穩定吸金</span>
+                    <span class="bg-cyan-500/20 text-cyan-400 px-2.5 py-1 rounded-lg border border-cyan-500/30 font-bold text-[11px]">穩定吸金</span>
                 </div>
             </div>
         </div>
@@ -153,7 +165,7 @@
     <script>
         Chart.register(ChartDataLabels);
 
-        // 資料庫擴充：完整列出成分股與對應佔比總和 100%
+        // 完整資料庫（含所有成分股與佔比百分比）
         const db = {
             "20260828": {
                 label: "📅 2026-08-28 資金分佈圖",
@@ -219,7 +231,7 @@
             },
             "20260827": {
                 label: "📅 2026-08-27 歷史數據",
-                sentiment: { title: "盤面類股輪動加速，觀望氣氛濃厚", desc: "多空交織，資金在主流與防守板塊間快速切換，建議控制部位、留意追高風險。", index: "+12.1", icon: "⚖️", color: "text-blue-400" },
+                sentiment: { title: "盤面類股輪動加速，觀望氣氛濃厚", desc: "多空交織，資金在主流與防守板塊間快速切換，建議控制部位、留意追高風險。", index: "+12.1", icon: "⚖️", color: "text-cyan-400" },
                 data: [
                     { x: 11, y: 6, r: 17, name: '半導體業', stocks: [{s:'台積電 (2330)', val:'+25.1億', pct:'65%'}, {s:'聯發科 (2454)', val:'+6.2億', pct:'35%'}] },
                     { x: 7, y: -7, r: 14, name: '電腦及週邊', stocks: [{s:'廣達 (2382)', val:'+4.1億', pct:'70%'}, {s:'緯創 (3231)', val:'-0.8億', pct:'30%'}] },
@@ -255,12 +267,12 @@
                 const midY = y.getPixelForValue(0);
 
                 ctx.save();
-                ctx.fillStyle = 'rgba(52, 211, 153, 0.02)'; ctx.fillRect(midX, top, right - midX, midY - top);
-                ctx.fillStyle = 'rgba(56, 189, 248, 0.02)'; ctx.fillRect(midX, midY, right - midX, bottom - midY);
-                ctx.fillStyle = 'rgba(251, 191, 36, 0.02)'; ctx.fillRect(left, top, midX - left, midY - top);
-                ctx.fillStyle = 'rgba(244, 63, 94, 0.02)'; ctx.fillRect(left, midY, midX - left, bottom - midY);
+                ctx.fillStyle = 'rgba(52, 211, 153, 0.025)'; ctx.fillRect(midX, top, right - midX, midY - top);
+                ctx.fillStyle = 'rgba(56, 189, 248, 0.025)'; ctx.fillRect(midX, midY, right - midX, bottom - midY);
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.025)'; ctx.fillRect(left, top, midX - left, midY - top);
+                ctx.fillStyle = 'rgba(244, 63, 94, 0.025)'; ctx.fillRect(left, midY, midX - left, bottom - midY);
 
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
                 ctx.beginPath();
                 ctx.moveTo(midX, top); ctx.lineTo(midX, bottom);
                 ctx.moveTo(left, midY); ctx.lineTo(right, midY);
@@ -277,11 +289,11 @@
                     data: db["20260828"].data,
                     backgroundColor: function(context) {
                         const val = context.raw;
-                        if (!val) return 'rgba(56, 189, 248, 0.75)';
-                        if (val.x >= 0 && val.y >= 0) return 'rgba(52, 211, 153, 0.75)';
-                        if (val.x >= 0 && val.y < 0)  return 'rgba(56, 189, 248, 0.75)';
-                        if (val.x < 0 && val.y >= 0)  return 'rgba(251, 191, 36, 0.75)';
-                        return 'rgba(244, 63, 94, 0.75)';
+                        if (!val) return 'rgba(56, 189, 248, 0.8)';
+                        if (val.x >= 0 && val.y >= 0) return 'rgba(52, 211, 153, 0.8)';
+                        if (val.x >= 0 && val.y < 0)  return 'rgba(56, 189, 248, 0.8)';
+                        if (val.x < 0 && val.y >= 0)  return 'rgba(251, 191, 36, 0.8)';
+                        return 'rgba(244, 63, 94, 0.8)';
                     },
                     borderColor: '#ffffff',
                     borderWidth: 1.5
@@ -291,8 +303,8 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { min: -20, max: 20, title: { display: true, text: '← 資金流出 | 資金流入 →', color: '#64748b', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.02)' }, ticks: { color: '#64748b' } },
-                    y: { min: -20, max: 20, title: { display: true, text: '← 動能減緩 | 動能加速 →', color: '#64748b', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.02)' }, ticks: { color: '#64748b' } }
+                    x: { min: -20, max: 20, title: { display: true, text: '← 資金流出 | 資金流入 →', color: '#64748b', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#64748b' } },
+                    y: { min: -20, max: 20, title: { display: true, text: '← 動能減緩 | 動能加速 →', color: '#64748b', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#64748b' } }
                 },
                 plugins: {
                     legend: { display: false },
@@ -311,41 +323,40 @@
             plugins: [quadrantBackgroundPlugin]
         });
 
-        // 渲染完整成分股與比例
+        // 渲染完整成分股與比例百分比
         function renderDrilldown(board) {
-            document.getElementById('selected-board-tag.innerText = board.name; // 修正選取標題
             document.getElementById('selected-board-tag').innerText = board.name;
             const container = document.getElementById('drilldown-content');
             
             let html = `
-                <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800 mb-2.5 flex justify-between items-center">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-2.5 flex justify-between items-center shadow-inner">
                     <div>
-                        <div class="text-[10px] text-slate-400">資金總流量 / 動能</div>
-                        <div class="text-xs font-bold text-slate-200">${board.x} / <span class="text-emerald-400">${board.y}</span></div>
+                        <div class="text-[10px] text-slate-400">總流量 / 動能</div>
+                        <div class="text-xs font-bold text-slate-200 font-mono">${board.x} / <span class="text-emerald-400">${board.y}</span></div>
                     </div>
                     <div class="text-right">
-                        <div class="text-[10px] text-slate-400">成分股檔數</div>
-                        <div class="text-xs font-bold text-blue-400">${board.stocks.length} 檔</div>
+                        <div class="text-[10px] text-slate-400">成分股總數</div>
+                        <div class="text-xs font-bold text-cyan-400 font-mono">${board.stocks.length} 檔</div>
                     </div>
                 </div>
                 <div class="text-[11px] font-bold text-slate-300 mb-1.5 flex justify-between items-center px-1">
                     <span>核心成分股清單</span>
-                    <span>貢獻金額 / 比例(%)</span>
+                    <span>貢獻金額 / 佔比</span>
                 </div>
-                <div class="space-y-1.5">
+                <div class="space-y-2">
             `;
 
             board.stocks.forEach(st => {
                 const isPos = st.val.includes('+');
-                const valCol = isPos ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20';
+                const valCol = isPos ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' : 'text-rose-400 bg-rose-500/10 border-rose-500/30';
                 
                 html += `
-                    <div class="bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/80 flex justify-between items-center hover:bg-slate-950/80 transition">
+                    <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center hover:border-cyan-500/50 transition">
                         <div>
                             <div class="text-slate-200 font-bold text-xs">${st.s}</div>
-                            <div class="text-[10px] text-slate-400">權重佔比: <strong class="text-blue-400">${st.pct}</strong></div>
+                            <div class="text-[10px] text-slate-400">權重佔比: <strong class="text-cyan-400 font-mono">${st.pct}</strong></div>
                         </div>
-                        <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold border ${valCol}">${st.val}</span>
+                        <span class="px-2 py-1 rounded-lg text-xs font-mono font-bold border ${valCol}">${st.val}</span>
                     </div>
                 `;
             });
@@ -359,7 +370,7 @@
             document.getElementById('market-status-title').className = `text-xs font-bold ${s.color} mb-1.5`;
             document.getElementById('market-status-desc').innerText = s.desc;
             document.getElementById('market-tide-index').innerText = s.index;
-            document.getElementById('market-tide-index').className = `text-sm font-black ${s.color}`;
+            document.getElementById('market-tide-index').className = `text-sm font-black ${s.color} font-mono`;
             document.getElementById('sentiment-icon').innerText = s.icon;
         }
 
@@ -382,15 +393,15 @@
             const btn = document.getElementById('trailBtn');
             if (showTrailMode) {
                 btn.innerHTML = "<span>📌</span> 關閉軌跡";
-                btn.className = "bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 text-xs px-3.5 py-2 rounded-xl transition font-medium shadow-sm border border-emerald-500/40 flex items-center gap-1.5";
+                btn.className = "bg-emerald-600/20 text-emerald-400 text-xs px-3.5 py-2 rounded-xl transition border border-emerald-500/40 flex items-center gap-1.5 font-medium shadow-sm";
                 updateTrailDatasets();
             } else {
                 btn.innerHTML = "<span>📌</span> 歷史軌跡";
-                btn.className = "bg-slate-900/80 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-2 rounded-xl transition border border-slate-700/80 font-medium shadow-sm flex items-center gap-1.5";
+                btn.className = "bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-2 rounded-xl transition border border-slate-700 font-medium shadow-sm flex items-center gap-1.5";
                 const date = document.getElementById('dateSelect').value;
                 tideBubbleChart.data.datasets = [{
                     label: '板塊資金', data: db[date].data,
-                    backgroundColor: (ctx) => ctx.raw?.x >= 0 && ctx.raw?.y >= 0 ? 'rgba(52, 211, 153, 0.75)' : 'rgba(56, 189, 248, 0.75)',
+                    backgroundColor: (ctx) => ctx.raw?.x >= 0 && ctx.raw?.y >= 0 ? 'rgba(52, 211, 153, 0.8)' : 'rgba(56, 189, 248, 0.8)',
                     borderColor: '#ffffff', borderWidth: 1.5
                 }];
                 tideBubbleChart.update();
