@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>《泊》TIDE TERMINAL V20.0 - 專家戰略與成分股矩陣終端</title>
+    <title>《泊》TIDE TERMINAL V21.0 - 專家戰略與動態聯動矩陣終端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -29,15 +29,15 @@
                     <span class="handwritten-title text-4xl md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 drop-shadow-[0_0_15px_rgba(6,182,212,0.4)]">《泊》</span>
                     <h1 class="text-xl md:text-2xl font-black tracking-widest text-white uppercase font-mono">TIDE TERMINAL</h1>
                 </div>
-                <p class="text-xs text-slate-400 tracking-wider mt-1">INSTITUTIONAL MACRO STRATEGY & EXPERT ASSET MATRIX V20.0</p>
+                <p class="text-xs text-slate-400 tracking-wider mt-1">MACRO STRATEGY & DYNAMIC ASSET MATRIX V21.0</p>
             </div>
         </div>
         
         <div class="bg-slate-950/90 px-5 py-3 rounded-2xl border border-slate-800 text-xs text-slate-300 flex items-center gap-3 shadow-inner">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <div>
-                <span class="text-cyan-400 font-bold block">核心防禦與成長矩陣已就緒</span>
-                <span class="text-[11px] text-slate-400">成分股權重透視・配息與報酬深度差異化</span>
+                <span class="text-cyan-400 font-bold block">總經分類與專家推薦已全面整合</span>
+                <span class="text-[11px] text-slate-400">點選分類/標的即時透視全成分與收益預估</span>
             </div>
         </div>
     </header>
@@ -45,167 +45,43 @@
     <!-- 主版面 -->
     <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
         
-        <!-- 左側主欄位：專家推薦前 5 檔深度解析（成分股、權重、配息與報酬差異化） (7 cols) -->
+        <!-- 左側主欄位：動態分類與成分股透視面板 (7 cols) -->
         <div class="lg:col-span-7 glass-card p-6 rounded-3xl space-y-5 flex flex-col justify-between">
             <div>
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-2">
-                    <span class="text-sm font-bold text-cyan-400 flex items-center gap-2 handwritten-title text-xl">
-                        ⭐ 專家推薦前 5 大核心戰略標的（全成分股與收益透視）
-                    </span>
-                    <span class="text-[10px] bg-slate-900 text-slate-400 px-3 py-1 rounded-xl border border-slate-800 font-mono">Verified Weights & Yields</span>
+                <!-- 分類與標題列 -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-3">
+                    <div>
+                        <span class="text-xs text-cyan-400 font-mono font-bold uppercase tracking-wider block mb-1">🎯 總經資產分類與專家推薦聯動檢視</span>
+                        <h2 id="currentCategoryTitle" class="text-lg font-bold text-white flex items-center gap-2">
+                            <span>00770 國泰北美科技</span>
+                            <span class="text-[10px] bg-blue-950 text-blue-400 px-2 py-0.5 rounded border border-blue-800 font-mono">美股科技核心</span>
+                        </h2>
+                    </div>
+                    <!-- 頂部快速分類切換 -->
+                    <div class="flex flex-wrap gap-1.5 text-[11px]">
+                        <button onclick="switchCategory('global', this)" class="cat-tab px-3 py-1.5 rounded-xl border border-blue-500/50 bg-blue-950/50 text-blue-300 font-bold transition">美股科技</button>
+                        <button onclick="switchCategory('tw', this)" class="cat-tab px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-white transition">台股大盤</button>
+                        <button onclick="switchCategory('div', this)" class="cat-tab px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-white transition">台股高息</button>
+                        <button onclick="switchCategory('defend', this)" class="cat-tab px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-white transition">防禦債券</button>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-4 mt-4 max-h-[620px] overflow-y-auto pr-2">
-                    
-                    <!-- 1. 00770 -->
-                    <div class="bg-slate-950/90 p-5 rounded-2xl border border-blue-500/40 space-y-3 transition hover:border-blue-400">
-                        <div class="flex flex-wrap justify-between items-center gap-2">
-                            <span class="font-bold text-base text-white flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>00770 國泰北美科技</span>
-                            <div class="flex items-center gap-1.5 text-xs font-mono">
-                                <span class="bg-blue-950/80 text-blue-400 px-2.5 py-1 rounded-lg border border-blue-800 font-bold">長期年化 +18.2%</span>
-                                <span class="bg-slate-900 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-800">年配息/滾存</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">追蹤標普北美科技行業指數，聚焦美股軟體與AI巨頭，資本利得爆發力極強。</p>
-                        
-                        <!-- 差異化收益與成分矩陣 -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                <span class="text-[11px] text-cyan-400 font-bold block">💰 收益與回報特徵</span>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>預估殖利率：</span><span class="font-mono text-white">無/資本增值為主</span></div>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>歷史夏普比率：</span><span class="font-mono text-cyan-400 font-bold">1.92 (極優)</span></div>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1.5">
-                                <span class="text-[11px] text-slate-400 font-bold block">📊 主要成分股與精確權重</span>
-                                <div class="grid grid-cols-2 gap-1 text-[11px]">
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">Microsoft</span><span class="text-blue-400 font-mono font-bold">10.2%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">Apple</span><span class="text-blue-400 font-mono font-bold">8.8%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">NVIDIA</span><span class="text-blue-400 font-mono font-bold">8.6%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">Broadcom</span><span class="text-blue-400 font-mono font-bold">7.5%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <!-- 動態載入的詳細卡片內容 -->
+                <div id="dynamicDetailCard" class="mt-4 space-y-4">
+                    <!-- 這裡會透過 JS 動態渲染目前選中標的的詳細資料與所有成分股 -->
+                </div>
+            </div>
 
-                    <!-- 2. 0050 -->
-                    <div class="bg-slate-950/90 p-5 rounded-2xl border border-slate-800 space-y-3 transition hover:border-slate-700">
-                        <div class="flex flex-wrap justify-between items-center gap-2">
-                            <span class="font-bold text-base text-white flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>0050 元大台灣50</span>
-                            <div class="flex items-center gap-1.5 text-xs font-mono">
-                                <span class="bg-blue-950/80 text-blue-400 px-2.5 py-1 rounded-lg border border-blue-800 font-bold">長期年化 +14.5%</span>
-                                <span class="bg-slate-900 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-800">半年度配息</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">代表台灣市值最大50家頂尖企業，護國神山核心配置，跟隨台灣經濟成長。</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                <span class="text-[11px] text-cyan-400 font-bold block">💰 收益與回報特徵</span>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>預估殖利率：</span><span class="font-mono text-white">約 3.0% ~ 3.5%</span></div>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>歷史夏普比率：</span><span class="font-mono text-cyan-400 font-bold">1.65 (穩健)</span></div>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1.5">
-                                <span class="text-[11px] text-slate-400 font-bold block">📊 主要成分股與精確權重</span>
-                                <div class="grid grid-cols-2 gap-1 text-[11px]">
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">台積電</span><span class="text-blue-400 font-mono font-bold">53.2%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">鴻海</span><span class="text-blue-400 font-mono font-bold">6.1%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">聯發科</span><span class="text-blue-400 font-mono font-bold">4.8%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">台達電</span><span class="text-blue-400 font-mono font-bold">2.5%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. 00919 -->
-                    <div class="bg-slate-950/90 p-5 rounded-2xl border border-slate-800 space-y-3 transition hover:border-slate-700">
-                        <div class="flex flex-wrap justify-between items-center gap-2">
-                            <span class="font-bold text-base text-white flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>00919 群益精選高息</span>
-                            <div class="flex items-center gap-1.5 text-xs font-mono">
-                                <span class="bg-emerald-950/80 text-emerald-400 px-2.5 py-1 rounded-lg border border-emerald-800 font-bold">長期年化 +10.2%</span>
-                                <span class="bg-emerald-900/30 text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-800">季配息 (高現金流)</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">精選高股息與強悍填息能力，專為追求穩定現金流與收益率的投資人打造。</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                <span class="text-[11px] text-emerald-400 font-bold block">💰 收益與回報特徵</span>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>預估殖利率：</span><span class="font-mono text-emerald-400 font-bold">約 10.0%</span></div>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>歷史夏普比率：</span><span class="font-mono text-cyan-400 font-bold">1.82 (高效率)</span></div>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1.5">
-                                <span class="text-[11px] text-slate-400 font-bold block">📊 主要成分股與精確權重</span>
-                                <div class="grid grid-cols-2 gap-1 text-[11px]">
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">聯電</span><span class="text-emerald-400 font-mono font-bold">10.5%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">長榮</span><span class="text-emerald-400 font-mono font-bold">8.5%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">聯詠</span><span class="text-emerald-400 font-mono font-bold">7.2%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">日月光投控</span><span class="text-emerald-400 font-mono font-bold">6.8%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 4. 00878 -->
-                    <div class="bg-slate-950/90 p-5 rounded-2xl border border-slate-800 space-y-3 transition hover:border-slate-700">
-                        <div class="flex flex-wrap justify-between items-center gap-2">
-                            <span class="font-bold text-base text-white flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>00878 國泰永續高股息</span>
-                            <div class="flex items-center gap-1.5 text-xs font-mono">
-                                <span class="bg-emerald-950/80 text-emerald-400 px-2.5 py-1 rounded-lg border border-emerald-800 font-bold">長期年化 +9.8%</span>
-                                <span class="bg-emerald-900/30 text-emerald-300 px-2.5 py-1 rounded-lg border border-emerald-800">季配息 (抗震防禦)</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">結合 ESG 篩選機制的國民級抗震高股息 ETF，成分股多為產業龍頭，波動度低。</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                <span class="text-[11px] text-emerald-400 font-bold block">💰 收益與回報特徵</span>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>預估殖利率：</span><span class="font-mono text-emerald-400 font-bold">約 7.5%</span></div>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>歷史夏普比率：</span><span class="font-mono text-cyan-400 font-bold">1.78 (極佳防禦)</span></div>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1.5">
-                                <span class="text-[11px] text-slate-400 font-bold block">📊 主要成分股與精確權重</span>
-                                <div class="grid grid-cols-2 gap-1 text-[11px]">
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">聯發科</span><span class="text-emerald-400 font-mono font-bold">6.2%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">華碩</span><span class="text-emerald-400 font-mono font-bold">5.8%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">大聯大</span><span class="text-emerald-400 font-mono font-bold">5.5%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">廣達</span><span class="text-emerald-400 font-mono font-bold">5.2%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 5. 00720B -->
-                    <div class="bg-slate-950/90 p-5 rounded-2xl border border-slate-800 space-y-3 transition hover:border-slate-700">
-                        <div class="flex flex-wrap justify-between items-center gap-2">
-                            <span class="font-bold text-base text-white flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>00720B 元大美公債20年</span>
-                            <div class="flex items-center gap-1.5 text-xs font-mono">
-                                <span class="bg-amber-950/80 text-amber-400 px-2.5 py-1 rounded-lg border border-amber-800 font-bold">長期年化 +5.5%</span>
-                                <span class="bg-amber-900/30 text-amber-300 px-2.5 py-1 rounded-lg border border-amber-800">季配息 (降息避險)</span>
-                            </div>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">美國 20 年期以上長天期投資級優質公債，降息循環時享有強勁資本利得與穩定配息。</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1">
-                                <span class="text-[11px] text-amber-400 font-bold block">💰 收益與回報特徵</span>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>預估殖利率：</span><span class="font-mono text-amber-400 font-bold">約 4.5% ~ 5.0%</span></div>
-                                <div class="text-[11px] text-slate-300 flex justify-between"><span>歷史夏普比率：</span><span class="font-mono text-cyan-400 font-bold">1.45 (避險配置)</span></div>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1.5">
-                                <span class="text-[11px] text-slate-400 font-bold block">📊 主要成分與精確權重</span>
-                                <div class="grid grid-cols-2 gap-1 text-[11px]">
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">美國政府長債</span><span class="text-amber-400 font-mono font-bold">100.0%</span></div>
-                                    <div class="flex justify-between bg-slate-950 p-1 rounded"><span class="text-slate-300">信評等級</span><span class="text-amber-400 font-mono font-bold">AAA 頂級</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+            <!-- 下方分類清單快速切換按鈕群 -->
+            <div class="pt-3 border-t border-slate-800/80">
+                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">快速檢索該分類下所有專家推薦標的：</div>
+                <div id="categoryTickerButtons" class="flex flex-wrap gap-2">
+                    <!-- 動態帶入該分類的標的按鈕 -->
                 </div>
             </div>
         </div>
 
-        <!-- 右側主欄位：即時互動氣泡矩陣與分類切換 (5 cols) -->
+        <!-- 右側主欄位：即時互動氣泡矩陣與控制台 (5 cols) -->
         <div class="lg:col-span-5 glass-card p-6 rounded-3xl flex flex-col justify-between space-y-5">
             <div>
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3.5">
@@ -231,16 +107,9 @@
                 </div>
             </div>
 
-            <!-- 分類切換按鈕區 -->
-            <div>
-                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2.5">點擊切換總經資產分類：</div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
-                    <button onclick="filterMatrix('all', this)" class="cat-btn tab-active py-2.5 px-3 rounded-xl border border-slate-800 transition font-bold text-center">全部標的</button>
-                    <button onclick="filterMatrix('global', this)" class="cat-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 py-2.5 px-3 rounded-xl transition text-center">美股科技</button>
-                    <button onclick="filterMatrix('tw', this)" class="cat-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 py-2.5 px-3 rounded-xl transition text-center">台股大盤</button>
-                    <button onclick="filterMatrix('div', this)" class="cat-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 py-2.5 px-3 rounded-xl transition text-center">台股高息</button>
-                    <button onclick="filterMatrix('defend', this)" class="cat-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 py-2.5 px-3 rounded-xl transition text-center">防禦債券</button>
-                </div>
+            <!-- 系統狀態提示 -->
+            <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
+                💡 <span class="text-cyan-400 font-bold">操作提示：</span>點擊上方分類標籤可切換總經資產板塊，點擊氣泡矩陣中的任一標的或下方按鈕，左側即可同步展開該標的的完整成分股與收益細節。
             </div>
         </div>
 
@@ -274,11 +143,11 @@
                     </div>
                     <div>
                         <label class="text-[11px] text-slate-400 block mb-1">年化報酬(%)</label>
-                        <input type="number" step="0.1" id="simRate" value="18.2" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-emerald-400 text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 focus:outline-none font-mono font-bold">
+                        <input type="number" step="0.1" id="simRate" value="18.2" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-emerald-400 text-xs px-3 py-2.5 rounded-xl border border-slate-700 focus:outline-none font-mono font-bold">
                     </div>
                     <div>
                         <label class="text-[11px] text-slate-400 block mb-1">通膨率(%)</label>
-                        <input type="number" step="0.1" id="simInflation" value="2.0" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-rose-400 text-xs px-3.5 py-2.5 rounded-xl border border-slate-700 focus:outline-none font-mono font-bold">
+                        <input type="number" step="0.1" id="simInflation" value="2.0" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-rose-400 text-xs px-3 py-2.5 rounded-xl border border-slate-700 focus:outline-none font-mono font-bold">
                     </div>
                 </div>
                 <div class="flex items-center justify-between text-[11px] pt-1.5 bg-slate-950/90 p-3.5 rounded-xl border border-slate-800">
@@ -307,16 +176,96 @@
     <script>
         Chart.register(ChartDataLabels);
 
+        // 完整專家推薦資料庫（包含分類、完整成分股、權重、配息與殖利率）
         const fullMatrixDb = [
-            { ticker: '00770', x: 18.2, y: 1.92, r: 30, category: 'global', name: '00770 國泰北美科技', returnRate: 18.2, desc: '追蹤標普北美科技行業指數，聚焦美股軟體與AI巨頭。' },
-            { ticker: '00757', x: 19.5, y: 1.68, r: 28, category: 'global', name: '00757 統一FANG+', returnRate: 19.5, desc: '集中重壓全球尖牙與頂尖創新科技巨頭。' },
-            { ticker: '0050', x: 14.5, y: 1.65, r: 30, category: 'tw', name: '0050 元大台灣50', returnRate: 14.5, desc: '代表台灣市值最大的 50 家頂尖企業與護國神山。' },
-            { ticker: '006208', x: 14.8, y: 1.66, r: 28, category: 'tw', name: '006208 富邦台50', returnRate: 14.8, desc: '內扣經理費更低的台50指數追蹤替代首選。' },
-            { ticker: '00919', x: 10.2, y: 1.82, r: 28, category: 'div', name: '00919 群益精選高息', returnRate: 10.2, desc: '精選高股息與填息能力強悍的台股高息標的。' },
-            { ticker: '00878', x: 9.8, y: 1.78, r: 26, category: 'div', name: '00878 國泰永續高股息', returnRate: 9.8, desc: '結合 ESG 篩選機制的國民級抗震高股息 ETF。' },
-            { ticker: '00929', x: 10.5, y: 1.72, r: 26, category: 'div', name: '00929 復華台灣科技優息', returnRate: 10.5, desc: '台灣首檔純科技股月配高息 ETF。' },
-            { ticker: '00720B', x: 5.5, y: 1.45, r: 28, category: 'defend', name: '00720B 元大美公債20年', returnRate: 5.5, desc: '美國 20 年期以上長天期投資級優質公債。' },
-            { ticker: '00751B', x: 5.8, y: 1.48, r: 26, category: 'defend', name: '00751B 元大美債20年', returnRate: 5.8, desc: '規模龐大的美國20年期長天期公債 ETF。' }
+            { 
+                ticker: '00770', x: 18.2, y: 1.92, r: 30, category: 'global', categoryName: '美股科技核心', name: '00770 國泰北美科技', returnRate: 18.2, yieldStr: '無 / 資本增值為主', payout: '年配息/滾存', desc: '追蹤標普北美科技行業指數，聚焦美股軟體與AI巨頭，資本利得爆發力極強。',
+                holdings: [
+                    { name: 'Microsoft (微軟)', weight: '10.2%' },
+                    { name: 'Apple (蘋果)', weight: '8.8%' },
+                    { name: 'NVIDIA (輝達)', weight: '8.6%' },
+                    { name: 'Broadcom (博通)', weight: '7.5%' },
+                    { name: 'Amazon (亞馬遜)', weight: '6.4%' },
+                    { name: 'Alphabet (谷歌)', weight: '5.8%' }
+                ]
+            },
+            { 
+                ticker: '00757', x: 19.5, y: 1.68, r: 28, category: 'global', categoryName: '美股科技核心', name: '00757 統一FANG+', returnRate: 19.5, yieldStr: '無 / 資本增值為主', payout: '年配息', desc: '集中重壓全球尖牙與頂尖創新科技巨頭，爆發力與波動度均高。',
+                holdings: [
+                    { name: 'NVIDIA (輝達)', weight: '10.5%' },
+                    { name: 'Meta (臉書)', weight: '10.2%' },
+                    { name: 'Microsoft (微軟)', weight: '10.0%' },
+                    { name: 'Amazon (亞馬遜)', weight: '9.8%' },
+                    { name: 'Apple (蘋果)', weight: '9.5%' },
+                    { name: 'Alphabet (谷歌)', weight: '9.2%' }
+                ]
+            },
+            { 
+                ticker: '0050', x: 14.5, y: 1.65, r: 30, category: 'tw', categoryName: '台股權值大盤', name: '0050 元大台灣50', returnRate: 14.5, yieldStr: '約 3.0% ~ 3.5%', payout: '半年度配息', desc: '代表台灣市值最大50家頂尖企業，護國神山核心配置，跟隨台灣經濟成長。',
+                holdings: [
+                    { name: '台積電 (2330)', weight: '53.2%' },
+                    { name: '鴻海 (2317)', weight: '6.1%' },
+                    { name: '聯發科 (2454)', weight: '4.8%' },
+                    { name: '台達電 (2308)', weight: '2.5%' },
+                    { name: '富邦金 (2881)', weight: '2.2%' },
+                    { name: '廣達 (2382)', weight: '2.0%' }
+                ]
+            },
+            { 
+                ticker: '006208', x: 14.8, y: 1.66, r: 28, category: 'tw', categoryName: '台股權值大盤', name: '006208 富邦台50', returnRate: 14.8, yieldStr: '約 3.0% ~ 3.5%', payout: '半年度配息', desc: '內扣經理費更低的台50指數追蹤替代首選，長期報酬緊貼大盤。',
+                holdings: [
+                    { name: '台積電 (2330)', weight: '53.2%' },
+                    { name: '鴻海 (2317)', weight: '6.1%' },
+                    { name: '聯發科 (2454)', weight: '4.8%' },
+                    { name: '台達電 (2308)', weight: '2.5%' },
+                    { name: '富邦金 (2881)', weight: '2.2%' }
+                ]
+            },
+            { 
+                ticker: '00919', x: 10.2, y: 1.82, r: 28, category: 'div', categoryName: '台股高息現金流', name: '00919 群益精選高息', returnRate: 10.2, yieldStr: '約 10.0%', payout: '季配息 (高現金流)', desc: '精選高股息與強悍填息能力，專為追求穩定現金流與收益率的投資人打造。',
+                holdings: [
+                    { name: '聯電 (2303)', weight: '10.5%' },
+                    { name: '長榮 (2603)', weight: '8.5%' },
+                    { name: '聯詠 (3034)', weight: '7.2%' },
+                    { name: '日月光投控 (3711)', weight: '6.8%' },
+                    { name: '中美晶 (5483)', weight: '5.5%' },
+                    { name: '力成 (6239)', weight: '5.2%' }
+                ]
+            },
+            { 
+                ticker: '00878', x: 9.8, y: 1.78, r: 26, category: 'div', categoryName: '台股高息現金流', name: '00878 國泰永續高股息', returnRate: 9.8, yieldStr: '約 7.5%', payout: '季配息 (抗震防禦)', desc: '結合 ESG 篩選機制的國民級抗震高股息 ETF，成分股多為產業龍頭。',
+                holdings: [
+                    { name: '聯發科 (2454)', weight: '6.2%' },
+                    { name: '華碩 (2357)', weight: '5.8%' },
+                    { name: '大聯大 (3702)', weight: '5.5%' },
+                    { name: '廣達 (2382)', weight: '5.2%' },
+                    { name: '聯電 (2303)', weight: '4.9%' }
+                ]
+            },
+            { 
+                ticker: '00929', x: 10.5, y: 1.72, r: 26, category: 'div', categoryName: '台股高息現金流', name: '00929 復華台灣科技優息', returnRate: 10.5, yieldStr: '約 7.8%', payout: '月配息 (現金流)', desc: '台灣首檔純科技股月配高息 ETF，兼顧科技成長與定期配息。',
+                holdings: [
+                    { name: '聯發科 (2454)', weight: '5.5%' },
+                    { name: '日月光投控 (3711)', weight: '5.2%' },
+                    { name: '聯電 (2303)', weight: '4.8%' },
+                    { name: '京元電子 (2449)', weight: '4.5%' },
+                    { name: '瑞昱 (2379)', weight: '4.2%' }
+                ]
+            },
+            { 
+                ticker: '00720B', x: 5.5, y: 1.45, r: 28, category: 'defend', categoryName: '防禦債券與REITs', name: '00720B 元大美公債20年', returnRate: 5.5, yieldStr: '約 4.5% ~ 5.0%', payout: '季配息 (降息避險)', desc: '美國 20 年期以上長天期投資級優質公債，降息循環時享有強勁資本利得。',
+                holdings: [
+                    { name: '美國政府長天期公債', weight: '100.0%' },
+                    { name: '信評等級：AAA 頂級', weight: 'Safe' }
+                ]
+            },
+            { 
+                ticker: '00751B', x: 5.8, y: 1.48, r: 26, category: 'defend', categoryName: '防禦債券與REITs', name: '00751B 元大美債20年', returnRate: 5.8, yieldStr: '約 4.6% ~ 5.1%', payout: '季配息 (降息避險)', desc: '規模龐大的美國20年期長天期公債 ETF，提供資產對沖與穩定收息。',
+                holdings: [
+                    { name: '美國政府長天期公債', weight: '100.0%' },
+                    { name: '信評等級：AAA 頂級', weight: 'Safe' }
+                ]
+            }
         ];
 
         const ctx = document.getElementById('tideBubbleChart').getContext('2d');
@@ -348,8 +297,7 @@
                 onClick: (event, elements) => {
                     if (elements.length > 0) {
                         const item = tideBubbleChart.data.datasets[0].data[elements[0].index];
-                        activeSelectedItem = item;
-                        updateSelectionInfo(item);
+                        selectItem(item);
                     }
                 }
             }
@@ -376,9 +324,103 @@
             }
         });
 
+        function selectItem(item) {
+            activeSelectedItem = item;
+            updateSelectionInfo(item);
+            renderDetailCard(item);
+            highlightCategoryButton(item.category);
+            updateCategoryTickerButtons(item.category);
+        }
+
         function updateSelectionInfo(item) {
             document.getElementById('selected-board-tag').innerHTML = `<span>目前選取：${item.name}</span><span class="text-[10px] text-cyan-400 font-mono">選定標的</span>`;
             document.getElementById('drilldown-summary').innerText = `預估年化：+${item.returnRate}% | 夏普：${item.y} | ${item.desc}`;
+        }
+
+        function renderDetailCard(item) {
+            document.getElementById('currentCategoryTitle').innerHTML = `
+                <span>${item.name}</span>
+                <span class="text-[10px] bg-blue-950 text-blue-400 px-2 py-0.5 rounded border border-blue-800 font-mono">${item.categoryName}</span>
+            `;
+
+            let holdingsHtml = item.holdings.map(h => `
+                <div class="flex justify-between bg-slate-900/90 p-2 rounded-xl border border-slate-800 text-xs">
+                    <span class="text-slate-200 font-medium">${h.name}</span>
+                    <span class="text-cyan-400 font-mono font-bold">${h.weight}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('dynamicDetailCard').innerHTML = `
+                <div class="bg-slate-950/90 p-4 rounded-2xl border border-blue-500/40 space-y-3">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <span class="text-xs text-slate-300 leading-relaxed">${item.desc}</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-800/80">
+                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-1.5">
+                            <span class="text-[11px] text-cyan-400 font-bold block">💰 收益與回報預估特徵</span>
+                            <div class="text-[11px] text-slate-300 flex justify-between"><span>長期年化報酬：</span><span class="font-mono text-emerald-400 font-bold">+${item.returnRate}%</span></div>
+                            <div class="text-[11px] text-slate-300 flex justify-between"><span>預估殖利率：</span><span class="font-mono text-white">${item.yieldStr}</span></div>
+                            <div class="text-[11px] text-slate-300 flex justify-between"><span>配息頻率：</span><span class="font-mono text-cyan-300">${item.payout}</span></div>
+                            <div class="text-[11px] text-slate-300 flex justify-between"><span>歷史夏普比率：</span><span class="font-mono text-cyan-400 font-bold">${item.y}</span></div>
+                        </div>
+                        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800/80 space-y-2">
+                            <span class="text-[11px] text-slate-400 font-bold block">📊 完整成分股與精確權重清單</span>
+                            <div class="grid grid-cols-1 gap-1.5 max-h-[140px] overflow-y-auto pr-1">
+                                ${holdingsHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function switchCategory(catKey, btnElement) {
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                btn.className = "cat-tab px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-white transition";
+            });
+            btnElement.className = "cat-tab px-3 py-1.5 rounded-xl border border-blue-500/50 bg-blue-950/50 text-blue-300 font-bold transition";
+
+            const firstMatch = fullMatrixDb.find(i => i.category === catKey);
+            if (firstMatch) {
+                selectItem(firstMatch);
+            }
+
+            let filtered = fullMatrixDb;
+            if (catKey !== 'all') {
+                filtered = fullMatrixDb.filter(i => i.category === catKey);
+            }
+            tideBubbleChart.data.datasets[0].data = filtered;
+            tideBubbleChart.update();
+        }
+
+        function highlightCategoryButton(catKey) {
+            document.querySelectorAll('.cat-tab').forEach(btn => {
+                btn.className = "cat-tab px-3 py-1.5 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:text-white transition";
+                if ((catKey === 'global' && btn.innerText.includes('美股科技')) ||
+                    (catKey === 'tw' && btn.innerText.includes('台股大盤')) ||
+                    (catKey === 'div' && btn.innerText.includes('台股高息')) ||
+                    (catKey === 'defend' && btn.innerText.includes('防禦債券'))) {
+                    btn.className = "cat-tab px-3 py-1.5 rounded-xl border border-blue-500/50 bg-blue-950/50 text-blue-300 font-bold transition";
+                }
+            });
+        }
+
+        function updateCategoryTickerButtons(catKey) {
+            const matches = fullMatrixDb.filter(i => i.category === catKey);
+            const container = document.getElementById('categoryTickerButtons');
+            container.innerHTML = matches.map(m => `
+                <button onclick="selectTicker('${m.ticker}')" class="px-3 py-1.5 rounded-xl border ${m.ticker === activeSelectedItem.ticker ? 'bg-blue-600 text-slate-950 font-bold border-blue-400' : 'bg-slate-900 text-slate-300 border-slate-800 hover:border-slate-600'} text-xs font-mono transition">
+                    ${m.name}
+                </button>
+            `).join('');
+        }
+
+        function selectTicker(ticker) {
+            const found = fullMatrixDb.find(i => i.ticker === ticker);
+            if (found) {
+                selectItem(found);
+            }
         }
 
         function copyTickerToSim() {
@@ -395,24 +437,9 @@
             const found = fullMatrixDb.find(e => e.ticker === inputVal);
             if (found) {
                 document.getElementById('simRate').value = found.returnRate;
-                activeSelectedItem = found;
-                updateSelectionInfo(found);
+                selectItem(found);
             }
             runCustomSimulation();
-        }
-
-        function filterMatrix(category, btnElement) {
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.className = "cat-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 py-2.5 px-3 rounded-xl transition text-center";
-            });
-            btnElement.className = "cat-btn tab-active py-2.5 px-3 rounded-xl border border-slate-800 transition font-bold text-center";
-
-            let filtered = fullMatrixDb;
-            if (category !== 'all') {
-                filtered = fullMatrixDb.filter(i => i.category === category);
-            }
-            tideBubbleChart.data.datasets[0].data = filtered;
-            tideBubbleChart.update();
         }
 
         function runCustomSimulation() {
@@ -465,8 +492,9 @@
             compoundMiniChart.update();
         }
 
+        // 初始化載入預設項目
+        selectItem(fullMatrixDb[0]);
         runCustomSimulation();
-        updateSelectionInfo(fullMatrixDb[0]);
     </script>
 </body>
 </html>
