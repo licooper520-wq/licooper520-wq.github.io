@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>《泊》TIDE TERMINAL V27.0 - 全球多區域資產與持倉解析終端</title>
+    <title>《泊》TIDE TERMINAL V28.0 - 全球資金潮汐與多區域資產解析終端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -16,6 +16,8 @@
         ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
         .tab-active { background: #2563eb !important; color: #ffffff !important; border-color: #3b82f6 !important; }
         .modal-backdrop { background: rgba(11, 15, 25, 0.85); backdrop-filter: blur(6px); }
+        .tide-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-6 flex flex-col items-center selection:bg-blue-600 selection:text-white">
@@ -23,20 +25,50 @@
     <!-- 頂部終端導覽 -->
     <header class="w-full max-w-7xl mb-5 bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div class="flex items-center gap-3">
-            <span class="text-xs font-mono font-bold bg-blue-600 text-white px-2.5 py-1 rounded">TIDE V27.0</span>
-            <h1 class="text-sm md:text-base font-bold tracking-tight text-white">全球多區域資產與持倉解析終端</h1>
+            <span class="text-xs font-mono font-bold bg-blue-600 text-white px-2.5 py-1 rounded">TIDE V28.0</span>
+            <h1 class="text-sm md:text-base font-bold tracking-tight text-white">全球資金潮汐與多區域資產解析終端</h1>
         </div>
         <div class="flex items-center gap-2 text-xs bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 font-mono text-slate-400">
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>依市值規模排序・真實揭露</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 tide-pulse"></span>
+            <span>資金潮汐追蹤中・即時板塊輪動</span>
         </div>
     </header>
 
     <!-- 主版面 -->
     <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-5 mb-5">
         
-        <!-- 左側：標的總覽與多區域篩選 (7 cols) -->
-        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col justify-between space-y-3">
+        <!-- 左側：資金潮汐儀表板與標的總覽 (7 cols) -->
+        <div class="lg:col-span-7 bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col justify-between space-y-4">
+            
+            <!-- 核心亮點：全球資金潮汐流向面板 (Tide Flow) -->
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
+                <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
+                    <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                        <span class="text-blue-400">🌊</span> 全球資金潮汐與板塊輪動 (Capital Tide)
+                    </span>
+                    <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-900">淨流入導向</span>
+                </div>
+                <!-- 動態潮汐狀態條 -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                        <div class="text-[10px] text-slate-400">最強資金吸納</div>
+                        <div class="font-bold text-blue-400 mt-0.5">美國市場 / AI科技</div>
+                    </div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                        <div class="text-[10px] text-slate-400">亞太動能焦點</div>
+                        <div class="font-bold text-emerald-400 mt-0.5">台股半導體 / 韓國記憶體</div>
+                    </div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                        <div class="text-[10px] text-slate-400">政策轉向受惠</div>
+                        <div class="font-bold text-amber-400 mt-0.5">日本市場 (東證)</div>
+                    </div>
+                    <div class="bg-slate-900 p-2 rounded border border-slate-800">
+                        <div class="text-[10px] text-slate-400">防禦資金錨</div>
+                        <div class="font-bold text-slate-300 mt-0.5">長天期公債</div>
+                    </div>
+                </div>
+            </div>
+
             <div>
                 <!-- 分類頁籤（依市場規模由大到小排序） -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-3 gap-2">
@@ -55,7 +87,7 @@
                 </div>
 
                 <!-- 標的清單 -->
-                <div id="expertCardContainer" class="grid grid-cols-1 gap-2.5 mt-3 max-h-[540px] overflow-y-auto pr-1">
+                <div id="expertCardContainer" class="grid grid-cols-1 gap-2.5 mt-3 max-h-[460px] overflow-y-auto pr-1">
                     <!-- 動態渲染 -->
                 </div>
             </div>
@@ -75,7 +107,7 @@
 
                 <div class="space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800">
                     <div id="selected-board-tag" class="font-bold text-slate-200 flex justify-between">
-                        <span>選定：00646 身份/S&P500</span>
+                        <span>選定：00646 元大S&P500</span>
                         <span class="text-blue-400 mono">Active</span>
                     </div>
                     <div id="drilldown-summary" class="text-slate-400 text-[11px] leading-relaxed border-t border-slate-800 pt-2">
@@ -163,7 +195,7 @@
     <script>
         Chart.register(ChartDataLabels);
 
-        // 全球資產資料庫：依市場總市值規模由大到小排序（美國 -> 全球股票 -> 全球科技 -> 台股大盤 -> 高息現金流 -> 日本 -> 韓國 -> 債券）
+        // 全球資產資料庫：依市場總市值規模由大到小排序
         const fullMatrixDb = [
             // 1. 美國市場 (全球最大資本市場)
             { 
@@ -185,7 +217,7 @@
                 ],
                 totalNote: '聚焦美股大盤中具備高成長動能之標的'
             },
-            // 2. 全球股票 (MSCI World / 跨國成熟市場)
+            // 2. 全球股票 (MSCI World)
             { 
                 ticker: '00662', x: 13.8, y: 1.62, r: 25, category: 'global_stock', categoryName: '全球股票', name: '00662 富邦NASDAQ', returnRate: 13.8, yieldStr: '資本增值', payout: '年度配息', desc: '聚焦美國納斯達克 100 指數，涵蓋科技與創新成長股。',
                 holdings: [
