@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CYBER TIDE TERMINAL V17.0 - 20檔完整機構級宏觀與稅負戰略終端</title>
+    <title>《泊》TIDE TERMINAL V18.0 - 專家推薦前5檔與巨集戰略終端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.8); }
         ::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.4); border-radius: 4px; }
         .cyber-glow { box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.2); }
         .glass-card { background: rgba(15, 23, 42, 0.94); backdrop-filter: blur(16px); border: 1px solid rgba(51, 65, 85, 0.6); }
+        .handwritten-title { font-family: 'ZCOOL KuaiLe', 'Noto Serif TC', cursive, sans-serif; letter-spacing: 2px; }
     </style>
 </head>
 <body class="bg-[#020617] text-slate-100 min-h-screen p-3 md:p-5 flex flex-col items-center font-sans selection:bg-blue-500 selection:text-slate-950">
@@ -20,182 +22,216 @@
     <!-- 頂部導覽列 -->
     <header class="w-full max-w-7xl mb-4 glass-card p-4 rounded-2xl shadow-2xl cyber-glow flex flex-col lg:flex-row justify-between items-center gap-4">
         <div class="flex items-center gap-3">
-            <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-3 rounded-xl text-slate-950 font-black text-xl shadow-lg shadow-blue-500/30">🌐</div>
+            <div class="bg-gradient-to-tr from-blue-600 to-cyan-400 p-3 rounded-xl text-slate-950 font-black text-xl shadow-lg shadow-blue-500/30">🌊</div>
             <div>
-                <h1 class="text-xl font-black tracking-wider flex items-center gap-2 text-white">
-                    CYBER TIDE <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/40 tracking-widest font-mono">V17.0 FULL 20-ETF PRO</span>
+                <h1 class="text-2xl font-black tracking-wider flex items-center gap-3 text-white">
+                    <span class="handwritten-title text-3xl text-cyan-400">《泊》</span> TIDE TERMINAL 
+                    <span class="text-[10px] bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full border border-blue-500/40 tracking-widest font-mono">V18.0 TOP 5 EXPERT ED.</span>
                 </h1>
-                <p class="text-[11px] text-slate-400">Institutional Macro Stress-Testing & Full-Spectrum Asset Matrix</p>
+                <p class="text-[11px] text-slate-400">Institutional Macro Stress-Testing & Expert Top-5 Portfolio Analysis</p>
             </div>
         </div>
         
         <div class="bg-slate-950/80 px-3.5 py-2 rounded-xl border border-slate-800 text-[11px] text-slate-300 flex items-center gap-2">
-            <span class="text-cyan-400 font-bold">✨ 資料庫全面擴充：</span>
-            <span>內建 20 檔完整校正標的（台/美股、高息、債券、創新科技）。</span>
+            <span class="text-cyan-400 font-bold">🎯 專家嚴選：</span>
+            <span>精選前 5 大核心戰略標的，成分股與權重全數透視。</span>
         </div>
     </header>
 
     <!-- 主版面 -->
-    <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
         
-        <!-- 左側欄：智慧複利模擬器 -->
-        <div class="space-y-4 flex flex-col lg:col-span-1">
-            <div class="glass-card p-4 rounded-2xl space-y-4 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
-                        <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">🧮 巨集複利與總經模擬</span>
-                        <span id="activeSimBadge" class="text-[9px] font-mono text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">00770</span>
-                    </div>
-                    
-                    <div class="space-y-3">
-                        <div>
-                            <label class="text-[11px] text-slate-400 block mb-1">輸入 ETF 股號</label>
-                            <input type="text" id="simTicker" value="00770" oninput="onTickerInputChange()" class="w-full bg-slate-900 text-cyan-400 text-xs px-3 py-2 rounded-lg border border-slate-700 focus:outline-none font-mono">
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div>
-                                <label class="text-[11px] text-slate-400 block mb-1">每月投入(萬)</label>
-                                <input type="number" id="simMonthly" value="3" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-blue-400 text-xs px-2.5 py-2 rounded-lg border border-slate-700 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="text-[11px] text-slate-400 block mb-1">年期(年)</label>
-                                <input type="number" id="simYears" value="10" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-amber-400 text-xs px-2.5 py-2 rounded-lg border border-slate-700 focus:outline-none">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-[11px] text-slate-400 block mb-1">預估年化報酬率 (%)</label>
-                            <input type="number" step="0.1" id="simRate" value="18.2" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-emerald-400 text-xs px-3 py-2 rounded-lg border border-slate-700 focus:outline-none font-mono">
-                        </div>
+        <!-- 左側與中間：專家推薦前 5 檔深度解析（成分股與權重全部列出） -->
+        <div class="lg:col-span-2 glass-card p-4 rounded-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <span class="text-xs font-bold text-cyan-400 flex items-center gap-1.5 handwritten-title text-sm">
+                    ⭐ 專家推薦前 5 檔核心戰略標的（全成分股與權重透視）
+                </span>
+                <span class="text-[10px] text-slate-400 font-mono">Verified Portfolio Weights</span>
+            </div>
 
-                        <!-- 進階總經與稅負開關 -->
-                        <div class="pt-2 border-t border-slate-800 space-y-2">
-                            <div class="flex justify-between items-center text-[11px]">
-                                <span class="text-slate-400">預估年通膨率 (%)</span>
-                                <input type="number" step="0.1" id="simInflation" value="2.0" oninput="runCustomSimulation()" class="w-20 bg-slate-900 text-rose-400 text-xs px-2 py-1 rounded border border-slate-700 text-right font-mono">
-                            </div>
-                            <div class="flex justify-between items-center text-[11px]">
-                                <span class="text-slate-400" title="包含二代健保補充保費及海外所得基本稅額">扣除稅負與摩擦成本</span>
-                                <input type="checkbox" id="simTaxToggle" onchange="runCustomSimulation()" class="w-4 h-4 accent-blue-500 rounded cursor-pointer">
-                            </div>
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[580px] overflow-y-auto pr-1">
+                <!-- 1. 00770 -->
+                <div class="bg-slate-950/90 p-3.5 rounded-xl border border-blue-500/30 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-white">00770 國泰北美科技</span>
+                        <span class="text-xs font-mono text-cyan-400 bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">年化 18.2%</span>
                     </div>
-
-                    <div id="customSimResult" class="mt-3 bg-slate-950/90 p-3 rounded-xl border border-slate-800 text-[11px] space-y-1.5 font-mono">
-                        <!-- 動態產出 -->
+                    <p class="text-[11px] text-slate-300 leading-relaxed">聚焦北美軟體與AI巨頭，具備強悍的長期資本利得爆發力。</p>
+                    <div class="space-y-1 pt-1 border-t border-slate-800">
+                        <div class="text-[10px] text-slate-400 font-bold">主要成分股與權重：</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px]">
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">Microsoft</span><span class="text-blue-400 font-mono">10.2%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">Apple</span><span class="text-blue-400 font-mono">8.8%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">NVIDIA</span><span class="text-blue-400 font-mono">8.6%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">Broadcom</span><span class="text-blue-400 font-mono">7.5%</span></div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 雙軌資產增長趨勢圖（名目 vs 實質購買力） -->
-                <div class="mt-3 pt-3 border-t border-slate-800">
-                    <div class="text-[10px] text-slate-400 font-bold mb-1 flex justify-between">
-                        <span>📈 名目 vs 實質購買力曲線</span>
-                        <span class="text-rose-400 font-normal">扣除通膨</span>
+                <!-- 2. 0050 -->
+                <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-white">0050 元大台灣50</span>
+                        <span class="text-xs font-mono text-blue-400 bg-blue-950/80 px-2 py-0.5 rounded border border-blue-800">年化 14.5%</span>
                     </div>
-                    <div class="relative w-full h-[140px]">
-                        <canvas id="compoundMiniChart"></canvas>
+                    <p class="text-[11px] text-slate-300 leading-relaxed">代表台灣市值最大50家頂尖企業，護國神山核心配置。</p>
+                    <div class="space-y-1 pt-1 border-t border-slate-800">
+                        <div class="text-[10px] text-slate-400 font-bold">主要成分股與權重：</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px]">
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">台積電</span><span class="text-blue-400 font-mono">53.2%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">鴻海</span><span class="text-blue-400 font-mono">6.1%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">聯發科</span><span class="text-blue-400 font-mono">4.8%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">台達電</span><span class="text-blue-400 font-mono">2.5%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. 00919 -->
+                <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-white">00919 群益精選高息</span>
+                        <span class="text-xs font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">殖利率 ~10%</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-relaxed">精選高股息與強悍填息能力，提供穩健現金流。</p>
+                    <div class="space-y-1 pt-1 border-t border-slate-800">
+                        <div class="text-[10px] text-slate-400 font-bold">主要成分股與權重：</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px]">
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">聯電</span><span class="text-emerald-400 font-mono">10.5%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">長榮</span><span class="text-emerald-400 font-mono">8.5%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">聯詠</span><span class="text-emerald-400 font-mono">7.2%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">日月光投控</span><span class="text-emerald-400 font-mono">6.8%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. 00878 -->
+                <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-white">00878 國泰永續高股息</span>
+                        <span class="text-xs font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">殖利率 ~7.5%</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-relaxed">結合 ESG 篩選機制的國民級抗震高股息 ETF。</p>
+                    <div class="space-y-1 pt-1 border-t border-slate-800">
+                        <div class="text-[10px] text-slate-400 font-bold">主要成分股與權重：</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px]">
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">聯發科</span><span class="text-emerald-400 font-mono">6.2%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">華碩</span><span class="text-emerald-400 font-mono">5.8%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">大聯大</span><span class="text-emerald-400 font-mono">5.5%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">廣達</span><span class="text-emerald-400 font-mono">5.2%</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. 00720B -->
+                <div class="bg-slate-950/90 p-3.5 rounded-xl border border-slate-800 space-y-2 md:col-span-2">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-sm text-white">00720B 元大美公債20年</span>
+                        <span class="text-xs font-mono text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800">降息防禦資產</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 leading-relaxed">美國 20 年期以上長天期投資級優質公債，提供資產對沖與穩定收息。</p>
+                    <div class="space-y-1 pt-1 border-t border-slate-800">
+                        <div class="text-[10px] text-slate-400 font-bold">主要成分與權重：</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px]">
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">美國政府長天期公債</span><span class="text-amber-400 font-mono">100.0%</span></div>
+                            <div class="bg-slate-900 p-1.5 rounded flex justify-between"><span class="text-slate-200">信評等級</span><span class="text-amber-400 font-mono">AAA 頂級</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 中間欄：20 檔完整視覺化氣泡圖與分類過濾 -->
-        <div class="lg:col-span-2 glass-card p-4 rounded-2xl flex flex-col justify-between">
+        <!-- 右側：即時互動與氣泡圖表 -->
+        <div class="glass-card p-4 rounded-2xl flex flex-col justify-between lg:col-span-1">
             <div>
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
-                    <span id="chartTitleTag" class="text-xs font-bold text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-xl border border-blue-500/30 shadow-sm w-fit">
-                        🔥 完整 20 檔真實配息校正 ETF 效能矩陣
-                    </span>
-                    <span class="text-[11px] text-slate-400">💡 點擊氣泡檢視詳細配息與一鍵模擬</span>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-blue-400">📊 20 檔完整效能矩陣</span>
+                    <span class="text-[10px] text-slate-400">點擊氣泡選取標的</span>
                 </div>
-
-                <div class="relative w-full h-[400px]">
+                <div class="relative w-full h-[240px]">
                     <canvas id="tideBubbleChart"></canvas>
                 </div>
             </div>
 
-            <!-- 下方分類切換按鈕 -->
-            <div class="mt-4 pt-3 border-t border-slate-800">
-                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">請選擇下方類別過濾檢視：</div>
-                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                    <button onclick="switchCategory('all', this)" id="btnAll" class="filter-btn bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs py-2 px-3 rounded-xl transition font-bold text-center">
-                        🔥 全部 20 檔
-                    </button>
-                    <button onclick="switchCategory('global', this)" id="btnGlobal" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🇺🇸 美股科技大盤
-                    </button>
-                    <button onclick="switchCategory('tw', this)" id="btnTw" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🇹🇼 台股權值高息
-                    </button>
-                    <button onclick="switchCategory('innovate', this)" id="btnInnovate" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🌐 全球主題創新
-                    </button>
-                    <button onclick="switchCategory('defend', this)" id="btnDefend" class="filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center">
-                        🛡️ 防禦債券REITs
-                    </button>
+            <div class="mt-3 pt-3 border-t border-slate-800 space-y-2 text-xs">
+                <div id="selected-board-tag" class="font-bold text-slate-200">目前選取：00770 國泰北美科技</div>
+                <div id="drilldown-summary" class="bg-slate-950/90 p-2.5 rounded-xl border border-slate-800 text-[11px] text-slate-300">
+                    預估年化：+18.2% | 夏普：1.92 | 配息：不定期滾存成長
                 </div>
+                <button onclick="copyTickerToSim()" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-slate-950 py-2 rounded-xl font-bold shadow-md text-xs transition hover:brightness-110">
+                    ⚡ 一鍵帶入下方複利模擬器
+                </button>
             </div>
         </div>
 
-        <!-- 右側欄：真實配息、內扣與成分穿透面板 -->
-        <div class="glass-card p-4 rounded-2xl flex flex-col justify-between lg:col-span-1">
-            <div class="flex flex-col h-full">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
-                    <div>
-                        <div class="text-[10px] text-blue-400 uppercase tracking-widest font-bold">Verified Dividend & Yield</div>
-                        <div id="selected-board-tag" class="text-sm font-black text-slate-100">請選取標的氣泡</div>
-                    </div>
-                    <button onclick="copyTickerToSim()" class="text-[10px] bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-slate-950 px-2.5 py-1.5 rounded-lg transition font-bold shadow-md shadow-blue-500/20">
-                        ⚡ 一鍵帶入複利
-                    </button>
-                </div>
-
-                <div id="drilldown-content" class="flex-1 overflow-y-auto pr-1 space-y-2 text-xs max-h-[400px]">
-                    <div class="h-full flex flex-col items-center justify-center text-center py-20 text-slate-500 space-y-3">
-                        <span class="text-3xl opacity-40">💎</span>
-                        <p class="text-xs leading-relaxed max-w-[200px]">點擊圖表中任一氣泡<br>查看正確配息頻率與內扣總開銷</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-3 pt-3 border-t border-slate-800 text-[10px] text-slate-500 text-center flex justify-between items-center font-mono">
-                <span>V17.0 FULL 20 ETF PRO</span>
-                <span class="text-emerald-400">SECURE</span>
-            </div>
-        </div>
     </main>
 
-    <!-- 邏輯核心 (完整 20 檔真實資料庫) -->
+    <!-- 最下方：智慧複利與總經壓力模擬器 -->
+    <section class="w-full max-w-7xl glass-card p-5 rounded-2xl space-y-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-slate-800 pb-3">
+            <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5 handwritten-title text-base">
+                🧮 智慧複利與總經壓力模擬器（已移至底端）
+            </span>
+            <span id="activeSimBadge" class="text-[10px] font-mono text-cyan-400 bg-cyan-950/80 px-2.5 py-1 rounded border border-cyan-800">標的：00770</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+            <div class="space-y-3 md:col-span-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">輸入 ETF 股號</label>
+                        <input type="text" id="simTicker" value="00770" oninput="onTickerInputChange()" class="w-full bg-slate-900 text-cyan-400 text-xs px-3 py-2 rounded-lg border border-slate-700 focus:outline-none font-mono">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">每月投入(萬)</label>
+                        <input type="number" id="simMonthly" value="3" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-blue-400 text-xs px-2.5 py-2 rounded-lg border border-slate-700 focus:outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">年期(年)</label>
+                        <input type="number" id="simYears" value="10" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-amber-400 text-xs px-2.5 py-2 rounded-lg border border-slate-700 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">年化報酬(%)</label>
+                        <input type="number" step="0.1" id="simRate" value="18.2" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-emerald-400 text-xs px-2 py-2 rounded-lg border border-slate-700 focus:outline-none font-mono">
+                    </div>
+                    <div>
+                        <label class="text-[11px] text-slate-400 block mb-1">通膨率(%)</label>
+                        <input type="number" step="0.1" id="simInflation" value="2.0" oninput="runCustomSimulation()" class="w-full bg-slate-900 text-rose-400 text-xs px-2 py-2 rounded-lg border border-slate-700 focus:outline-none font-mono">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-[11px] pt-1">
+                    <span class="text-slate-400">扣除稅負與摩擦成本 (二代健保/海外稅)</span>
+                    <input type="checkbox" id="simTaxToggle" onchange="runCustomSimulation()" class="w-4 h-4 accent-blue-500 rounded cursor-pointer">
+                </div>
+                <div id="customSimResult" class="bg-slate-950/90 p-3 rounded-xl border border-slate-800 text-[11px] space-y-1 font-mono">
+                    <!-- 動態產出 -->
+                </div>
+            </div>
+
+            <!-- 趨勢圖 -->
+            <div class="md:col-span-3">
+                <div class="text-[10px] text-slate-400 font-bold mb-1 flex justify-between">
+                    <span>📈 名目資產 vs 實質購買力曲線</span>
+                    <span class="text-rose-400 font-normal">扣除通膨壓力</span>
+                </div>
+                <div class="relative w-full h-[180px]">
+                    <canvas id="compoundMiniChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script>
         Chart.register(ChartDataLabels);
 
         const globalEtfDb20 = [
-            // 🇺🇸 美股科技與大盤 (global)
-            { ticker: '00770', x: 18.2, y: 1.92, r: 32, category: 'global', name: '00770 國泰北美科技', returnRate: 18.2, sharpe: '夏普 1.92', expense: '0.36%', dividendFreq: '不定期收益分配 (滾存成長)', dividendYield: '無固定配息', desc: '追蹤標普北美科技行業指數，聚焦美股最強軟體與AI巨頭。', stocks: [{s:'Microsoft', val:'雲端霸主', pct:'10.2%'}, {s:'Apple', val:'生態系', pct:'8.8%'}, {s:'NVIDIA', val:'AI晶片', pct:'8.6%'}, {s:'Broadcom', val:'網通晶片', pct:'7.5%'}]},
-            { ticker: '00646', x: 16.5, y: 1.85, r: 30, category: 'global', name: '00646 元大S&P 500', returnRate: 16.5, sharpe: '夏普 1.85', expense: '0.64%', dividendFreq: '不定期收益分配', dividendYield: '約 1.00%', desc: '直接連結美股標普500指數，涵蓋全美頂尖500大企業。', stocks: [{s:'Microsoft', val:'軟體', pct:'7.2%'}, {s:'Apple', val:'消費電子', pct:'6.5%'}, {s:'NVIDIA', val:'半導體', pct:'5.8%'}]},
-            { ticker: '00858', x: 13.8, y: 1.79, r: 28, category: 'global', name: '00858 富邦美國500', returnRate: 13.8, sharpe: '夏普 1.79', expense: '0.15%', dividendFreq: '不定期收益分配', dividendYield: '約 1.20%', desc: '追蹤 STOXX 美國 500 指數，內扣費用極具競爭力。', stocks: [{s:'Microsoft/Apple', val:'雙雄', pct:'13.5%'}, {s:'NVIDIA/Amazon', val:'AI零售', pct:'9.8%'}]},
-            { ticker: '00757', x: 19.5, y: 1.68, r: 30, category: 'global', name: '00757 統一FANG+', returnRate: 19.5, sharpe: '夏普 1.68', expense: '0.98%', dividendFreq: '不定期收益分配', dividendYield: '無固定配息', desc: '集中重壓全球前十大尖牙與頂尖創新科技巨頭。', stocks: [{s:'NVIDIA', val:'AI算力', pct:'10.5%'}, {s:'Meta', val:'社群AI', pct:'10.2%'}, {s:'Broadcom', val:'網通', pct:'10.0%'}]},
-            { ticker: '00924', x: 15.2, y: 1.74, r: 28, category: 'global', name: '00924 復華美國大型成長', returnRate: 15.2, sharpe: '夏普 1.74', expense: '0.50%', dividendFreq: '不定期收益分配', dividendYield: '約 1.00%', desc: '精選美股大型成長股，捕捉強勢創新紅利。', stocks: [{s:'Apple', val:'iPhone', pct:'11.2%'}, {s:'Microsoft', val:'Azure', pct:'10.8%'}]},
-
-            // 🇹🇼 台股權值與高息 (tw)
-            { ticker: '0050', x: 14.5, y: 1.65, r: 30, category: 'tw', name: '0050 元大台灣50', returnRate: 14.5, sharpe: '夏普 1.65', expense: '0.42%', dividendFreq: '半年配息 (每年 1、7 月)', dividendYield: '約 2.5% ~ 3.0%', desc: '代表台灣市值最大的 50 家頂尖企業與護國神山。', stocks: [{s:'台積電', val:'晶圓代工', pct:'53.2%'}, {s:'鴻海', val:'AI代工', pct:'6.1%'}]},
-            { ticker: '006208', x: 14.8, y: 1.66, r: 29, category: 'tw', name: '006208 富邦台50', returnRate: 14.8, sharpe: '夏普 1.66', expense: '0.24%', dividendFreq: '半年配息 (每年 7、11 月)', dividendYield: '約 2.5% ~ 3.0%', desc: '內扣經理費更低的台50指數追蹤替代首選。', stocks: [{s:'台積電', val:'台積電', pct:'53.5%'}, {s:'聯發科', val:'IC設計', pct:'4.8%'}]},
-            { ticker: '00919', x: 10.2, y: 1.82, r: 28, category: 'tw', name: '00919 群益精選高息', returnRate: 10.2, sharpe: '夏普 1.82', expense: '0.55%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 10.0% ~ 10.5%', desc: '精選高股息與填息能力強悍的台股高息標的。', stocks: [{s:'聯電', val:'成熟製程', pct:'10.5%'}, {s:'長榮', val:'航運現金流', pct:'8.5%'}]},
-            { ticker: '00878', x: 9.8, y: 1.78, r: 26, category: 'tw', name: '00878 國泰永續高股息', returnRate: 9.8, sharpe: '夏普 1.78', expense: '0.50%', dividendFreq: '季配息 (2、5、8、11月)', dividendYield: '約 7.0% ~ 7.5%', desc: '結合 ESG 篩選機制的國民級抗震高股息 ETF。', stocks: [{s:'聯發科', val:'IC設計', pct:'6.2%'}, {s:'華碩', val:'PC品牌', pct:'5.8%'}]},
-            { ticker: '00929', x: 10.5, y: 1.72, r: 27, category: 'tw', name: '00929 復華台灣科技優息', returnRate: 10.5, sharpe: '夏普 1.72', expense: '0.56%', dividendFreq: '月配息 (每月領息)', dividendYield: '約 8.5% ~ 9.0%', desc: '台灣首檔純科技股月配高息 ETF，聚焦導向電子股。', stocks: [{s:'聯發科', val:'IC設計', pct:'4.8%'}, {s:'日月光投控', val:'封測', pct:'4.5%'}]},
-            { ticker: '0056', x: 10.0, y: 1.70, r: 27, category: 'tw', name: '0056 元大高股息', returnRate: 10.0, sharpe: '夏普 1.70', expense: '0.73%', dividendFreq: '季配息 (1、4、7、10月)', dividendYield: '約 6.5% ~ 7.0%', desc: '歷史最悠久的台股高股息標竿 ETF。', stocks: [{s:'聯發科', val:'IC設計', pct:'4.5%'}, {s:'長榮', val:'航運', pct:'4.2%'}]},
-
-            // 🌐 全球主題創新 (innovate)
-            { ticker: '00830', x: 16.0, y: 1.62, r: 27, category: 'innovate', name: '00830 國泰費城半導體', returnRate: 16.0, sharpe: '夏普 1.62', expense: '0.55%', dividendFreq: '不定期收益分配', dividendYield: '約 0.80%', desc: '直擊全球半導體設備與晶片設計最核心產業鏈。', stocks: [{s:'NVIDIA', val:'繪圖晶片', pct:'9.5%'}, {s:'Broadcom', val:'網通', pct:'9.2%'}, {s:'Qualcomm', val:'手機晶片', pct:'8.5%'}]},
-            { ticker: '00893', x: 15.5, y: 1.58, r: 26, category: 'innovate', name: '00893 國泰標普電動車', returnRate: 15.5, sharpe: '夏普 1.58', expense: '0.88%', dividendFreq: '不定期收益分配', dividendYield: '無固定配息', desc: '聚焦全球電動車供應鏈與自駕技術革新。', stocks: [{s:'Tesla', val:'電動車龍頭', pct:'14.5%'}, {s:'NVIDIA', val:'車用運算', pct:'10.2%'}]},
-            { ticker: '00901', x: 13.5, y: 1.64, r: 26, category: 'innovate', name: '00901 永豐智能車供應鏈', returnRate: 13.5, sharpe: '夏普 1.64', expense: '0.48%', dividendFreq: '年配息 (每年 11 月)', dividendYield: '約 3.5% ~ 4.0%', desc: '結合台灣在地強大車用零組件與台積電半導體優勢。', stocks: [{s:'台積電', val:'晶圓代工', pct:'22.5%'}, {s:'鴻海', val:'電動車代工', pct:'6.8%'}]},
-            { ticker: '00881', x: 14.2, y: 1.69, r: 27, category: 'innovate', name: '00881 國泰台灣5G+', returnRate: 14.2, sharpe: '夏普 1.69', expense: '0.45%', dividendFreq: '年配息 (每年 1、11 月)', dividendYield: '約 3.0% ~ 3.5%', desc: '精選台灣 5G 概念與半導體供應鏈重鎮。', stocks: [{s:'台積電', val:'晶圓代工', pct:'30.5%'}, {s:'鴻海', val:'伺服器', pct:'7.2%'}]},
-
-            // 🛡️ 防禦債券與 REITs (defend)
-            { ticker: '00720B', x: 5.5, y: 1.45, r: 28, category: 'defend', name: '00720B 元大美公債20年', returnRate: 5.5, sharpe: '夏普 1.45', expense: '0.28%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 4.5% ~ 4.8%', desc: '美國 20 年期以上長天期投資級優質公債。', stocks: [{s:'美國國債', val:'最高信用評等', pct:'100%'}]},
-            { ticker: '00751B', x: 5.8, y: 1.48, r: 28, category: 'defend', name: '00751B 元大美債20年', returnRate: 5.8, sharpe: '夏普 1.48', expense: '0.25%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 4.5% ~ 4.8%', desc: '規模龐大的美國20年期長天期公債 ETF。', stocks: [{s:'美國國債', val:'國家信用', pct:'100%'}]},
-            { ticker: '00793B', x: 6.2, y: 1.52, r: 27, category: 'defend', name: '00793B 中信美國公債20年', returnRate: 6.2, sharpe: '夏普 1.52', expense: '0.24%', dividendFreq: '季配息 (3、6、9、12月)', dividendYield: '約 4.6% ~ 4.9%', desc: '提供穩定現金流與降息資本利得防禦。', stocks: [{s:'美國公債', val:'AAA級', pct:'100%'}]},
-            { ticker: '00714', x: 7.2, y: 1.38, r: 25, category: 'defend', name: '00714 群益群眾不動產', returnRate: 7.2, sharpe: '夏普 1.38', expense: '1.15%', dividendFreq: '半年配息 (6、12月)', dividendYield: '約 5.0% ~ 5.5%', desc: '全球不動產投資信託基金（REITs），對抗通膨抗性高。', stocks: [{s:'商用不動產', val:'多元收租', pct:'100%'}]},
-            { ticker: '00772B', x: 5.2, y: 1.42, r: 27, category: 'defend', name: '00772B 中信高評級公司債', returnRate: 5.2, sharpe: '夏普 1.42', expense: '0.32%', dividendFreq: '月配息 (每月領息)', dividendYield: '約 5.2% ~ 5.5%', desc: '精選全球投資等級公司債，具備月配息現金流。', stocks: [{s:'投資級企業債', val:'全球企業', pct:'100%'}]}
+            { ticker: '00770', x: 18.2, y: 1.92, r: 32, category: 'global', name: '00770 國泰北美科技', returnRate: 18.2, desc: '追蹤標普北美科技行業指數，聚焦美股軟體與AI巨頭。' },
+            { ticker: '0050', x: 14.5, y: 1.65, r: 30, category: 'tw', name: '0050 元大台灣50', returnRate: 14.5, desc: '代表台灣市值最大的 50 家頂尖企業與護國神山。' },
+            { ticker: '00919', x: 10.2, y: 1.82, r: 28, category: 'tw', name: '00919 群益精選高息', returnRate: 10.2, desc: '精選高股息與填息能力強悍的台股高息標的。' },
+            { ticker: '00878', x: 9.8, y: 1.78, r: 26, category: 'tw', name: '00878 國泰永續高股息', returnRate: 9.8, desc: '結合 ESG 篩選機制的國民級抗震高股息 ETF。' },
+            { ticker: '00720B', x: 5.5, y: 1.45, r: 28, category: 'defend', name: '00720B 元大美公債20年', returnRate: 5.5, desc: '美國 20 年期以上長天期投資級優質公債。' }
         ];
 
         const ctx = document.getElementById('tideBubbleChart').getContext('2d');
@@ -217,8 +253,8 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { title: { display: true, text: '← 長期年化報酬率 (%) →', color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#64748b' } },
-                    y: { title: { display: true, text: '← 夏普比率 →', color: '#94a3b8', font: { size: 11 } }, grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#64748b' } }
+                    x: { title: { display: true, text: '年化報酬率 (%)', color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#64748b' } },
+                    y: { title: { display: true, text: '夏普比率', color: '#94a3b8', font: { size: 10 } }, grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#64748b' } }
                 },
                 plugins: {
                     legend: { display: false },
@@ -228,7 +264,7 @@
                     if (elements.length > 0) {
                         const item = tideBubbleChart.data.datasets[0].data[elements[0].index];
                         activeSelectedItem = item;
-                        renderDrilldown(item);
+                        updateSelectionInfo(item);
                     }
                 }
             }
@@ -240,7 +276,7 @@
                 labels: [],
                 datasets: [
                     { label: '名目資產總值', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 },
-                    { label: '實質購買力(扣除通膨)', data: [], borderColor: '#f43f5e', borderDash: [4, 4], tension: 0.2 },
+                    { label: '實質購買力', data: [], borderColor: '#f43f5e', borderDash: [4, 4], tension: 0.2 },
                     { label: '投入本金', data: [], borderColor: '#64748b', borderDash: [2, 2], tension: 0.1 }
                 ]
             },
@@ -255,63 +291,29 @@
             }
         });
 
-        function renderDrilldown(item) {
-            document.getElementById('selected-board-tag').innerText = item.name;
-            const container = document.getElementById('drilldown-content');
-            let html = `
-                <div class="bg-slate-950/90 p-3 rounded-xl border border-slate-800 space-y-1.5 mb-2.5 text-[11px]">
-                    <div class="flex justify-between items-center"><span class="text-slate-400">股票代號:</span><span class="font-bold text-cyan-400 font-mono">${item.ticker}</span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-400">預估年化:</span><span class="font-bold text-blue-400 font-mono">+${item.returnRate}%</span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-400">配息機制:</span><span class="font-bold text-amber-400">${item.dividendFreq}</span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-400">預估殖利率:</span><span class="font-bold text-emerald-400 font-mono">${item.dividendYield}</span></div>
-                    <div class="flex justify-between items-center"><span class="text-slate-400">內扣經理費:</span><span class="font-bold font-mono text-slate-200">${item.expense}</span></div>
-                    <p class="text-[10px] text-slate-300 pt-1.5 border-t border-slate-800/60 leading-relaxed">${item.desc}</p>
-                </div>
-                <div class="text-[11px] font-bold text-slate-300 mb-1.5 px-1">真實成分與權重</div>
-                <div class="space-y-1.5">
-            `;
-            item.stocks.forEach(st => {
-                html += `<div class="bg-slate-950/80 p-2 rounded-xl border border-slate-800/80 flex justify-between items-center"><div><div class="text-slate-100 font-bold text-xs">${st.s}</div><div class="text-[10px] text-slate-400">${st.val}</div></div><span class="px-2 py-0.5 rounded-lg text-xs font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/30">${st.pct}</span></div>`;
-            });
-            html += `</div>`;
-            container.innerHTML = html;
+        function updateSelectionInfo(item) {
+            document.getElementById('selected-board-tag').innerText = `目前選取：${item.name}`;
+            document.getElementById('drilldown-summary').innerText = `預估年化：+${item.returnRate}% | 夏普：${item.y} | ${item.desc}`;
         }
 
         function copyTickerToSim() {
             if (!activeSelectedItem) return;
             document.getElementById('simTicker').value = activeSelectedItem.ticker;
             document.getElementById('simRate').value = activeSelectedItem.returnRate;
-            document.getElementById('activeSimBadge').innerText = activeSelectedItem.ticker;
+            document.getElementById('activeSimBadge').innerText = `標的：${activeSelectedItem.ticker}`;
             runCustomSimulation();
         }
 
         function onTickerInputChange() {
             const inputVal = document.getElementById('simTicker').value.trim().toUpperCase();
-            document.getElementById('activeSimBadge').innerText = inputVal || 'CUSTOM';
+            document.getElementById('activeSimBadge').innerText = `標的：${inputVal || 'CUSTOM'}`;
             const found = globalEtfDb20.find(e => e.ticker === inputVal);
             if (found) {
                 document.getElementById('simRate').value = found.returnRate;
                 activeSelectedItem = found;
-                renderDrilldown(found);
+                updateSelectionInfo(found);
             }
             runCustomSimulation();
-        }
-
-        function switchCategory(cat, btnElement) {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = "filter-btn bg-slate-950/80 text-slate-400 hover:text-slate-200 border border-slate-800 text-xs py-2 px-3 rounded-xl transition font-medium text-center";
-            });
-            if (btnElement) {
-                btnElement.className = "filter-btn bg-blue-500/20 text-blue-400 border border-blue-500/40 text-xs py-2 px-3 rounded-xl transition font-bold text-center";
-            }
-
-            let filteredData = globalEtfDb20;
-            if (cat !== 'all') {
-                filteredData = globalEtfDb20.filter(item => item.category === cat);
-            }
-
-            tideBubbleChart.data.datasets[0].data = filteredData;
-            tideBubbleChart.update();
         }
 
         function runCustomSimulation() {
@@ -322,9 +324,7 @@
             const inflationRate = parseFloat(document.getElementById('simInflation').value) || 2.0;
             const hasTax = document.getElementById('simTaxToggle').checked;
 
-            if (hasTax) {
-                annualRatePct = Math.max(0, annualRatePct - 0.5);
-            }
+            if (hasTax) annualRatePct = Math.max(0, annualRatePct - 0.5);
 
             const months = years * 12;
             const monthlyRate = (annualRatePct / 100) / 12;
@@ -339,17 +339,12 @@
 
             for (let i = 0; i <= months; i++) {
                 if (i === 0) {
-                    labels.push('第0年');
-                    investedData.push(0);
-                    valueData.push(0);
-                    realData.push(0);
+                    labels.push('第0年'); investedData.push(0); valueData.push(0); realData.push(0);
                 } else {
                     futureValue = (futureValue + monthly) * (1 + monthlyRate);
                     let currentReal = futureValue / Math.pow(1 + (inflationRate / 100), i / 12);
-
                     if (i % 12 === 0 || i === months) {
-                        const yr = (i / 12).toFixed(0);
-                        labels.push(`第${yr}年`);
+                        labels.push(`第${(i/12).toFixed(0)}年`);
                         investedData.push(monthly * i);
                         valueData.push(parseFloat(futureValue.toFixed(1)));
                         realData.push(parseFloat(currentReal.toFixed(1)));
@@ -358,9 +353,8 @@
             }
 
             document.getElementById('customSimResult').innerHTML = `
-                <div class="text-cyan-400 font-bold mb-1">🎯 標的：${ticker} (淨年化 ${annualRatePct.toFixed(1)}%)</div>
-                <div class="text-slate-300">總投入本金：<span class="text-white font-bold">${totalInvested.toFixed(1)} 萬</span></div>
-                <div class="text-slate-300">名目資產終值：<span class="text-blue-400 font-bold">${futureValue.toFixed(1)} 萬</span></div>
+                <div class="text-cyan-400 font-bold mb-0.5">🎯 模擬結果：${ticker} (淨年化 ${annualRatePct.toFixed(1)}%)</div>
+                <div class="text-slate-300">總投入：<span class="text-white font-bold">${totalInvested.toFixed(1)} 萬</span> | 名目終值：<span class="text-blue-400 font-bold">${futureValue.toFixed(1)} 萬</span></div>
                 <div class="text-rose-300">實質購買力(現值)：<span class="text-rose-400 font-bold">${realData[realData.length-1]} 萬</span></div>
             `;
 
@@ -372,7 +366,7 @@
         }
 
         runCustomSimulation();
-        renderDrilldown(globalEtfDb20[0]);
+        updateSelectionInfo(globalEtfDb20[0]);
     </script>
 </body>
 </html>
