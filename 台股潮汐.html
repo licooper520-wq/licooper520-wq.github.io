@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>《泊》TIDE TERMINAL V26.0 - 全球多區域資產與持倉解析終端</title>
+    <title>《泊》TIDE TERMINAL V27.0 - 全球多區域資產與持倉解析終端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -23,12 +23,12 @@
     <!-- 頂部終端導覽 -->
     <header class="w-full max-w-7xl mb-5 bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div class="flex items-center gap-3">
-            <span class="text-xs font-mono font-bold bg-blue-600 text-white px-2.5 py-1 rounded">TIDE V26.0</span>
+            <span class="text-xs font-mono font-bold bg-blue-600 text-white px-2.5 py-1 rounded">TIDE V27.0</span>
             <h1 class="text-sm md:text-base font-bold tracking-tight text-white">全球多區域資產與持倉解析終端</h1>
         </div>
         <div class="flex items-center gap-2 text-xs bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 font-mono text-slate-400">
             <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            <span>全球跨國市場・真實揭露</span>
+            <span>依市值規模排序・真實揭露</span>
         </div>
     </header>
 
@@ -38,11 +38,12 @@
         <!-- 左側：標的總覽與多區域篩選 (7 cols) -->
         <div class="lg:col-span-7 bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col justify-between space-y-3">
             <div>
-                <!-- 分類頁籤 -->
+                <!-- 分類頁籤（依市場規模由大到小排序） -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-3 gap-2">
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">全球市場與資產分類</span>
                     <div class="flex flex-wrap gap-1 text-xs">
                         <button onclick="filterCategory('all', this)" class="cat-btn tab-active px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 font-semibold transition">全部</button>
+                        <button onclick="filterCategory('us', this)" class="cat-btn px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 transition">美國市場</button>
                         <button onclick="filterCategory('global_stock', this)" class="cat-btn px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 transition">全球股票</button>
                         <button onclick="filterCategory('global_tech', this)" class="cat-btn px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 transition">全球科技</button>
                         <button onclick="filterCategory('tw', this)" class="cat-btn px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 transition">台股大盤</button>
@@ -74,11 +75,11 @@
 
                 <div class="space-y-2 text-xs bg-slate-950 p-3 rounded-lg border border-slate-800">
                     <div id="selected-board-tag" class="font-bold text-slate-200 flex justify-between">
-                        <span>選定：00770 國泰北美科技</span>
+                        <span>選定：00646 身份/S&P500</span>
                         <span class="text-blue-400 mono">Active</span>
                     </div>
                     <div id="drilldown-summary" class="text-slate-400 text-[11px] leading-relaxed border-t border-slate-800 pt-2">
-                        年化報酬：18.2% | 夏普比率：1.92 | 聚焦北美軟體與雲端運算龍頭
+                        年化報酬：13.5% | 夏普比率：1.65 | 涵蓋美股前 500 大頂尖企業
                     </div>
                     <button onclick="copyTickerToSim()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-1.5 rounded font-bold text-xs transition mt-1">
                         載入至複利模擬器
@@ -93,7 +94,7 @@
     <section class="w-full max-w-7xl bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-3">
         <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
             <span class="text-xs font-bold text-slate-300">複利與實質購買力模擬器</span>
-            <span id="activeSimBadge" class="text-[11px] font-mono text-blue-400 bg-blue-950 px-2 py-0.5 rounded border border-blue-900">00770</span>
+            <span id="activeSimBadge" class="text-[11px] font-mono text-blue-400 bg-blue-950 px-2 py-0.5 rounded border border-blue-900">00646</span>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
@@ -101,7 +102,7 @@
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-[10px] text-slate-400 block mb-1">標的代號</label>
-                        <input type="text" id="simTicker" value="00770" oninput="onTickerInputChange()" class="w-full bg-slate-950 text-blue-400 text-xs px-2.5 py-1.5 rounded border border-slate-800 font-mono font-bold focus:outline-none">
+                        <input type="text" id="simTicker" value="00646" oninput="onTickerInputChange()" class="w-full bg-slate-950 text-blue-400 text-xs px-2.5 py-1.5 rounded border border-slate-800 font-mono font-bold focus:outline-none">
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 block mb-1">每月投入 (萬)</label>
@@ -115,7 +116,7 @@
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 block mb-1">年化報酬 (%)</label>
-                        <input type="number" step="0.1" id="simRate" value="18.2" oninput="runCustomSimulation()" class="w-full bg-slate-950 text-emerald-400 text-xs px-2.5 py-1.5 rounded border border-slate-800 font-mono font-bold focus:outline-none">
+                        <input type="number" step="0.1" id="simRate" value="13.5" oninput="runCustomSimulation()" class="w-full bg-slate-950 text-emerald-400 text-xs px-2.5 py-1.5 rounded border border-slate-800 font-mono font-bold focus:outline-none">
                     </div>
                     <div>
                         <label class="text-[10px] text-slate-400 block mb-1">通膨率 (%)</label>
@@ -162,9 +163,29 @@
     <script>
         Chart.register(ChartDataLabels);
 
-        // 全球多區域與多資產標的資料庫
+        // 全球資產資料庫：依市場總市值規模由大到小排序（美國 -> 全球股票 -> 全球科技 -> 台股大盤 -> 高息現金流 -> 日本 -> 韓國 -> 債券）
         const fullMatrixDb = [
-            // 全球股票
+            // 1. 美國市場 (全球最大資本市場)
+            { 
+                ticker: '00646', x: 13.5, y: 1.65, r: 26, category: 'us', categoryName: '美國市場', name: '00646 元大S&P500', returnRate: 13.5, yieldStr: '資本增值', payout: '年度配息', desc: '追蹤美國 S&P 500 指數，網羅美股前 500 大頂尖龍頭企業。',
+                holdings: [
+                    { name: 'Apple (蘋果)', weight: '~7.2%', analysis: '全球消費電子霸主，具備龐大軟體服務營收。' },
+                    { name: 'Microsoft (微軟)', weight: '~6.8%', analysis: '雲端運算與 AI 商業化應用的中流砥柱。' },
+                    { name: 'NVIDIA (輝達)', weight: '~6.5%', analysis: 'AI 算力晶片硬體基建獨占鰲頭。' },
+                    { name: 'Amazon (亞馬遜)', weight: '~3.8%', analysis: '全球電商與 AWS 雲端運算雙引擎。' }
+                ],
+                totalNote: '涵蓋美股總市值超過八成之核心標竿企業'
+            },
+            { 
+                ticker: '00924', x: 13.2, y: 1.58, r: 23, category: 'us', categoryName: '美國市場', name: '00924 復華S&P500成長', returnRate: 13.2, yieldStr: '資本增值', payout: '年度配息', desc: '追蹤 S&P 500 成長指數，網羅美股各行各業盈餘高速成長企業。',
+                holdings: [
+                    { name: 'Apple (蘋果)', weight: '~11.5%', analysis: '高現金流與強大股東回報能力。' },
+                    { name: 'Microsoft (微軟)', weight: '~11.2%', analysis: '高成長軟體與雲端巨頭。' },
+                    { name: 'NVIDIA (輝達)', weight: '~10.8%', analysis: '受惠全球生成式 AI 浪潮。' }
+                ],
+                totalNote: '聚焦美股大盤中具備高成長動能之標的'
+            },
+            // 2. 全球股票 (MSCI World / 跨國成熟市場)
             { 
                 ticker: '00662', x: 13.8, y: 1.62, r: 25, category: 'global_stock', categoryName: '全球股票', name: '00662 富邦NASDAQ', returnRate: 13.8, yieldStr: '資本增值', payout: '年度配息', desc: '聚焦美國納斯達克 100 指數，涵蓋科技與創新成長股。',
                 holdings: [
@@ -175,26 +196,7 @@
                 ],
                 totalNote: '揭露納斯達克 100 指數核心前四大重倉'
             },
-            { 
-                ticker: '00924', x: 13.2, y: 1.58, r: 23, category: 'global_stock', categoryName: '全球股票', name: '00924 復華S&P500成長', returnRate: 13.2, yieldStr: '資本增值', payout: '年度配息', desc: '追蹤 S&P 500 成長指數，網羅美股各行各業盈餘高速成長企業。',
-                holdings: [
-                    { name: 'Apple (蘋果)', weight: '~11.5%', analysis: '高現金流與強大股東回報能力。' },
-                    { name: 'Microsoft (微軟)', weight: '~11.2%', analysis: '高成長軟體與雲端巨頭。' },
-                    { name: 'NVIDIA (輝達)', weight: '~10.8%', analysis: '受惠全球生成式 AI 浪潮。' }
-                ],
-                totalNote: '聚焦美股大盤中具備高成長動能之標的'
-            },
-            // 全球科技
-            { 
-                ticker: '00770', x: 18.2, y: 1.92, r: 24, category: 'global_tech', categoryName: '全球科技', name: '00770 國泰北美科技', returnRate: 18.2, yieldStr: '資本增值', payout: '年配/滾存', desc: '追蹤北美科技指數，聚焦軟體與AI巨頭。',
-                holdings: [
-                    { name: 'Microsoft (微軟)', weight: '~10.2%', analysis: '雲端運算 Azure 與企業端 AI 應用核心受益者。' },
-                    { name: 'Apple (蘋果)', weight: '~8.8%', analysis: '硬體生態系穩固，換機潮持續推動。' },
-                    { name: 'NVIDIA (輝達)', weight: '~8.6%', analysis: 'AI 晶片與 GPU 算力基礎設施絕對龍頭。' },
-                    { name: 'Broadcom (博通)', weight: '~7.5%', analysis: '客製化 AI 晶片 (ASIC) 與網通晶片關鍵供應商。' }
-                ],
-                totalNote: '揭露前四大核心重倉，其餘為長尾北美軟硬體成分'
-            },
+            // 3. 全球科技
             { 
                 ticker: '00757', x: 19.5, y: 1.68, r: 24, category: 'global_tech', categoryName: '全球科技', name: '00757 統一FANG+', returnRate: 19.5, yieldStr: '資本增值', payout: '年度配息', desc: '高度集中全球頂尖尖牙股與創新龍頭（固定 10 檔）。',
                 holdings: [
@@ -204,7 +206,17 @@
                 ],
                 totalNote: 'FANG+ 指數採固定 10 檔等權重調整機制'
             },
-            // 台股大盤
+            { 
+                ticker: '00770', x: 18.2, y: 1.92, r: 24, category: 'global_tech', categoryName: '全球科技', name: '00770 國泰北美科技', returnRate: 18.2, yieldStr: '資本增值', payout: '年配/滾存', desc: '追蹤北美科技指數，聚焦軟體與AI巨頭。',
+                holdings: [
+                    { name: 'Microsoft (微軟)', weight: '~10.2%', analysis: '雲端運算 Azure 與企業端 AI 核心受益者。' },
+                    { name: 'Apple (蘋果)', weight: '~8.8%', analysis: '硬體生態系穩固，換機潮持續推動。' },
+                    { name: 'NVIDIA (輝達)', weight: '~8.6%', analysis: 'AI 晶片與 GPU 算力基礎設施絕對龍頭。' },
+                    { name: 'Broadcom (博通)', weight: '~7.5%', analysis: '客製化 AI 晶片 (ASIC) 與網通晶片關鍵供應商。' }
+                ],
+                totalNote: '揭露前四大核心重倉，其餘為長尾北美軟硬體成分'
+            },
+            // 4. 台股大盤
             { 
                 ticker: '0050', x: 14.5, y: 1.65, r: 26, category: 'tw', categoryName: '台股大盤', name: '0050 元大台灣50', returnRate: 14.5, yieldStr: '約 3.2%', payout: '半年度', desc: '代表台灣市值最大50家頂尖企業與護國神山。',
                 holdings: [
@@ -214,7 +226,7 @@
                 ],
                 totalNote: '台積電佔比逾五成，高度連動台灣半導體出口表現'
             },
-            // 高息現金流
+            // 5. 高息現金流
             { 
                 ticker: '00919', x: 10.2, y: 1.82, r: 24, category: 'div', categoryName: '高息現金流', name: '00919 群益精選高息', returnRate: 10.2, yieldStr: '約 10.0%', payout: '季配息', desc: '精選高股息與強悍填息能力的高息標的。',
                 holdings: [
@@ -232,7 +244,7 @@
                 ],
                 totalNote: '強調 ESG 質化評級與產業分散配置'
             },
-            // 日本市場 (新納入)
+            // 6. 日本市場
             { 
                 ticker: '00645', x: 11.5, y: 1.52, r: 22, category: 'japan', categoryName: '日本市場', name: '00645 富邦日本', returnRate: 11.5, yieldStr: '約 1.8%', payout: '年度配息', desc: '追蹤日本東證指數 (TOPIX)，完整涵蓋日本各產業龍頭與製造業復甦紅利。',
                 holdings: [
@@ -252,7 +264,7 @@
                 ],
                 totalNote: '聚焦日本半導體上游材料與設備關鍵核心企業'
             },
-            // 韓國市場 (新納入)
+            // 7. 韓國市場
             { 
                 ticker: '00667', x: 12.0, y: 1.49, r: 22, category: 'korea', categoryName: '韓國市場', name: '00667 富邦韓國', returnRate: 12.0, yieldStr: '約 2.0%', payout: '年度配息', desc: '追蹤韓國KOSPI 200指數，高度集中南韓頂尖科技、記憶體與重工業巨頭。',
                 holdings: [
@@ -263,7 +275,7 @@
                 ],
                 totalNote: '三星電子佔比高，高度連動全球記憶體週期與 AI 算力需求'
             },
-            // 全球債券
+            // 8. 全球債券
             { 
                 ticker: '00720B', x: 5.5, y: 1.45, r: 24, category: 'defend', categoryName: '全球債券', name: '00720B 元大美公債20年', returnRate: 5.5, yieldStr: '約 4.7%', payout: '季配息', desc: '美國 20 年期以上長天期投資級優質公債。',
                 holdings: [
