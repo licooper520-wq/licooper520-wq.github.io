@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>《泊》TIDE TERMINAL V30.0 - 全球資金潮汐與多區域資產解析終端</title>
+    <title>《泊》TIDE TERMINAL V30.1 - 全球資金潮汐與複利動態模擬終端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
@@ -25,12 +25,12 @@
     <!-- 頂部終端導覽 -->
     <header class="w-full max-w-7xl mb-5 bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3 shadow-lg">
         <div class="flex items-center gap-3">
-            <span class="text-xs font-mono font-bold bg-blue-600 text-white px-2.5 py-1 rounded shadow">TIDE V30.0</span>
-            <h1 class="text-sm md:text-base font-bold tracking-tight text-white">全球資金潮汐與多區域資產解析終端（旗艦升級版）</h1>
+            <span class="text-xs font-mono font-bold bg-blue-600 text-white px-2.5 py-1 rounded shadow">TIDE V30.1</span>
+            <h1 class="text-sm md:text-base font-bold tracking-tight text-white">全球資金潮汐與複利動態模擬終端（整合升級版）</h1>
         </div>
         <div class="flex items-center gap-2 text-xs bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800 font-mono text-slate-400">
             <span class="w-2 h-2 rounded-full bg-emerald-500 tide-pulse"></span>
-            <span>資金潮汐多維追蹤・標的庫全面深度擴充</span>
+            <span>資金潮汐追蹤・模擬器即時連動</span>
         </div>
     </header>
 
@@ -40,7 +40,7 @@
         <!-- 左側：資金潮汐儀表板與標的總覽 (7 cols) -->
         <div class="lg:col-span-7 bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-col justify-between space-y-4 shadow-lg">
             
-            <!-- 核心亮點：全球資金潮汐流向面板 (Tide Flow) -->
+            <!-- 核心亮點：全球資金潮汐流向面板 -->
             <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2.5">
                 <div class="flex justify-between items-center border-b border-slate-800/80 pb-2">
                     <span class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
@@ -48,7 +48,6 @@
                     </span>
                     <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-900">即時追蹤</span>
                 </div>
-                <!-- 動態潮汐狀態條 -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                     <div class="bg-slate-900 p-2 rounded border border-slate-800">
                         <div class="text-[10px] text-slate-400">最強資金吸納</div>
@@ -122,7 +121,7 @@
 
     </main>
 
-    <!-- 下方：複利模擬器 -->
+    <!-- 下方：複利與實質購買力模擬器 -->
     <section class="w-full max-w-7xl bg-slate-900 border border-slate-800 p-4 rounded-xl space-y-3 shadow-lg">
         <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
             <span class="text-xs font-bold text-slate-300">複利與實質購買力模擬器</span>
@@ -156,7 +155,7 @@
                     </div>
                 </div>
                 <div id="customSimResult" class="bg-slate-950 p-2.5 rounded border border-slate-800 text-xs space-y-1 font-mono">
-                    <!-- 動態計算 -->
+                    <!-- 動態計算結果 -->
                 </div>
             </div>
 
@@ -195,9 +194,8 @@
     <script>
         Chart.register(ChartDataLabels);
 
-        // 全球資產資料庫：已大幅擴充標的與流動細項
+        // 全球資產資料庫
         const fullMatrixDb = [
-            // 1. 美國市場 (全球最大資本市場)
             { 
                 ticker: '00646', x: 13.5, y: 1.65, r: 26, category: 'us', categoryName: '美國市場', name: '00646 元大S&P500', returnRate: 13.5, yieldStr: '資本增值', payout: '年度配息', desc: '追蹤美國 S&P 500 指數，網羅美股前 500 大頂尖龍頭企業。',
                 holdings: [
@@ -209,44 +207,14 @@
                 totalNote: '涵蓋美股總市值超過八成之核心標竿企業'
             },
             { 
-                ticker: '00924', x: 13.2, y: 1.58, r: 23, category: 'us', categoryName: '美國市場', name: '00924 復華S&P500成長', returnRate: 13.2, yieldStr: '資本增值', payout: '年度配息', desc: '追蹤 S&P 500 成長指數，網羅美股各行各業盈餘高速成長企業。',
-                holdings: [
-                    { name: 'Apple (蘋果)', weight: '~11.5%', analysis: '高現金流與強大股東回報能力。' },
-                    { name: 'Microsoft (微軟)', weight: '~11.2%', analysis: '高成長軟體與雲端巨頭。' },
-                    { name: 'NVIDIA (輝達)', weight: '~10.8%', analysis: '受惠全球生成式 AI 浪潮。' }
-                ],
-                totalNote: '聚焦美股大盤中具備高成長動能之標的'
-            },
-            { 
-                ticker: 'NOBL', x: 10.5, y: 1.72, r: 21, category: 'us', categoryName: '美國市場', name: 'NOBL 標普股息貴族 ETF', returnRate: 10.5, yieldStr: '約 2.4%', payout: '季配息', desc: '追蹤 S&P 500 股息貴族指數，成分股連續 25 年以上持續調高股利。',
-                holdings: [
-                    { name: 'Target (目標百貨)', weight: '~2.8%', analysis: '穩定零售供應鏈與現金流。' },
-                    { name: 'Chevron (雪佛龍)', weight: '~2.7%', analysis: '傳統能源巨頭，具備強勁現金防禦力。' },
-                    { name: 'PepsiCo (百事公司)', weight: '~2.6%', analysis: '全球必需消費品龍頭，抗通膨能力極佳。' }
-                ],
-                totalNote: '適合追求低波動與連續配息成長之核心資產配置'
-            },
-            // 2. 全球股票 (MSCI World)
-            { 
                 ticker: '00662', x: 13.8, y: 1.62, r: 25, category: 'global_stock', categoryName: '全球股票', name: '00662 富邦NASDAQ', returnRate: 13.8, yieldStr: '資本增值', payout: '年度配息', desc: '聚焦美國納斯達克 100 指數，涵蓋科技與創新成長股。',
                 holdings: [
                     { name: 'Apple (蘋果)', weight: '~8.9%', analysis: '全球消費電子與服務生態系巨頭。' },
                     { name: 'Microsoft (微軟)', weight: '~8.7%', analysis: '雲端與企業端 AI 應用絕對領頭羊。' },
-                    { name: 'NVIDIA (輝達)', weight: '~8.5%', analysis: 'AI 晶片與 GPU 算力基建霸主。' },
-                    { name: 'Amazon (亞馬遜)', weight: '~5.2%', analysis: 'AWS 雲端與電商雙引擎。' }
+                    { name: 'NVIDIA (輝達)', weight: '~8.5%', analysis: 'AI 晶片與 GPU 算力基建霸主。' }
                 ],
-                totalNote: '揭露納斯達克 100 指數核心前四大重倉'
+                totalNote: '揭露納斯達克 100 指數核心前三大重倉'
             },
-            { 
-                ticker: 'VT', x: 11.2, y: 1.55, r: 24, category: 'global_stock', categoryName: '全球股票', name: 'VT 先鋒全球股票 ETF', returnRate: 11.2, yieldStr: '約 2.1%', payout: '季配息', desc: '涵蓋全球成熟市場與新興市場近 9,000 檔股票的終極全球配置標的。',
-                holdings: [
-                    { name: 'Apple (蘋果)', weight: '~4.2%', analysis: '全球市值第一梯隊科技巨擘。' },
-                    { name: 'Microsoft (微軟)', weight: '~3.9%', analysis: '跨國軟體與雲端巨頭。' },
-                    { name: 'NVIDIA (輝達)', weight: '~3.2%', analysis: 'AI 硬體基礎設施全球佈局。' }
-                ],
-                totalNote: '單一標的即可買下全世界資本市場'
-            },
-            // 3. 全球科技
             { 
                 ticker: '00757', x: 19.5, y: 1.68, r: 24, category: 'global_tech', categoryName: '全球科技', name: '00757 統一FANG+', returnRate: 19.5, yieldStr: '資本增值', payout: '年度配息', desc: '高度集中全球頂尖尖牙股與創新龍頭（固定 10 檔）。',
                 holdings: [
@@ -257,26 +225,6 @@
                 totalNote: 'FANG+ 指數採固定 10 檔等權重調整機制'
             },
             { 
-                ticker: '00770', x: 18.2, y: 1.92, r: 24, category: 'global_tech', categoryName: '全球科技', name: '00770 國泰北美科技', returnRate: 18.2, yieldStr: '資本增值', payout: '年配/滾存', desc: '追蹤北美科技指數，聚焦軟體與AI巨頭。',
-                holdings: [
-                    { name: 'Microsoft (微軟)', weight: '~10.2%', analysis: '雲端運算 Azure 與企業端 AI 核心受益者。' },
-                    { name: 'Apple (蘋果)', weight: '~8.8%', analysis: '硬體生態系穩固，換機潮持續推動。' },
-                    { name: 'NVIDIA (輝達)', weight: '~8.6%', analysis: 'AI 晶片與 GPU 算力基礎設施絕對龍頭。' },
-                    { name: 'Broadcom (博通)', weight: '~7.5%', analysis: '客製化 AI 晶片 (ASIC) 與網通晶片關鍵供應商。' }
-                ],
-                totalNote: '揭露前四大核心重倉，其餘為長尾北美軟硬體成分'
-            },
-            { 
-                ticker: 'SOXX', x: 18.8, y: 1.54, r: 22, category: 'global_tech', categoryName: '全球科技', name: 'SOXX 美國半導體 ETF', returnRate: 18.8, yieldStr: '約 1.1%', payout: '季配息', desc: '追蹤美國半導體指數，高度聚焦晶片設計、設備與製造龍頭。',
-                holdings: [
-                    { name: 'NVIDIA (輝達)', weight: '~8.5%', analysis: 'AI 加速晶片無可取代的龍頭。' },
-                    { name: 'Broadcom (博通)', weight: '~8.2%', analysis: '高速網通晶片與 AI 晶片代工設計巨人。' },
-                    { name: 'Advanced Micro Devices (AMD)', weight: '~4.5%', analysis: '高效能運算與資料中心晶片重要挑戰者。' }
-                ],
-                totalNote: '全球半導體景氣與資本支出風向球'
-            },
-            // 4. 台股大盤
-            { 
                 ticker: '0050', x: 14.5, y: 1.65, r: 26, category: 'tw', categoryName: '台股大盤', name: '0050 元大台灣50', returnRate: 14.5, yieldStr: '約 3.2%', payout: '半年度', desc: '代表台灣市值最大50家頂尖企業與護國神山。',
                 holdings: [
                     { name: '台積電 (2330)', weight: '53.2%', analysis: '全球晶圓代工絕對霸主，先進製程與 CoWoS 掌握AI命脈。' },
@@ -286,92 +234,35 @@
                 totalNote: '台積電佔比逾五成，高度連動台灣半導體出口表現'
             },
             { 
-                ticker: '006208', x: 14.6, y: 1.66, r: 25, category: 'tw', categoryName: '台股大盤', name: '006208 富邦台50', returnRate: 14.6, yieldStr: '約 3.1%', payout: '年度配息', desc: '追蹤台灣 50 指數，具備極具競爭力的內扣費用優勢。',
-                holdings: [
-                    { name: '台積電 (2330)', weight: '53.5%', analysis: '台灣半導體產業鏈絕對核心。' },
-                    { name: '鴻海 (2317)', weight: '6.0%', analysis: 'AI 伺服器與全球組裝龍頭。' }
-                ],
-                totalNote: '長期績效緊貼 0050，內扣成本更具長期複利優勢'
-            },
-            // 5. 高息現金流
-            { 
                 ticker: '00919', x: 10.2, y: 1.82, r: 24, category: 'div', categoryName: '高息現金流', name: '00919 群益精選高息', returnRate: 10.2, yieldStr: '約 10.0%', payout: '季配息', desc: '精選高股息與強悍填息能力的高息標的。',
                 holdings: [
                     { name: '聯電 (2303)', weight: '~10.5%', analysis: '成熟製程晶圓代工，現金殖利率長期穩定。' },
-                    { name: '長榮 (2603)', weight: '~8.5%', analysis: '全球航運巨頭，具備高現金發放率特質。' },
-                    { name: '聯詠 (3034)', weight: '~7.2%', analysis: '面板驅動 IC 領導廠，獲利與配息率表現穩健。' }
+                    { name: '長榮 (2603)', weight: '~8.5%', analysis: '全球航運巨頭，具備高現金發放率特質。' }
                 ],
                 totalNote: '成分股透過宣告股利率進行動態篩選'
             },
             { 
-                ticker: '00878', x: 9.8, y: 1.78, r: 23, category: 'div', categoryName: '高息現金流', name: '00878 國泰永續高股息', returnRate: 9.8, yieldStr: '約 7.5%', payout: '季配息', desc: '結合 ESG 篩選機制的國民級抗震高股息 ETF。',
-                holdings: [
-                    { name: '聯發科 (2454)', weight: '~6.2%', analysis: '兼具成長與高現金股利發放特質。' },
-                    { name: '華碩 (2357)', weight: '~5.8%', analysis: '品牌 PC 與電競硬體大廠，獲利能力強。' }
-                ],
-                totalNote: '強調 ESG 質化評級與產業分散配置'
-            },
-            { 
-                ticker: '00940', x: 9.5, y: 1.65, r: 21, category: 'div', categoryName: '高息現金流', name: '00940 元大臺灣價值高息', returnRate: 9.5, yieldStr: '約 8.2%', payout: '月配息', desc: '結合巴菲特價值投資哲學與自由現金流指標的高股息月配型標的。',
-                holdings: [
-                    { name: '長榮 (2603)', weight: '~5.5%', analysis: '高殖利率與運價週期支撐。' },
-                    { name: '聯發科 (2454)', weight: '~4.2%', analysis: '龍頭 IC 設計穩定現金紅利。' }
-                ],
-                totalNote: '重視本益比與自由現金流收益率之價值篩選'
-            },
-            // 6. 日本市場
-            { 
                 ticker: '00645', x: 11.5, y: 1.52, r: 22, category: 'japan', categoryName: '日本市場', name: '00645 富邦日本', returnRate: 11.5, yieldStr: '約 1.8%', payout: '年度配息', desc: '追蹤日本東證指數 (TOPIX)，完整涵蓋日本各產業龍頭與製造業復甦紅利。',
                 holdings: [
                     { name: 'Toyota Motor (豐田汽車)', weight: '~5.2%', analysis: '全球銷量第一車廠，受惠油電混合車 (HEV) 與全球供應鏈佈局。' },
-                    { name: 'Sony Group (索尼)', weight: '~2.8%', analysis: '娛樂、遊戲 (PlayStation) 與感光元件技術全球領導者。' },
-                    { name: 'Mitsubishi UFJ (三菱日聯金融)', weight: '~2.5%', analysis: '日本最大金融集團，受惠日本央行走向貨幣正常化與升息循環。' },
-                    { name: 'Keyence (基恩斯)', weight: ' ~2.1%', analysis: '工廠自動化與感測器大廠，受惠全球工廠智慧化升級。' }
+                    { name: 'Sony Group (索尼)', weight: '~2.8%', analysis: '娛樂、遊戲與感光元件技術全球領導者。' }
                 ],
-                totalNote: '揭露東證指數代表性前四大龍頭權重'
+                totalNote: '揭露東證指數代表性龍頭權重'
             },
-            { 
-                ticker: '00949', x: 12.4, y: 1.55, r: 21, category: 'japan', categoryName: '日本市場', name: '00949 中信日本半導體', returnRate: 12.4, yieldStr: '資本增值', payout: '年度配息', desc: '聚焦日本半導體設備、材料與車用晶片強勢供應鏈。',
-                holdings: [
-                    { name: 'Tokyo Electron (東京威力科創)', weight: '~9.5%', analysis: '全球前三大半導體微影與蝕刻設備巨頭，受惠先進製程擴產。' },
-                    { name: 'Lasertec (雷泰光電)', weight: '~6.8%', analysis: 'EUV 光罩檢測設備全球獨占供應商。' },
-                    { name: 'Shin-Etsu Chemical (信越化學)', weight: '~6.2%', analysis: '半導體矽晶圓與光阻劑全球市佔第一。' }
-                ],
-                totalNote: '聚焦日本半導體上游材料與設備關鍵核心企業'
-            },
-            // 7. 韓國市場
             { 
                 ticker: '00667', x: 12.0, y: 1.49, r: 22, category: 'korea', categoryName: '韓國市場', name: '00667 富邦韓國', returnRate: 12.0, yieldStr: '約 2.0%', payout: '年度配息', desc: '追蹤韓國KOSPI 200指數，高度集中南韓頂尖科技、記憶體與重工業巨頭。',
                 holdings: [
-                    { name: 'Samsung Electronics (三星電子)', weight: '~25.5%', analysis: '全球記憶體 (DRAM/NAND) 晶片與智慧型手機雙料霸主，積極佈局 HBM 高頻寬記憶體。' },
-                    { name: 'SK Hynix (SK海力士)', weight: '~8.5%', analysis: 'AI 高頻寬記憶體 (HBM) 核心供應商，與 NVIDIA 深度綁定。' },
-                    { name: 'LG Energy Solution (LG新能源)', weight: '~4.2%', analysis: '全球電動車 (EV) 電池製造巨頭。' },
-                    { name: 'Hyundai Motor (現代汽車)', weight: '~3.8%', analysis: '全球前三大汽車集團，北美與歐洲電動車市佔迅速擴張。' }
+                    { name: 'Samsung Electronics (三星電子)', weight: '~25.5%', analysis: '全球記憶體與智慧型手機雙料霸主，積極佈局 HBM。' },
+                    { name: 'SK Hynix (SK海力士)', weight: '~8.5%', analysis: 'AI 高頻寬記憶體 (HBM) 核心供應商。' }
                 ],
-                totalNote: '三星電子佔比高，高度連動全球記憶體週期與 AI 算力需求'
+                totalNote: '三星電子佔比高，高度連動全球記憶體週期'
             },
-            // 8. 全球債券
             { 
                 ticker: '00720B', x: 5.5, y: 1.45, r: 24, category: 'defend', categoryName: '全球債券', name: '00720B 元大美公債20年', returnRate: 5.5, yieldStr: '約 4.7%', payout: '季配息', desc: '美國 20 年期以上長天期投資級優質公債。',
                 holdings: [
-                    { name: '美國政府長天期公債 (US Treasury)', weight: '100.0%', analysis: '由美國政府信用背書（信評 AAA），具備最高流動性與聯準會降息時的資本利得爆發力。' }
+                    { name: '美國政府長天期公債 (US Treasury)', weight: '100.0%', analysis: '信評 AAA，具備最高流動性與降息時的資本利得爆發力。' }
                 ],
                 totalNote: '純美國政府公債組合'
-            },
-            { 
-                ticker: '00751B', x: 5.8, y: 1.48, r: 23, category: 'defend', categoryName: '全球債券', name: '00751B 元大美債20年', returnRate: 5.8, yieldStr: '約 4.8%', payout: '季配息', desc: '規模龐大的美國20年期長天期公債 ETF。',
-                holdings: [
-                    { name: '美國政府長天期公債 (US Treasury)', weight: '100.0%', analysis: '長天期公債對利率變動敏感度高，適合作為資產配置防禦錨。' }
-                ],
-                totalNote: '純美國長天期公債'
-            },
-            { 
-                ticker: 'BND', x: 5.2, y: 1.50, r: 22, category: 'defend', categoryName: '全球債券', name: 'BND 先鋒總體債券 ETF', returnRate: 5.2, yieldStr: '約 4.3%', payout: '月配息', desc: '涵蓋美國政府公債、高評級公司債與MBS的綜合型投資級總體債券標的。',
-                holdings: [
-                    { name: 'US Treasury Bonds', weight: '~45.0%', analysis: '高安全係數美國公債。' },
-                    { name: 'Investment Grade Corporate Bonds', weight: '~28.0%', analysis: '美國大型企業高評級公司債，提供額外收益率。' }
-                ],
-                totalNote: '分散風險極佳的全球總體債券資產防禦核心'
             }
         ];
 
