@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>全球資產配置與動態複利模擬系統</title>
+    <title>全球資產配置與資金潮汐動態複利模擬系統</title>
     <style>
         :root {
             --primary: #1B365D;
@@ -12,6 +12,8 @@
             --text: #2D3748;
             --border: #E2E8F0;
             --white: #FFFFFF;
+            --success: #2F855A;
+            --success-light: #F0FFF4;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -22,7 +24,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
         }
         header {
@@ -51,6 +53,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 8px;
         }
         
         table {
@@ -78,7 +82,12 @@
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        @media(max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        @media(max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
 
         .control-group {
             margin-bottom: 14px;
@@ -117,6 +126,8 @@
             border-radius: 8px;
             text-align: center;
         }
+        .kpi-card.success { background: var(--success-light); }
+        .kpi-card.success .value { color: var(--success); }
         .kpi-card .label { font-size: 12px; color: #4A5568; margin-bottom: 4px; font-weight: 600; }
         .kpi-card .value { font-size: 18px; font-weight: bold; color: var(--primary); }
 
@@ -131,13 +142,50 @@
 <body>
 <div class="container">
     <header>
-        <h1>全球資產配置與動態複利模擬系統</h1>
-        <p>整合跨國科技、防禦、台股大盤、高息、亞太市場與債券，並結合「每月定期投入」與「每年額外加碼」之全方位動態試算模型</p>
+        <h1>全球資產配置與資金潮汐動態複利模擬系統</h1>
+        <p>整合「資金潮汐（現金流動態管控）」、全方位跨國資產配置矩陣與「定期定額／每年加碼複利模擬」之頂級實戰操盤儀表板</p>
     </header>
 
-    <!-- Part 1: Asset Matrix -->
+    <!-- Part 1: Cash Flow Tide (資金潮汐模組) -->
     <div class="card">
-        <h2>1. 全球資產配置矩陣</h2>
+        <h2>🌊 1. 資金潮汐與現金流動態控管模組</h2>
+        <div class="grid-3">
+            <div>
+                <div class="control-group">
+                    <label>每月主動／被動現金流入 (TWD)</label>
+                    <input type="number" id="monthlyInflow" value="120000" step="5000">
+                </div>
+                <div class="control-group">
+                    <label>每月基本生活與固定支出 (TWD)</label>
+                    <input type="number" id="monthlyExpense" value="60000" step="5000">
+                </div>
+            </div>
+            <div>
+                <div class="control-group">
+                    <label>每月淨現金流（自動計算結餘）</label>
+                    <input type="number" id="monthlySurplus" value="60000" readonly style="background: #EDF2F7; font-weight: bold; color: var(--success);">
+                </div>
+                <div class="control-group">
+                    <label>建議每月投入投資比例 (%)</label>
+                    <input type="number" id="investRatio" value="0.50" step="0.05" min="0" max="1">
+                </div>
+            </div>
+            <div>
+                <div class="control-group">
+                    <label>連動設定：自動帶入每月定期投入 (TWD)</label>
+                    <input type="number" id="linkedMonthlyContrib" value="30000" readonly style="background: #EDF2F7;">
+                </div>
+                <div class="control-group">
+                    <label>每年額外年終／盈餘加碼 (TWD)</label>
+                    <input type="number" id="annualContrib" value="200000" step="50000">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Part 2: Asset Matrix (全球資產配置矩陣) -->
+    <div class="card">
+        <h2>🌐 2. 全球資產配置矩陣</h2>
         <table>
             <thead>
                 <tr>
@@ -212,22 +260,14 @@
         </table>
     </div>
 
-    <!-- Part 2: Simulation Controls & KPIs -->
+    <!-- Part 3: Simulation Parameters & KPIs -->
     <div class="card">
-        <h2>2. 30年動態複利與金流模擬參數</h2>
+        <h2>📈 3. 30年動態複利與金流模擬總覽</h2>
         <div class="grid-2">
             <div>
                 <div class="control-group">
                     <label>初始本金 (TWD) [自動同步矩陣總額]</label>
                     <input type="number" id="initCapital" value="10000000" step="100000">
-                </div>
-                <div class="control-group">
-                    <label>每月定期投入 (TWD)</label>
-                    <input type="number" id="monthlyContrib" value="30000" step="5000">
-                </div>
-                <div class="control-group">
-                    <label>每年額外加碼 (TWD)</label>
-                    <input type="number" id="annualContrib" value="200000" step="50000">
                 </div>
             </div>
             <div>
@@ -235,14 +275,16 @@
                     <label>預估加權年化報酬率 (%) [自動對應資產配置]</label>
                     <input type="number" id="annualRate" value="0.0928" step="0.001" readonly style="background: #EDF2F7;">
                 </div>
-                <div class="control-group">
-                    <label>模擬投資年期 (年)</label>
-                    <input type="number" id="simYears" value="30" min="1" max="50">
-                </div>
-                <div class="control-group">
-                    <label>通貨膨脹率 (%)</label>
-                    <input type="number" id="inflationRate" value="0.015" step="0.005">
-                </div>
+            </div>
+        </div>
+        <div class="grid-2" style="margin-top: 10px;">
+            <div class="control-group">
+                <label>模擬投資年期 (年)</label>
+                <input type="number" id="simYears" value="30" min="1" max="50">
+            </div>
+            <div class="control-group">
+                <label>通貨膨脹率 (%)</label>
+                <input type="number" id="inflationRate" value="0.015" step="0.005">
             </div>
         </div>
 
@@ -251,7 +293,7 @@
                 <div class="label">總投入本金</div>
                 <div class="value" id="kpiPrincipal">0</div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card success">
                 <div class="label">期末總資產市值</div>
                 <div class="value" id="kpiFinalVal">0</div>
             </div>
@@ -266,9 +308,9 @@
         </div>
     </div>
 
-    <!-- Part 3: Yearly Breakdown Table -->
+    <!-- Part 4: Yearly Breakdown Table -->
     <div class="card">
-        <h2>3. 逐年複利明細數據</h2>
+        <h2>📋 4. 逐年複利與資金潮汐明細數據</h2>
         <div class="table-container">
             <table>
                 <thead>
@@ -296,11 +338,24 @@ function formatMoney(num) {
     return Math.round(num).toLocaleString('en-US');
 }
 
+function updateCashFlowTide() {
+    let inflow = parseFloat(document.getElementById('monthlyInflow').value) || 0;
+    let expense = parseFloat(document.getElementById('monthlyExpense').value) || 0;
+    let surplus = inflow - expense;
+    let ratio = parseFloat(document.getElementById('investRatio').value) || 0.5;
+    
+    document.getElementById('monthlySurplus').value = surplus;
+    let monthlyInvest = Math.round(surplus * ratio);
+    document.getElementById('linkedMonthlyContrib').value = monthlyInvest;
+    
+    runSimulation();
+}
+
 function runSimulation() {
     let initCap = parseFloat(document.getElementById('initCapital').value) || 0;
-    let monthly = parseFloat(document.getElementById('monthlyContrib').value) || 0;
+    let monthly = parseFloat(document.getElementById('linkedMonthlyContrib').value) || 0;
     let annual = parseFloat(document.getElementById('annualContrib').value) || 0;
-    let rate = parseFloat(document.getElementById('annualRate').value) || 0.09;
+    let rate = parseFloat(document.getElementById('annualRate').value) || 0.0928;
     let years = parseInt(document.getElementById('simYears').value) || 30;
     let inflation = parseFloat(document.getElementById('inflationRate').value) || 0.015;
 
@@ -349,13 +404,13 @@ function runSimulation() {
     document.getElementById('kpiMultiple').innerText = multiple;
 }
 
-// Event listeners for live calculation
-['initCapital', 'monthlyContrib', 'annualContrib', 'simYears', 'inflationRate'].forEach(id => {
-    document.getElementById(id).addEventListener('input', runSimulation);
+// Event listeners for tide and simulation inputs
+['monthlyInflow', 'monthlyExpense', 'investRatio', 'annualContrib', 'initCapital', 'simYears', 'inflationRate'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updateCashFlowTide);
 });
 
 // Initial run
-runSimulation();
+updateCashFlowTide();
 </script>
 </body>
 </html>
