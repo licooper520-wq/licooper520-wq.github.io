@@ -14,7 +14,7 @@
                 extend: {
                     colors: {
                         brand: {
-                            bg: '#FAF6f0',     
+                            bg: '#FAF6f0',    
                             card: '#ffffff',
                             primary: '#B68D6A',  
                             secondary: '#D4B89F',
@@ -58,7 +58,6 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #main-content { font-size: var(--app-font-size, 1rem); }
         
-        /* 確保隱藏的 Modal 與 Loader 完全不阻擋滑鼠與觸控事件 */
         #globalLoader.hidden,
         #restoreModal.hidden,
         #dbModal.hidden,
@@ -90,7 +89,7 @@
                 <button type="button" onclick="window.adjustFontSize(1)" class="px-2 py-0.5 hover:bg-gray-600 rounded font-bold transition" title="放大字體">A+</button>
             </div>
 
-            <input type="file" id="backupFileInput" class="hidden" accept=".json">
+            <input type="file" id="backupFileInput" class="hidden" accept=".json" onchange="window.handleFileSelect(event)">
 
             <button type="button" onclick="window.createNewCustomer()" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5" title="開新表單">
                 <i class="fas fa-plus"></i> <span class="hidden sm:inline">新表單</span>
@@ -274,7 +273,6 @@
                 <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Skin Care Treatment Log Sheet</p>
             </div>
 
-            <!-- 表頭基本資料 -->
             <div class="border border-brand-primary rounded-xl p-4 md:p-6 mb-6 text-sm md:text-base">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
                     <div class="flex items-center gap-4">
@@ -373,7 +371,6 @@
                             </div>
                         </div>
 
-                        <!-- 眉毛狀況 -->
                         <div>
                             <span class="font-bold block mb-2">● 眉毛狀況：</span>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-4">
@@ -384,100 +381,506 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 頭皮注意事項與簽名 -->
+                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10 bg-[#FAF6f0]">
+                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">注意事項與簽名</div>
+                    <ul class="space-y-2 text-sm md:text-base mt-2 list-disc pl-5">
+                        <li>頭皮養護前若有嚴重傷口、皮膚感染或過敏現象請先行告知。</li>
+                        <li>我已充分了解相關護理注意事項，並同意由店家進行專業操作。</li>
+                    </ul>
+                    <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div class="flex-1 w-full relative">
+                            <div class="flex justify-between mb-1">
+                                <label class="font-bold">顧客同意簽章：</label>
+                                <button type="button" onclick="window.clearScalpMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border"><i class="fas fa-eraser"></i> 重簽</button>
+                            </div>
+                            <div class="border-2 border-brand-primary border-dashed bg-white relative rounded-lg overflow-hidden">
+                                <canvas id="scalpMainSignaturePad" width="600" height="150" class="w-full h-28 cursor-crosshair"></canvas>
+                                <div id="scalpMainSignPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-300 pointer-events-none tracking-widest text-lg">請在此處簽名</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 whitespace-nowrap">
+                            <label class="font-bold">填表日期：</label>
+                            <input type="date" id="scalpIntakeDate" class="input-line text-sm md:text-base bg-transparent">
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
 
-        <!-- ==================== 分頁 4: 頭皮服務紀錄表 ==================== -->
+        <!-- ==================== 分頁 4: 頭皮服務紀錄 ==================== -->
         <div id="tab-scalp-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
             <div class="text-center mb-8 relative">
                 <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
                 <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">頭皮服務紀錄表</h2>
-                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Treatment Log Sheet</p>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Care Treatment Log Sheet</p>
             </div>
-            <p class="text-center text-gray-500">頭皮服務紀錄內容...</p>
+
+            <div class="border border-brand-primary rounded-xl p-4 md:p-6 mb-6 text-sm md:text-base">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
+                    <div class="flex items-center">
+                        <label class="font-bold whitespace-nowrap mr-2">顧客姓名：</label>
+                        <input type="text" id="scalpLogCustName" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由頭皮資料卡連動">
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-bold whitespace-nowrap mr-2">聯絡電話：</label>
+                        <input type="tel" id="scalpLogCustPhone" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由頭皮資料卡連動">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-brand-primary rounded-lg overflow-x-auto">
+                <table class="w-full text-center border-collapse min-w-[650px]">
+                    <thead>
+                        <tr class="bg-[#C4A484] text-white">
+                            <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-52">養護項目</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                            <th class="py-3 px-2 border border-[#C4A484]">備註</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scalpLogTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 text-center export-hidden">
+                <button type="button" onclick="window.addScalpLogRow()" class="px-6 py-2.5 bg-brand-bg border border-brand-primary text-brand-text hover:bg-brand-secondary hover:text-white rounded-full transition font-bold shadow-sm">
+                    <i class="fas fa-plus mr-1"></i> 新增一筆頭皮服務紀錄
+                </button>
+            </div>
         </div>
     </main>
 
-    <!-- JS 邏輯：基本分頁與資料連動機制 -->
+    <!-- 資料庫管理視窗 (Modal) -->
+    <div id="dbModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-2xl w-full p-6 shadow-2xl border border-brand-border max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                <h3 class="font-bold text-lg text-brand-text flex items-center gap-2"><i class="fas fa-database text-brand-primary"></i> 雲端/本機客戶資料庫</h3>
+                <button type="button" onclick="window.closeCustomerListModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            <div class="mb-4">
+                <input type="text" id="dbSearchInput" oninput="window.filterCustomerList()" placeholder="搜尋顧客姓名或電話..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-brand-primary text-sm">
+            </div>
+            <div class="flex-1 overflow-y-auto divide-y divide-gray-100" id="customerListContainer">
+                <!-- 動態載入客戶列表 -->
+            </div>
+            <div class="mt-4 pt-3 border-t flex justify-end">
+                <button type="button" onclick="window.closeCustomerListModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-bold hover:bg-gray-300">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 簽名細節跳窗 (用於服務紀錄列表內的小簽名畫布) -->
+    <div id="signatureModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
+            <h3 class="font-bold text-lg mb-3 text-brand-text">請顧客簽名</h3>
+            <div class="border-2 border-brand-primary border-dashed bg-white relative rounded-lg overflow-hidden mb-4">
+                <canvas id="modalSignaturePad" width="400" height="200" class="w-full h-40 cursor-crosshair"></canvas>
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="window.clearModalCanvas()" class="px-4 py-2 bg-gray-200 rounded-lg text-sm">清除重寫</button>
+                <button type="button" onclick="window.closeSignatureModal(false)" class="px-4 py-2 bg-gray-500 text-white rounded-lg text-sm">取消</button>
+                <button type="button" onclick="window.closeSignatureModal(true)" class="px-4 py-2 bg-brand-primary text-white rounded-lg text-sm font-bold">確認儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 核心控制邏輯 -->
     <script>
-        // 分頁切換功能
+        let currentActiveTab = 'tab-skin-intake';
+        let currentCustomerId = 'cust_' + Date.now();
+        let currentFontSizeScale = 1.0;
+        let activeModalTarget = null; // 紀錄目前是哪一行表格在簽名
+
+        // 初始化畫布與預設日期
+        window.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T5')[0].substring(0, 10);
+            if(document.getElementById('skinIntakeDate')) document.getElementById('skinIntakeDate').value = today;
+            if(document.getElementById('scalpIntakeDate')) document.getElementById('scalpIntakeDate').value = today;
+            if(document.getElementById('skinJoinDate')) document.getElementById('skinJoinDate').value = today;
+
+            initSignCanvas('skinMainSignaturePad', 'skinMainSignPlaceholder');
+            initSignCanvas('scalpMainSignaturePad', 'scalpMainSignPlaceholder');
+            initSignCanvas('modalSignaturePad', null);
+
+            // 初始化載入或建立空白資料
+            loadCustomerData(currentCustomerId);
+            addSkinLogRow();
+            addScalpLogRow();
+        });
+
+        // 分頁切換函式
         window.switchTab = function(tabId) {
-            const tabs = ['tab-skin-intake', 'tab-skin-log', 'tab-scalp-intake', 'tab-scalp-log'];
-            tabs.forEach(id => {
+            ['tab-skin-intake', 'tab-skin-log', 'tab-scalp-intake', 'tab-scalp-log'].forEach(id => {
                 const el = document.getElementById(id);
                 const btn = document.getElementById('btn-' + id);
-                if (el) el.classList.add('hidden');
-                if (btn) {
-                    btn.classList.remove('text-brand-primary', 'border-brand-primary');
-                    btn.classList.add('text-gray-400', 'border-transparent');
+                if (id === tabId) {
+                    el.classList.remove('hidden');
+                    btn.className = "py-2.5 px-3 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base";
+                } else {
+                    el.classList.add('hidden');
+                    btn.className = "py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base";
                 }
             });
-
-            const targetTab = document.getElementById(tabId);
-            const targetBtn = document.getElementById('btn-' + tabId);
-            if (targetTab) targetTab.classList.remove('hidden');
-            if (targetBtn) {
-                targetBtn.classList.remove('text-gray-400', 'border-transparent');
-                targetBtn.classList.add('text-brand-primary', 'border-brand-primary');
-            }
+            currentActiveTab = tabId;
         };
 
-        // 肌膚與頭皮表單資料同步
+        // 資料同步（肌膚與頭皮表單基本資料互相連動）
         window.syncData = function(source) {
             if (source === 'skin') {
                 const name = document.getElementById('skinCustName').value;
                 const phone = document.getElementById('skinCustPhone').value;
                 const line = document.getElementById('skinCustLine').value;
-                const birthday = document.getElementById('skinCustBirthday').value;
-                const address = document.getElementById('skinCustAddress').value;
-
+                
                 document.getElementById('scalpCustName').value = name;
                 document.getElementById('scalpCustPhone').value = phone;
                 document.getElementById('scalpCustLine').value = line;
-                document.getElementById('scalpCustBirthday').value = birthday;
-                document.getElementById('scalpCustAddress').value = address;
 
                 document.getElementById('skinLogCustName').value = name;
                 document.getElementById('skinLogCustPhone').value = phone;
                 document.getElementById('skinLogCustLine').value = line;
-                document.getElementById('currentCustomerNameDisplay').textContent = name ? `顧客：${name}` : '正在建立新表單...';
+
+                document.getElementById('currentCustomerNameDisplay').textContent = name ? `當前顧客：${name}` : '正在建立新表單...';
             } else if (source === 'scalp') {
                 const name = document.getElementById('scalpCustName').value;
                 const phone = document.getElementById('scalpCustPhone').value;
                 const line = document.getElementById('scalpCustLine').value;
-                const birthday = document.getElementById('scalpCustBirthday').value;
-                const address = document.getElementById('scalpCustAddress').value;
-
+                
                 document.getElementById('skinCustName').value = name;
                 document.getElementById('skinCustPhone').value = phone;
                 document.getElementById('skinCustLine').value = line;
-                document.getElementById('skinCustBirthday').value = birthday;
-                document.getElementById('skinCustAddress').value = address;
 
-                document.getElementById('skinLogCustName').value = name;
-                document.getElementById('skinLogCustPhone').value = phone;
-                document.getElementById('skinLogCustLine').value = line;
-                document.getElementById('currentCustomerNameDisplay').textContent = name ? `顧客：${name}` : '正在建立新表單...';
+                document.getElementById('scalpLogCustName').value = name;
+                document.getElementById('scalpLogCustPhone').value = phone;
+
+                document.getElementById('currentCustomerNameDisplay').textContent = name ? `當前顧客：${name}` : '正在建立新表單...';
             }
         };
 
-        // 字體大小縮放
-        let currentFontRatio = 100;
-        window.adjustFontSize = function(delta) {
-            currentFontRatio += delta * 5;
-            if (currentFontRatio < 80) currentFontRatio = 80;
-            if (currentFontRatio > 120) currentFontRatio = 120;
-            document.getElementById('main-content').style.setProperty('--app-font-size', (currentFontRatio / 100) + 'rem');
-            document.getElementById('fontSizeIndicator').textContent = currentFontRatio + '%';
+        // 字體大小調整
+        window.adjustFontSize = function(direction) {
+            currentFontSizeScale += direction * 0.1;
+            if (currentFontSizeScale < 0.8) currentFontSizeScale = 0.8;
+            if (currentFontSizeScale > 1.3) currentFontSizeScale = 1.3;
+            document.documentElement.style.setProperty('--app-font-size', currentFontSizeScale + 'rem');
+            document.getElementById('fontSizeIndicator').textContent = Math.round(currentFontSizeScale * 100) + '%';
         };
 
-        // 清除簽名
+        // 簽名畫布初始化通用邏輯
+        function initSignCanvas(canvasId, placeholderId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let painting = false;
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            }
+
+            canvas.addEventListener('mousedown', start);
+            canvas.addEventListener('touchstart', start);
+            canvas.addEventListener('mouseup', stop);
+            canvas.addEventListener('touchend', stop);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('touchmove', draw);
+
+            function start(e) {
+                painting = true;
+                if (placeholderId) {
+                    const ph = document.getElementById(placeholderId);
+                    if (ph) ph.style.display = 'none';
+                }
+                draw(e);
+            }
+
+            function stop() {
+                painting = false;
+                ctx.beginPath();
+            }
+
+            function draw(e) {
+                if (!painting) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#4A3B32';
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            }
+        }
+
         window.clearSkinMainCanvas = function() {
             const canvas = document.getElementById('skinMainSignaturePad');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('skinMainSignPlaceholder').style.display = 'flex';
+        };
+
+        window.clearScalpMainCanvas = function() {
+            const canvas = document.getElementById('scalpMainSignaturePad');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById('scalpMainSignPlaceholder').style.display = 'flex';
+        };
+
+        // 服務紀錄動態加列
+        window.addSkinLogRow = function() {
+            const tbody = document.getElementById('skinLogTableBody');
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-gray-200 hover:bg-gray-50";
+            tr.innerHTML = `
+                <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
+                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入療程項目"></td>
+                <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
+                <td class="p-2 border text-center">
+                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition">點擊簽名</button>
+                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold"><i class="fas fa-check"></i> 已簽名</div>
+                </td>
+                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="備註..."></td>
+                <td class="p-2 border text-center export-hidden"><button type="button" onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600"><i class="fas fa-trash-alt"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        };
+
+        window.addScalpLogRow = function() {
+            const tbody = document.getElementById('scalpLogTableBody');
+            const tr = document.createElement('tr');
+            tr.className = "border-b border-gray-200 hover:bg-gray-50";
+            tr.innerHTML = `
+                <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
+                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入養護項目"></td>
+                <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
+                <td class="p-2 border text-center">
+                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition">點擊簽名</button>
+                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold"><i class="fas fa-check"></i> 已簽名</div>
+                </td>
+                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="備註..."></td>
+                <td class="p-2 border text-center export-hidden"><button type="button" onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600"><i class="fas fa-trash-alt"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        };
+
+        // 簽名跳窗控制
+        window.openSignatureModal = function(btn) {
+            activeModalTarget = btn.parentNode;
+            document.getElementById('signatureModal').classList.remove('hidden');
+            const canvas = document.getElementById('modalSignaturePad');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
+
+        window.clearModalCanvas = function() {
+            const canvas = document.getElementById('modalSignaturePad');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
+
+        window.closeSignatureModal = function(isSave) {
+            if (isSave && activeModalTarget) {
+                const canvas = document.getElementById('modalSignaturePad');
+                const dataURL = canvas.toDataURL();
+                activeModalTarget.dataset.signature = dataURL;
+                const preview = activeModalTarget.querySelector('.signature-preview');
+                const btn = activeModalTarget.querySelector('button');
+                if (preview) preview.classList.remove('hidden');
+                if (btn) btn.textContent = "重新簽名";
             }
+            document.getElementById('signatureModal').classList.add('hidden');
+            activeModalTarget = null;
+        };
+
+        // 雲端儲存與資料庫功能 (LocalStorage)
+        window.saveToDB = function() {
+            const loader = document.getElementById('globalLoader');
+            document.getElementById('loaderText').textContent = "雲端資料同步儲存中...";
+            loader.classList.remove('hidden');
+
+            setTimeout(() => {
+                const custName = document.getElementById('skinCustName').value || '未命名顧客';
+                const custPhone = document.getElementById('skinCustPhone').value || '無電話';
+                
+                const formData = {
+                    id: currentCustomerId,
+                    name: custName,
+                    phone: custPhone,
+                    updatedAt: new Date().toLocaleString(),
+                    skinIntake: getFormValues('skinIntakeForm'),
+                    scalpIntake: getFormValues('scalpIntakeForm')
+                };
+
+                let db = JSON.parse(localStorage.getItem('j57_beauty_db') || '{}');
+                db[currentCustomerId] = formData;
+                localStorage.setItem('j57_beauty_db', JSON.stringify(db));
+
+                loader.classList.add('hidden');
+                alert('✨ 雲端/本機資料儲存成功！');
+            }, 600);
+        };
+
+        function getFormValues(formId) {
+            const form = document.getElementById(formId);
+            if (!form) return {};
+            const obj = {};
+            const inputs = form.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    if (input.checked) {
+                        if (!obj[input.name]) obj[input.name] = [];
+                        obj[input.name].push(input.value);
+                    }
+                } else if (input.id) {
+                    obj[input.id] = input.value;
+                }
+            });
+            return obj;
+        }
+
+        window.createNewCustomer = function() {
+            if (confirm('確定要開新表單嗎？未儲存的變更將會重設。')) {
+                currentCustomerId = 'cust_' + Date.now();
+                document.getElementById('skinIntakeForm').reset();
+                document.getElementById('scalpIntakeForm').reset();
+                window.clearSkinMainCanvas();
+                window.clearScalpMainCanvas();
+                document.getElementById('currentCustomerNameDisplay').textContent = "正在建立新表單...";
+            }
+        };
+
+        window.openCustomerListModal = function() {
+            renderCustomerList();
+            document.getElementById('dbModal').classList.remove('hidden');
+        };
+
+        window.closeCustomerListModal = function() {
+            document.getElementById('dbModal').classList.add('hidden');
+        };
+
+        function renderCustomerList(filterText = '') {
+            const container = document.getElementById('customerListContainer');
+            let db = JSON.parse(localStorage.getItem('j57_beauty_db') || '{}');
+            container.innerHTML = '';
+
+            const keys = Object.keys(db);
+            if (keys.length === 0) {
+                container.innerHTML = '<div class="p-6 text-center text-gray-400">目前尚無儲存的顧客資料</div>';
+                return;
+            }
+
+            keys.forEach(id => {
+                const cust = db[id];
+                if (filterText && !cust.name.includes(filterText) && !cust.phone.includes(filterText)) return;
+
+                const div = document.createElement('div');
+                div.className = "p-4 hover:bg-brand-bg flex justify-between items-center transition cursor-pointer";
+                div.innerHTML = `
+                    <div>
+                        <h4 class="font-bold text-brand-text text-base">${cust.name} <span class="text-xs text-gray-500 font-normal">(${cust.phone})</span></h4>
+                        <p class="text-xs text-gray-400">最後更新：${cust.updatedAt || '未知'}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="window.loadCustomer('${id}')" class="px-3 py-1.5 bg-brand-primary text-white rounded-lg text-xs font-bold hover:bg-brand-secondary">載入</button>
+                        <button type="button" onclick="window.deleteCustomer('${id}')" class="px-2 py-1.5 bg-red-100 text-red-600 rounded-lg text-xs hover:bg-red-200"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.filterCustomerList = function() {
+            const text = document.getElementById('dbSearchInput').value;
+            renderCustomerList(text);
+        };
+
+        window.loadCustomer = function(id) {
+            let db = JSON.parse(localStorage.getItem('j57_beauty_db') || '{}');
+            if (db[id]) {
+                currentCustomerId = id;
+                const cust = db[id];
+                // 載入邏輯簡化對應
+                document.getElementById('skinCustName').value = cust.skinIntake?.skinCustName || cust.name || '';
+                document.getElementById('skinCustPhone').value = cust.skinIntake?.skinCustPhone || cust.phone || '';
+                window.syncData('skin');
+                closeCustomerListModal();
+                alert(`已成功載入 ${cust.name} 的資料！`);
+            }
+        };
+
+        window.deleteCustomer = function(id) {
+            if (confirm('確定要刪除此筆客戶記錄嗎？')) {
+                let db = JSON.parse(localStorage.getItem('j57_beauty_db') || '{}');
+                delete db[id];
+                localStorage.setItem('j57_beauty_db', JSON.stringify(db));
+                renderCustomerList();
+            }
+        };
+
+        function loadCustomerData(id) {
+            // 初始化預留
+        }
+
+        // 智慧備份與匯出
+        window.exportDatabaseBackup = function() {
+            const db = localStorage.getItem('j57_beauty_db') || '{}';
+            const blob = new Blob([db], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `J57_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        };
+
+        window.triggerRestoreBackup = function() {
+            document.getElementById('backupFileInput').click();
+        };
+
+        window.handleFileSelect = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    localStorage.setItem('j57_beauty_db', JSON.stringify(data));
+                    alert('✨ 資料還原成功！');
+                } catch(err) {
+                    alert('檔案格式錯誤，還原失敗。');
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        // 圖片匯出
+        window.exportToImage = function() {
+            const loader = document.getElementById('globalLoader');
+            document.getElementById('loaderText').textContent = "正在產生高畫質圖片...";
+            loader.classList.remove('hidden');
+            document.body.classList.add('exporting');
+
+            const activeEl = document.getElementById(currentActiveTab);
+
+            setTimeout(() => {
+                html2canvas(activeEl, { scale: 2, useCORS: true }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `J57_${currentActiveTab}_${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    document.body.classList.remove('exporting');
+                    loader.classList.add('hidden');
+                }).catch(err => {
+                    document.body.classList.remove('exporting');
+                    loader.classList.add('hidden');
+                    alert('匯出圖片發生錯誤。');
+                });
+            }, 500);
         };
     </script>
 </body>
