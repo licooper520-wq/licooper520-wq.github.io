@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 美學管理系統 v3.0</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -43,6 +43,9 @@
         input[type="checkbox"], input[type="radio"] {
             accent-color: #B68D6A; width: 1.1rem; height: 1.1rem; cursor: pointer;
         }
+        .sub-checkbox {
+            accent-color: #B68D6A; width: 0.95rem; height: 0.95rem; cursor: pointer;
+        }
         .export-hidden { display: flex; }
         body.exporting .export-hidden { display: none !important; }
         body.exporting .paper-container { box-shadow: none; border: none; border-radius: 0; margin: 0; padding: 2rem; max-width: none; }
@@ -53,6 +56,7 @@
             border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #main-content { font-size: var(--app-font-size, 1rem); }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden text-brand-text relative">
@@ -64,18 +68,25 @@
                 J
             </div>
             <div class="hidden md:block">
-                <h1 class="font-bold text-lg tracking-wider">J.57 美學管理系統</h1>
+                <h1 class="font-bold text-lg tracking-wider">J.57 雙系統美學管理</h1>
                 <p class="text-xs text-brand-secondary" id="currentCustomerNameDisplay">正在建立新表單...</p>
             </div>
         </div>
         
         <div class="flex items-center gap-1.5 md:gap-2">
+            <div class="flex items-center bg-gray-700 rounded px-1.5 py-1 text-xs md:text-sm mr-1">
+                <span class="text-gray-300 mr-1 hidden sm:inline"><i class="fas fa-text-height"></i></span>
+                <button type="button" onclick="window.adjustFontSize(-1)" class="px-2 py-0.5 hover:bg-gray-600 rounded font-bold transition" title="縮小字體">A-</button>
+                <span id="fontSizeIndicator" class="px-1 text-brand-secondary font-medium">100%</span>
+                <button type="button" onclick="window.adjustFontSize(1)" class="px-2 py-0.5 hover:bg-gray-600 rounded font-bold transition" title="放大字體">A+</button>
+            </div>
+
             <input type="file" id="backupFileInput" class="hidden" accept=".json">
 
             <button type="button" onclick="window.createNewCustomer()" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5" title="開新表單">
                 <i class="fas fa-plus"></i> <span class="hidden sm:inline">新表單</span>
             </button>
-            <button type="button" onclick="window.openCustomerListModal()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 border border-gray-500" title="開啟資料庫">
+            <button type="button" onclick="window.openCustomerListModal()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 border border-gray-500" title="開啟雲端資料庫">
                 <i class="fas fa-database"></i> <span class="hidden sm:inline">資料庫</span>
             </button>
             
@@ -92,13 +103,13 @@
                     </button>
                     <div class="border-t border-gray-100 my-1"></div>
                     <button type="button" onclick="window.restoreFromLocalCache()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2 text-green-700 font-medium">
-                        <i class="fas fa-history"></i> 從瀏覽器快取還原
+                        <i class="fas fa-history"></i> 從瀏覽器安全快取還原
                     </button>
                 </div>
             </div>
 
             <button type="button" onclick="window.saveToDB()" class="px-3.5 py-2 bg-brand-primary hover:bg-brand-secondary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 shadow-lg">
-                <i class="fas fa-cloud-upload-alt"></i> <span class="hidden sm:inline">儲存資料</span>
+                <i class="fas fa-cloud-upload-alt"></i> <span class="hidden sm:inline">雲端儲存</span>
             </button>
             <button type="button" onclick="window.exportToImage()" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5">
                 <i class="fas fa-image"></i> <span class="hidden lg:inline">匯出圖片</span>
@@ -106,13 +117,19 @@
         </div>
     </header>
 
-    <!-- 分頁切換標籤 -->
-    <div class="bg-white border-b border-gray-200 flex justify-center gap-4 sm:gap-8 shrink-0 px-4">
-        <button type="button" onclick="window.switchTab('tab-intake')" id="btn-tab-intake" class="py-3 px-4 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base">
-            肌膚管理顧客資料表
+    <!-- 分頁切換標籤 (四大分頁) -->
+    <div class="bg-white border-b border-gray-200 flex justify-center flex-wrap gap-2 sm:gap-6 shrink-0 px-2 pt-2">
+        <button type="button" onclick="window.switchTab('tab-skin-intake')" id="btn-tab-skin-intake" class="py-2.5 px-3 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base">
+            肌膚管理資料表
         </button>
-        <button type="button" onclick="window.switchTab('tab-log')" id="btn-tab-log" class="py-3 px-4 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
-            服務紀錄表
+        <button type="button" onclick="window.switchTab('tab-skin-log')" id="btn-tab-skin-log" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
+            肌膚服務紀錄
+        </button>
+        <button type="button" onclick="window.switchTab('tab-scalp-intake')" id="btn-tab-scalp-intake" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
+            頭皮養護資料卡
+        </button>
+        <button type="button" onclick="window.switchTab('tab-scalp-log')" id="btn-tab-scalp-log" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
+            頭皮服務紀錄
         </button>
     </div>
 
@@ -124,33 +141,32 @@
             <p class="font-bold text-brand-text tracking-widest text-sm" id="loaderText">系統同步中...</p>
         </div>
 
-        <!-- 分頁 1: 初診表 -->
-        <div id="tab-intake" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border">
+        <!-- ==================== 分頁 1: 肌膚管理顧客資料表 ==================== -->
+        <div id="tab-skin-intake" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border">
             <div class="text-center mb-8 relative">
                 <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
                 <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">肌膚管理顧客資料表</h2>
                 <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Skin Management Client Profile</p>
             </div>
 
-            <form id="intakeForm" class="space-y-6">
+            <form id="skinIntakeForm" class="space-y-6">
                 <!-- 基本資料 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">基本資料</div>
-                    
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 mt-2">
-                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">姓名：</label><input type="text" id="custName" class="input-line flex-1" oninput="window.syncData()"></div>
-                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">生日：</label><input type="date" id="custBirthday" class="input-line flex-1 text-sm"></div>
-                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">電話：</label><input type="tel" id="custPhone" class="input-line flex-1" oninput="window.syncData()"></div>
-                        <div class="flex items-center lg:col-span-1"><label class="whitespace-nowrap mr-2 font-bold">LINE ID：</label><input type="text" id="custLine" class="input-line flex-1" oninput="window.syncData()"></div>
-                        <div class="flex items-center lg:col-span-2"><label class="whitespace-nowrap mr-2 font-bold">地址：</label><input type="text" id="custAddress" class="input-line flex-1"></div>
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">姓名：</label><input type="text" id="skinCustName" class="input-line flex-1" oninput="window.syncData('skin')"></div>
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">生日：</label><input type="date" id="skinCustBirthday" class="input-line flex-1 text-sm" oninput="window.syncData('skin')"></div>
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">電話：</label><input type="tel" id="skinCustPhone" class="input-line flex-1" oninput="window.syncData('skin')"></div>
+                        <div class="flex items-center lg:col-span-1"><label class="whitespace-nowrap mr-2 font-bold">LINE ID：</label><input type="text" id="skinCustLine" class="input-line flex-1" oninput="window.syncData('skin')"></div>
+                        <div class="flex items-center lg:col-span-2"><label class="whitespace-nowrap mr-2 font-bold">地址：</label><input type="text" id="skinCustAddress" class="input-line flex-1" oninput="window.syncData('skin')"></div>
                         
                         <div class="col-span-full flex flex-wrap items-center gap-3 mt-2 text-sm md:text-base">
                             <label class="whitespace-nowrap font-bold">如何得知本店：</label>
-                            <label><input type="checkbox" name="howKnow" value="IG"> IG</label>
-                            <label><input type="checkbox" name="howKnow" value="FB"> FB</label>
-                            <label><input type="checkbox" name="howKnow" value="Google"> Google</label>
-                            <div class="flex items-center"><label><input type="checkbox" name="howKnow" value="親友介紹"> 親友介紹，介紹人</label><input type="text" id="referralName" class="input-line w-20 ml-1"></div>
-                            <div class="flex items-center"><label><input type="checkbox" name="howKnow" value="其他"> 其他</label><input type="text" id="otherKnowText" class="input-line w-20 ml-1"></div>
+                            <label><input type="checkbox" name="skinHowKnow" value="IG"> IG</label>
+                            <label><input type="checkbox" name="skinHowKnow" value="FB"> FB</label>
+                            <label><input type="checkbox" name="skinHowKnow" value="Google"> Google</label>
+                            <div class="flex items-center"><label><input type="checkbox" name="skinHowKnow" value="親友介紹"> 親友介紹，介紹人</label><input type="text" id="skinReferralName" class="input-line w-20 ml-1"></div>
+                            <div class="flex items-center"><label><input type="checkbox" name="skinHowKnow" value="其他"> 其他</label><input type="text" id="skinOtherKnowText" class="input-line w-20 ml-1"></div>
                         </div>
 
                         <div class="col-span-full flex flex-wrap items-center gap-4 mt-1 text-sm md:text-base">
@@ -165,7 +181,6 @@
                 <!-- 基本狀況 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">基本狀況</div>
-                    
                     <div class="space-y-3 mt-2 text-sm md:text-base leading-relaxed">
                         <div class="flex items-center gap-4"><span class="font-bold">● 是否有化妝習慣：</span><label><input type="radio" name="makeupHabit" value="是"> 是</label><label><input type="radio" name="makeupHabit" value="否"> 否</label></div>
                         <div class="flex items-center gap-4"><span class="font-bold">● 是否有去角質習慣：</span><label><input type="radio" name="exfoliateHabit" value="是"> 是</label><label><input type="radio" name="exfoliateHabit" value="否"> 否</label></div>
@@ -209,14 +224,13 @@
                             <label><input type="checkbox" name="healthCond" value="腸胃機能不佳"> 腸胃機能不佳</label><label><input type="checkbox" name="healthCond" value="其他"> 其他</label>
                         </div>
 
-                        <div class="flex mt-3"><label class="whitespace-nowrap font-bold mr-2">備註：</label><textarea id="intakeNotes" rows="2" class="flex-1 input-line resize-none" placeholder="輸入備註..."></textarea></div>
+                        <div class="flex mt-3"><label class="whitespace-nowrap font-bold mr-2">備註：</label><textarea id="skinIntakeNotes" rows="2" class="flex-1 input-line resize-none" placeholder="輸入備註..."></textarea></div>
                     </div>
                 </div>
 
                 <!-- 注意事項與簽名 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10 bg-[#FAF6f0]">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">注意事項與簽名</div>
-                    
                     <ul class="space-y-2 text-sm md:text-base mt-2 list-disc pl-5">
                         <li>如本身有癲癇、皮膚發炎、過敏、曬傷或有傷口，請事先告知由美容師評估。</li>
                         <li>如本身有任何疾病仍堅持施作，操作過程中若有微紅腫、刺痛等現象，須自行承擔風險。</li>
@@ -227,36 +241,32 @@
                         </li>
                         <li>我已充分了解以上注意事項，在此證明最佳認知狀態下填寫，並簽名同意。</li>
                     </ul>
-
                     <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div class="flex-1 w-full relative">
                             <div class="flex justify-between mb-1">
                                 <label class="font-bold">顧客同意簽章：</label>
-                                <button type="button" onclick="window.clearMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border"><i class="fas fa-eraser"></i> 重簽</button>
+                                <button type="button" onclick="window.clearSkinMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border"><i class="fas fa-eraser"></i> 重簽</button>
                             </div>
                             <div class="border-2 border-brand-primary border-dashed bg-white relative rounded-lg overflow-hidden">
-                                <canvas id="mainSignaturePad" width="600" height="150" class="w-full h-28 cursor-crosshair"></canvas>
-                                <div id="mainSignPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-300 pointer-events-none tracking-widest text-lg">
-                                    請在此處簽名
-                                </div>
+                                <canvas id="skinMainSignaturePad" width="600" height="150" class="w-full h-28 cursor-crosshair"></canvas>
+                                <div id="skinMainSignPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-300 pointer-events-none tracking-widest text-lg">請在此處簽名</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 whitespace-nowrap">
                             <label class="font-bold">填表日期：</label>
-                            <input type="date" id="intakeDate" class="input-line text-sm md:text-base bg-transparent">
+                            <input type="date" id="skinIntakeDate" class="input-line text-sm md:text-base bg-transparent">
                         </div>
                     </div>
                 </div>
             </form>
         </div>
 
-        <!-- 分頁 2: 服務紀錄表 -->
-        <div id="tab-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
-            
+        <!-- ==================== 分頁 2: 肌膚管理服務紀錄表 ==================== -->
+        <div id="tab-skin-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
             <div class="text-center mb-8 relative">
                 <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
-                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">顧客資料與服務紀錄表</h2>
-                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Client Information & Log Sheet</p>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">肌膚管理服務紀錄表</h2>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Skin Care Treatment Log Sheet</p>
             </div>
 
             <!-- 表頭基本資料 -->
@@ -264,29 +274,28 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
                     <div class="flex items-center gap-4">
                         <span class="font-bold">會員：</span>
-                        <label><input type="checkbox" id="isVIP"> VIP</label>
-                        <label><input type="checkbox" id="isVVIP"> VVIP</label>
+                        <label><input type="checkbox" id="skinIsVIP"> VIP</label>
+                        <label><input type="checkbox" id="skinIsVVIP"> VVIP</label>
                     </div>
                     <div class="flex items-center md:justify-end">
                         <label class="font-bold whitespace-nowrap mr-2">入會日期 (期限一年)：</label>
-                        <input type="date" id="joinDate" class="input-line text-sm">
+                        <input type="date" id="skinJoinDate" class="input-line text-sm">
                     </div>
                     <div class="flex items-center">
                         <label class="font-bold whitespace-nowrap mr-2">顧客姓名：</label>
-                        <input type="text" id="logCustName" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                        <input type="text" id="skinLogCustName" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
                     </div>
                     <div class="flex items-center">
                         <label class="font-bold whitespace-nowrap mr-2">聯絡電話：</label>
-                        <input type="tel" id="logCustPhone" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                        <input type="tel" id="skinLogCustPhone" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
                     </div>
                     <div class="flex items-center md:col-span-2">
                         <label class="font-bold whitespace-nowrap mr-2">LINE ID：</label>
-                        <input type="text" id="logCustLine" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                        <input type="text" id="skinLogCustLine" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
                     </div>
                 </div>
             </div>
 
-            <!-- 動態服務紀錄表 -->
             <div class="border border-brand-primary rounded-lg overflow-x-auto">
                 <table class="w-full text-center border-collapse min-w-[650px]">
                     <thead>
@@ -299,49 +308,270 @@
                             <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
                         </tr>
                     </thead>
-                    <tbody id="logTableBody">
+                    <tbody id="skinLogTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 text-center export-hidden">
+                <button type="button" onclick="window.addSkinLogRow()" class="px-6 py-2.5 bg-brand-bg border border-brand-primary text-brand-text hover:bg-brand-secondary hover:text-white rounded-full transition font-bold shadow-sm">
+                    <i class="fas fa-plus mr-1"></i> 新增一筆服務紀錄
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁 3: 頭皮養護顧客資料卡 ==================== -->
+        <div id="tab-scalp-intake" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
+            <div class="text-center mb-8 relative">
+                <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">頭皮養護顧客資料卡</h2>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Care & Hair Management Profile</p>
+            </div>
+
+            <form id="scalpIntakeForm" class="space-y-6">
+                <!-- 基本資料 -->
+                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
+                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">基本資料 (已連動)</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 mt-2">
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">姓名：</label><input type="text" id="scalpCustName" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">生日：</label><input type="date" id="scalpCustBirthday" class="input-line flex-1 text-sm" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">電話：</label><input type="tel" id="scalpCustPhone" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center lg:col-span-1"><label class="whitespace-nowrap mr-2 font-bold">LINE ID：</label><input type="text" id="scalpCustLine" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center lg:col-span-2"><label class="whitespace-nowrap mr-2 font-bold">地址：</label><input type="text" id="scalpCustAddress" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        
+                        <div class="col-span-full flex flex-wrap items-center gap-3 mt-2 text-sm md:text-base">
+                            <label class="whitespace-nowrap font-bold">如何得知本店：</label>
+                            <label><input type="checkbox" name="scalpHowKnow" value="IG"> IG</label>
+                            <label><input type="checkbox" name="scalpHowKnow" value="FB"> FB</label>
+                            <label><input type="checkbox" name="scalpHowKnow" value="Google"> Google</label>
+                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="親友介紹"> 親友介紹，介紹人</label><input type="text" id="scalpReferralName" class="input-line w-20 ml-1"></div>
+                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="其他"> 其他</label><input type="text" id="scalpOtherKnowText" class="input-line w-20 ml-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 頭皮與落髮狀況評估 -->
+                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
+                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">頭皮與毛髮狀況評估</div>
+                    
+                    <div class="space-y-4 mt-2 text-sm md:text-base leading-relaxed">
+                        <div>
+                            <span class="font-bold block mb-1">● 主要困擾 / 落髮區域：</span>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pl-4">
+                                <label><input type="checkbox" name="hairIssue" value="M字額"> M字額</label>
+                                <label><input type="checkbox" name="hairIssue" value="頭頂稀疏"> 頭頂稀疏</label>
+                                <label><input type="checkbox" name="hairIssue" value="分髮線變寬"> 分髮線變寬</label>
+                                <label><input type="checkbox" name="hairIssue" value="產後落髮"> 產後落髮</label>
+                                <label><input type="checkbox" name="hairIssue" value="壓力型落髮"> 壓力型落髮</label>
+                                <label><input type="checkbox" name="hairIssue" value="白髮增多"> 白髮增多</label>
+                                <label><input type="checkbox" name="hairIssue" value="頭皮屑/搔癢"> 頭皮屑/搔癢</label>
+                                <label><input type="checkbox" name="hairIssue" value="頭皮容易出油"> 頭皮容易出油</label>
+                            </div>
+                        </div>
+
+                        <!-- 眉毛狀況 -->
+                        <div>
+                            <span class="font-bold block mb-2">● 眉毛狀況：</span>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-4">
+                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="稀疏"> 稀疏</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_稀疏" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_稀疏" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_稀疏" value="後" class="sub-checkbox"> 後</label></div></div>
+                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="空洞"> 空洞</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_空洞" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_空洞" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_空洞" value="後" class="sub-checkbox"> 後</label></div></div>
+                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="受損"> 受損</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_受損" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_受損" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_受損" value="後" class="sub-checkbox"> 後</label></div></div>
+                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="細毛"> 細毛</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_細毛" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_細毛" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_細毛" value="後" class="sub-checkbox"> 後</label></div></div>
+                            </div>
+                            <div class="flex items-center mt-2 pl-4">
+                                <label><input type="checkbox" name="browCond" value="其它"> 其它</label>
+                                <input type="text" id="otherBrowText" class="input-line w-48 ml-2">
+                            </div>
+                        </div>
+
+                        <!-- 白髮狀況 -->
+                        <div>
+                            <span class="font-bold block mb-1">● 白髮狀況：</span>
+                            <div class="flex flex-wrap items-center gap-3 pl-4">
+                                <label><input type="checkbox" name="whiteHairCond" value="瀏海（左、右）"> 瀏海（左、右）</label><label><input type="checkbox" name="whiteHairCond" value="頭頂"> 頭頂</label>
+                                <label><input type="checkbox" name="whiteHairCond" value="分髮線（左、中、右）"> 分髮線（左、中、右）</label><label><input type="checkbox" name="whiteHairCond" value="上半頭"> 上半頭</label>
+                                <label><input type="checkbox" name="whiteHairCond" value="整頭"> 整頭</label><label><input type="checkbox" name="whiteHairCond" value="下半頭"> 下半頭</label><label><input type="checkbox" name="whiteHairCond" value="少年白"> 少年白</label>
+                                <div class="flex items-center"><label><input type="checkbox" name="whiteHairCond" value="其它"> 其它</label><input type="text" id="otherWhiteHairText" class="input-line w-28 ml-1"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="font-bold block mb-1">● 頭皮屬性：</span>
+                            <div class="flex flex-wrap gap-4 pl-4">
+                                <label><input type="radio" name="scalpType" value="油性頭皮"> 油性頭皮</label><label><input type="radio" name="scalpType" value="乾性頭皮"> 乾性頭皮</label>
+                                <label><input type="radio" name="scalpType" value="敏感性頭皮"> 敏感性頭皮</label><label><input type="radio" name="scalpType" value="混合性頭皮"> 混合性頭皮</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="font-bold block mb-1">● 生活與作息習慣：</span>
+                            <div class="flex flex-wrap gap-4 pl-4">
+                                <label><input type="checkbox" name="lifestyle" value="經常熬夜"> 經常熬夜</label><label><input type="checkbox" name="lifestyle" value="壓力大"> 壓力大</label>
+                                <label><input type="checkbox" name="lifestyle" value="經常燙染"> 經常燙染</label><label><input type="checkbox" name="lifestyle" value="抽菸/飲酒"> 抽菸/飲酒</label><label><input type="checkbox" name="lifestyle" value="睡眠品質不佳"> 睡眠品質不佳</label>
+                            </div>
+                        </div>
+
+                        <div class="flex mt-3"><label class="whitespace-nowrap font-bold mr-2">頭皮養護專員備註：</label><textarea id="scalpIntakeNotes" rows="2" class="flex-1 input-line resize-none" placeholder="輸入頭皮檢測狀況或特殊需求..."></textarea></div>
+                    </div>
+                </div>
+
+                <!-- 注意事項與聲明 -->
+                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10 bg-[#FAF6f0]">
+                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">頭皮養護服務聲明與注意事項</div>
+                    
+                    <div class="space-y-4 text-sm md:text-base mt-2">
+                        <div>
+                            <p class="font-bold text-brand-text mb-1">【顧客注意事項（同意下列敘述請在框內打勾✔，代表「每次」服務皆同意下列敘述）】</p>
+                            <ul class="space-y-1 text-gray-700 pl-2">
+                                <li class="flex items-start"><span class="mr-2">①</span>施作部位過敏、長痘痘者不適合。</li>
+                                <li class="flex items-start"><span class="mr-2">②</span>懷孕、哺乳不能施作。</li>
+                                <li class="flex items-start"><span class="mr-2">③</span>曾罹癌症問題、紅斑性狼瘡或其他免疫疾病者、糖尿病患者皆不能施作。</li>
+                                <li class="mt-2"><label class="font-bold text-brand-primary"><input type="checkbox" id="noIssueConsent" class="mr-2"> 本人皆無以上狀況</label></li>
+                            </ul>
+                        </div>
+
+                        <div class="border-t border-brand-border pt-3">
+                            <p class="font-bold text-brand-text mb-2">✒️ 青春賦活髮絲 保養注意事項</p>
+                            <ul class="space-y-2 text-gray-700 pl-2">
+                                <li><label><input type="checkbox" name="blackHairNotice" value="產品每日使用一次晚"> 產品每日使用一次晚（洗完頭或晚上），建議後續可以持續使用作為保養。</label></li>
+                                <li><label><input type="checkbox" name="blackHairNotice" value="產品使用後需按摩"> 產品使用後需按摩3-5分鐘再靜置5分鐘，不要直接吹乾！</label></li>
+                                <li><label><input type="checkbox" name="blackHairNotice" value="施作後不可蒸桑拿"> 施作後不可蒸桑拿或者去高溫處暴曬，不得用化妝品、保養品殘留在操作部位。</label></li>
+                                <li><label><input type="checkbox" name="blackHairNotice" value="24小時之內不宜直接碰水"> 24小時之內不宜直接碰水，並建議24小時後，洗頭盡量不去搓洗操作部位。</label></li>
+                                <li><label><input type="checkbox" name="blackHairNotice" value="少數人施作後會發生"> 少數人施作後會發生耳後淋巴結紅腫，請務必於施作完一週內，保持正常作息及充足睡眠。</label></li>
+                                <li><label><input type="checkbox" name="blackHairNotice" value="染髮、燙髮須間隔"> 染髮、燙髮、頭皮去角質、頭皮護理須間隔一個月，施作後洗頭吹頭髮溫度不宜太高或太低。</label></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-lg border border-brand-primary text-xs md:text-sm text-gray-800 leading-relaxed space-y-3 shadow-inner">
+                            <p class="font-medium text-brand-text">本人自身若有任何過敏、病症、發炎傷口時，會如實告知操作者，並知悉所使用產品為合格品，若因個人體質或未遵守後續保養產生的不適現象，服務人員及店家享有免責權。</p>
+                            <p class="font-medium text-brand-text">本人已充分了解上述注意事項及保養建議，並認知遵守保養須知及術後維護為本人之責任。在此證明本表格內容完全為本人於最佳認知狀況下所填寫，特此簽名同意施作。</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                        <div class="flex-1 w-full relative">
+                            <div class="flex justify-between mb-1">
+                                <label class="font-bold">客戶同意簽章：</label>
+                                <button type="button" onclick="window.clearScalpMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border"><i class="fas fa-eraser"></i> 重簽</button>
+                            </div>
+                            <div class="border-2 border-brand-primary border-dashed bg-white relative rounded-lg overflow-hidden">
+                                <canvas id="scalpMainSignaturePad" width="600" height="150" class="w-full h-28 cursor-crosshair"></canvas>
+                                <div id="scalpMainSignPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-300 pointer-events-none tracking-widest text-lg">請在此處簽名</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 whitespace-nowrap">
+                            <label class="font-bold">日期：</label>
+                            <input type="date" id="scalpIntakeDate" class="input-line text-sm md:text-base bg-transparent">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- ==================== 分頁 4: 頭皮護理課程服務紀錄表 ==================== -->
+        <div id="tab-scalp-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
+            
+            <div class="text-center mb-8 relative">
+                <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">頭皮護理課程服務紀錄表</h2>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Care Treatment Log Sheet</p>
+            </div>
+
+            <!-- 表頭基本資料 -->
+            <div class="border border-brand-primary rounded-xl p-4 md:p-6 mb-6 text-sm md:text-base">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6 items-center">
+                    <div class="flex items-center gap-4">
+                        <span class="font-bold">會員級別：</span>
+                        <label><input type="checkbox" id="scalpIsVIP"> VIP</label>
+                        <label><input type="checkbox" id="scalpIsVVIP"> VVIP</label>
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-bold whitespace-nowrap mr-2">顧客姓名：</label>
+                        <input type="text" id="scalpLogCustName" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-bold whitespace-nowrap mr-2">療程期限 (一年)：</label>
+                        <input type="date" id="scalpJoinDate" class="input-line flex-1">
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-bold whitespace-nowrap mr-2">聯絡電話：</label>
+                        <input type="tel" id="scalpLogCustPhone" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-brand-primary rounded-lg overflow-x-auto">
+                <table class="w-full text-center border-collapse min-w-[650px]">
+                    <thead>
+                        <tr class="bg-[#C4A484] text-white">
+                            <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-52">頭皮護理項目</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                            <th class="py-3 px-2 border border-[#C4A484]">頭皮狀況紀錄/備註</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scalpLogTableBody">
                     </tbody>
                 </table>
             </div>
 
             <div class="mt-6 text-center export-hidden">
-                <button type="button" onclick="window.addLogRow()" class="px-6 py-2.5 bg-brand-bg border border-brand-primary text-brand-text hover:bg-brand-secondary hover:text-white rounded-full transition font-bold shadow-sm">
-                    <i class="fas fa-plus mr-1"></i> 新增一筆服務紀錄
+                <button type="button" onclick="window.addScalpLogRow()" class="px-6 py-2.5 bg-brand-bg border border-brand-primary text-brand-text hover:bg-brand-secondary hover:text-white rounded-full transition font-bold shadow-sm">
+                    <i class="fas fa-plus mr-1"></i> 新增一筆護理紀錄
                 </button>
             </div>
         </div>
         
     </main>
 
+    <!-- 模態框區塊 -->
+    <!-- 還原確認對話框 Modal -->
+    <div id="restoreModal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col modal-enter p-6" id="restoreModalContent">
+            <div class="text-center mb-4">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+                    <i class="fas fa-file-upload"></i>
+                </div>
+                <h3 class="font-bold text-xl text-gray-800">確認還原備份檔案</h3>
+                <p class="text-sm text-gray-500 mt-1">即將匯入以下備份資料至雲端資料庫：</p>
+            </div>
+            <div class="bg-brand-bg p-4 rounded-lg text-sm text-gray-700 mb-6 space-y-1 border border-brand-border">
+                <p>檔案名稱：<span id="resFileName" class="font-bold">-</span></p>
+                <p>資料筆數：<span id="resFileCount" class="font-bold text-blue-600">-</span> 位顧客</p>
+                <p>匯出時間：<span id="resFileDate" class="font-bold">-</span></p>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="window.cancelRestore()" class="px-4 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 font-medium transition">取消</button>
+                <button type="button" onclick="window.confirmExecuteRestore()" class="px-5 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-md font-bold transition">確認開始還原</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 資料庫清單 Modal -->
     <div id="dbModal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex flex-col items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[80vh] modal-enter overflow-hidden" id="dbModalContent">
             <div class="bg-brand-text text-white px-5 py-4 flex justify-between items-center shrink-0">
-                <h3 class="font-bold text-lg"><i class="fas fa-database mr-2"></i>顧客資料庫</h3>
+                <h3 class="font-bold text-lg"><i class="fas fa-database mr-2"></i>雲端雙系統顧客資料庫</h3>
                 <button type="button" onclick="window.closeCustomerListModal()" class="text-gray-300 hover:text-white transition p-2"><i class="fas fa-times text-xl"></i></button>
             </div>
-            
             <div class="p-4 bg-brand-bg border-b border-gray-200 shrink-0">
                 <div class="relative">
                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     <input type="text" id="searchInput" onkeyup="window.filterCustomers()" placeholder="搜尋顧客姓名或電話..." class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-brand-primary">
                 </div>
             </div>
-
             <div class="flex-1 overflow-y-auto p-4 bg-white" id="customerListContainer">
-                <div class="text-center py-10 text-gray-400">
-                    <div class="loader mx-auto mb-2"></div>
-                    載入中...
-                </div>
+                <div class="text-center py-10 text-gray-400"><div class="loader mx-auto mb-2"></div>載入中...</div>
             </div>
         </div>
     </div>
 
-    <!-- 簽名板 Modal -->
+    <!-- 單次簽名板 Modal -->
     <div id="signatureModal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col modal-enter" id="sigModalContent">
             <div class="bg-brand-primary text-white px-4 py-3 flex justify-between items-center">
-                <h3 class="font-bold">單次服務紀錄簽名</h3>
+                <h3 class="font-bold">單次課程簽名</h3>
                 <button type="button" onclick="window.closeSigModal()" class="text-white hover:text-gray-200 p-2"><i class="fas fa-times text-xl"></i></button>
             </div>
             <div class="p-4 bg-gray-50 relative">
@@ -362,131 +592,63 @@
         </div>
     </div>
 
-    <!-- 通用刪除/操作確認 Modal -->
-    <div id="confirmModal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col modal-enter" id="confirmModalContent">
-            <div class="bg-brand-text text-white px-5 py-3.5 flex justify-between items-center">
-                <h3 class="font-bold text-base flex items-center gap-2" id="confirmModalTitle">
-                    <i class="fas fa-exclamation-triangle text-amber-400"></i> 操作確認
-                </h3>
-                <button type="button" onclick="window.closeConfirmModal(false)" class="text-gray-300 hover:text-white transition p-1"><i class="fas fa-times text-lg"></i></button>
-            </div>
-            <div class="p-6 bg-white text-brand-text">
-                <p id="confirmModalMessage" class="text-sm md:text-base leading-relaxed text-gray-700">確定要執行此操作嗎？</p>
-            </div>
-            <div class="p-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
-                <button type="button" onclick="window.closeConfirmModal(false)" class="px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 font-medium transition">取消</button>
-                <button type="button" id="confirmModalActionBtn" onclick="window.closeConfirmModal(true)" class="px-5 py-2 text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg font-bold shadow transition">確認刪除</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast 提示 -->
     <div id="toast" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full shadow-2xl opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center gap-3 font-medium">
         <i id="toastIcon" class="fas fa-check-circle text-green-400"></i>
         <span id="toastMsg">成功</span>
     </div>
 
-    <!-- 系統主邏輯 (支援雲端與離線單機雙模式) -->
+    <!-- 系統主邏輯 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        let app = null, auth = null, db = null;
-        let isFirebaseAvailable = false;
+        let firebaseConfig = {};
+        try { firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {}; } catch (e) {}
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'j57-beauty-system';
         let currentUser = null;
         let customersCollectionRef = null;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'j57-beauty-system';
 
-        // 防錯初始化：當離線或開啟下載的 HTML 時，自動防護切換為單機離線模式
-        try {
-            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-                const parsedConfig = JSON.parse(__firebase_config);
-                if (parsedConfig && parsedConfig.apiKey) {
-                    app = initializeApp(parsedConfig);
-                    auth = getAuth(app);
-                    db = getFirestore(app);
-                    isFirebaseAvailable = true;
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
                 }
-            }
-        } catch (e) {
-            console.warn("運行於離線單機模式:", e);
+            } catch (error) { showToast("資料庫連線失敗", "error"); }
         }
+        initAuth();
 
-        if (isFirebaseAvailable && auth) {
-            async function initAuth() {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (error) {
-                    console.warn("Firebase 登入失敗，切換為本機模式", error);
-                    isFirebaseAvailable = false;
-                }
-            }
-            initAuth();
+        onAuthStateChanged(auth, user => {
+            currentUser = user;
+            if(user) { customersCollectionRef = collection(db, 'artifacts', appId, 'users', user.uid, 'customers'); }
+        });
 
-            onAuthStateChanged(auth, user => {
-                currentUser = user;
-                if(user) {
-                    customersCollectionRef = collection(db, 'artifacts', appId, 'users', user.uid, 'customers');
-                }
-            });
-        }
-
-        let currentTab = 'tab-intake';
+        let currentTab = 'tab-skin-intake';
         let currentCustomerId = null; 
         let allCustomersCache = [];
         let currentRowIdForSign = null;
-        let confirmCallback = null;
+        let pendingRestoreData = null;
+        let currentFontSizeScale = 1.0;
 
-        const priceListItems = [
-            "淨化調理 (改善痘、粉刺+杏仁酸)",
-            "混合肌保養 (改善痘、粉刺+保濕)",
-            "顏值煥膚 杏仁酸",
-            "按摩撥筋",
-            "極致賦活養護 (調理肌膚紋理、提升保濕)",
-            "美背 (全背/上或下背)",
-            "髮絲強韌養護",
-            "豐盈眉毛",
-            "青春賦活髮絲",
-            "客製化綜合療程"
-        ];
+        const scalpCareItems = ["髮絲強韌養護", "豐盈眉毛", "青春賦活髮絲"];
+        const skinCareItems = ["基礎保濕保養", "深層淨痘護理", "逆齡煥膚療程", "眼周拉提抗老", "客製化肌膚管理"];
 
-        window.showConfirmModal = function({ title = '操作確認', message, confirmText = '確認', confirmClass = 'bg-red-600 hover:bg-red-700', onConfirm }) {
-            document.getElementById('confirmModalTitle').innerHTML = `<i class="fas fa-exclamation-triangle text-amber-400"></i> ${title}`;
-            document.getElementById('confirmModalMessage').textContent = message;
-            
-            const actionBtn = document.getElementById('confirmModalActionBtn');
-            actionBtn.textContent = confirmText;
-            actionBtn.className = `px-5 py-2 text-sm text-white rounded-lg font-bold shadow transition ${confirmClass}`;
-            
-            confirmCallback = onConfirm;
-            
-            const modal = document.getElementById('confirmModal');
-            const content = document.getElementById('confirmModalContent');
-            modal.classList.remove('hidden');
-            content.classList.add('modal-enter');
-            setTimeout(() => {
-                content.classList.remove('modal-enter'); 
-                content.classList.add('modal-enter-active');
-            }, 10);
-        };
-
-        window.closeConfirmModal = function(isConfirmed) {
-            const modal = document.getElementById('confirmModal');
-            const content = document.getElementById('confirmModalContent');
-            content.classList.remove('modal-enter-active');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                if (isConfirmed && typeof confirmCallback === 'function') {
-                    confirmCallback();
-                }
-                confirmCallback = null;
-            }, 180);
+        window.adjustFontSize = function(direction) {
+            currentFontSizeScale += direction * 0.1;
+            if (currentFontSizeScale < 0.8) currentFontSizeScale = 0.8;
+            if (currentFontSizeScale > 1.4) currentFontSizeScale = 1.4;
+            const mainContent = document.getElementById('main-content');
+            mainContent.style.setProperty('--app-font-size', `${currentFontSizeScale}rem`);
+            const percent = Math.round(currentFontSizeScale * 100);
+            document.getElementById('fontSizeIndicator').textContent = `${percent}%`;
+            showToast(`字體大小已調整為 ${percent}%`);
         };
 
         class SignaturePad {
@@ -496,7 +658,6 @@
                 this.placeholder = document.getElementById(placeholderId);
                 this.isDrawing = false;
                 this.hasSignature = false;
-                
                 this.ctx.strokeStyle = '#000';
                 this.ctx.lineWidth = 4;
                 this.ctx.lineCap = 'round';
@@ -552,91 +713,126 @@
             }
         }
 
-        let mainPad, modalPad;
-        
+        let skinMainPad, scalpMainPad, modalPad;
         window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('intakeDate').valueAsDate = new Date();
-            mainPad = new SignaturePad('mainSignaturePad', 'mainSignPlaceholder');
+            document.getElementById('skinIntakeDate').valueAsDate = new Date();
+            document.getElementById('scalpIntakeDate').valueAsDate = new Date();
+            skinMainPad = new SignaturePad('skinMainSignaturePad', 'skinMainSignPlaceholder');
+            scalpMainPad = new SignaturePad('scalpMainSignaturePad', 'scalpMainSignPlaceholder');
             modalPad = new SignaturePad('modalSignaturePad', 'modalSignPlaceholder');
-            window.addLogRow(); 
+            window.addSkinLogRow();
+            window.addScalpLogRow();
         });
 
         window.switchTab = function(tabId) {
-            document.getElementById('tab-intake').classList.add('hidden');
-            document.getElementById('tab-log').classList.add('hidden');
-            document.getElementById('btn-tab-intake').classList.remove('text-brand-primary', 'border-brand-primary');
-            document.getElementById('btn-tab-intake').classList.add('text-gray-400', 'border-transparent');
-            document.getElementById('btn-tab-log').classList.remove('text-brand-primary', 'border-brand-primary');
-            document.getElementById('btn-tab-log').classList.add('text-gray-400', 'border-transparent');
-
+            ['tab-skin-intake', 'tab-skin-log', 'tab-scalp-intake', 'tab-scalp-log'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+                const btn = document.getElementById('btn-' + id);
+                btn.classList.remove('text-brand-primary', 'border-brand-primary');
+                btn.classList.add('text-gray-400', 'border-transparent');
+            });
             document.getElementById(tabId).classList.remove('hidden');
-            const btnId = tabId === 'tab-intake' ? 'btn-tab-intake' : 'btn-tab-log';
-            document.getElementById(btnId).classList.remove('text-gray-400', 'border-transparent');
-            document.getElementById(btnId).classList.add('text-brand-primary', 'border-brand-primary');
+            const targetBtn = document.getElementById('btn-' + tabId);
+            targetBtn.classList.remove('text-gray-400', 'border-transparent');
+            targetBtn.classList.add('text-brand-primary', 'border-brand-primary');
             currentTab = tabId;
         };
 
-        window.syncData = function() {
-            document.getElementById('logCustName').value = document.getElementById('custName').value;
-            document.getElementById('logCustPhone').value = document.getElementById('custPhone').value;
-            document.getElementById('logCustLine').value = document.getElementById('custLine').value;
-            
-            const name = document.getElementById('custName').value.trim();
-            const display = document.getElementById('currentCustomerNameDisplay');
-            if(name) {
-                display.textContent = `目前編輯: ${name}`;
+        window.syncData = function(source) {
+            let name, phone, bd, line, addr;
+            if(source === 'skin') {
+                name = document.getElementById('skinCustName').value;
+                bd = document.getElementById('skinCustBirthday').value;
+                phone = document.getElementById('skinCustPhone').value;
+                line = document.getElementById('skinCustLine').value;
+                addr = document.getElementById('skinCustAddress').value;
+                
+                document.getElementById('scalpCustName').value = name;
+                document.getElementById('scalpCustBirthday').value = bd;
+                document.getElementById('scalpCustPhone').value = phone;
+                document.getElementById('scalpCustLine').value = line;
+                document.getElementById('scalpCustAddress').value = addr;
             } else {
-                display.textContent = currentCustomerId ? '目前編輯: 未命名顧客' : '正在建立新表單...';
+                name = document.getElementById('scalpCustName').value;
+                bd = document.getElementById('scalpCustBirthday').value;
+                phone = document.getElementById('scalpCustPhone').value;
+                line = document.getElementById('scalpCustLine').value;
+                addr = document.getElementById('scalpCustAddress').value;
+
+                document.getElementById('skinCustName').value = name;
+                document.getElementById('skinCustBirthday').value = bd;
+                document.getElementById('skinCustPhone').value = phone;
+                document.getElementById('skinCustLine').value = line;
+                document.getElementById('skinCustAddress').value = addr;
             }
+            
+            document.getElementById('skinLogCustName').value = name;
+            document.getElementById('skinLogCustPhone').value = phone;
+            document.getElementById('skinLogCustLine').value = line;
+            
+            document.getElementById('scalpLogCustName').value = name;
+            document.getElementById('scalpLogCustPhone').value = phone;
+
+            const display = document.getElementById('currentCustomerNameDisplay');
+            if(name.trim()) { display.textContent = `目前編輯: ${name}`; } 
+            else { display.textContent = currentCustomerId ? '目前編輯: 未命名顧客' : '正在建立新表單...'; }
         };
 
-        window.clearMainCanvas = function() { mainPad.clear(); };
+        window.clearSkinMainCanvas = function() { skinMainPad.clear(); };
+        window.clearScalpMainCanvas = function() { scalpMainPad.clear(); };
         window.clearModalCanvas = function() { modalPad.clear(); };
 
-        window.addLogRow = function(data = null) {
-            const tbody = document.getElementById('logTableBody');
-            const rowId = data ? data.id : 'row_' + Math.random().toString(36).substr(2, 9);
-            const tr = document.createElement('tr');
-            tr.id = rowId;
-            tr.className = "border-b border-[#E8DCCB] hover:bg-gray-50 transition";
+        function createRowHTML(rowId, data, itemsOptions) {
             let dateVal = data && data.date ? data.date : new Date().toISOString().split('T')[0];
-            
-            let optionsHtml = '<option value="">-- 選擇療程項目 --</option>';
-            priceListItems.forEach(item => {
+            let optionsHtml = '<option value="">-- 選擇項目 --</option>';
+            itemsOptions.forEach(item => {
                 const selected = (data && data.item && data.item.includes(item)) ? 'selected' : '';
                 optionsHtml += `<option value="${item}" ${selected}>${item}</option>`;
             });
 
             let customText = '';
             if (data && data.item) {
-                const matched = priceListItems.find(i => data.item.includes(i));
-                if (matched) {
-                    customText = data.item.replace(matched, '').replace(/[()]/g, '').trim();
-                } else {
-                    customText = data.item;
-                }
+                const matched = itemsOptions.find(i => data.item.includes(i));
+                customText = matched ? data.item.replace(matched, '').replace(/[()]/g, '').trim() : data.item;
             }
 
-            tr.innerHTML = `
+            return `
                 <td class="py-2.5 px-1 border-r border-[#E8DCCB]"><input type="date" class="w-full bg-transparent outline-none text-sm text-center item-date" value="${dateVal}"></td>
                 <td class="py-2.5 px-1 border-r border-[#E8DCCB]">
                     <select class="w-full bg-transparent outline-none px-1 text-sm text-center border-b border-dashed border-gray-300 py-1 item-select" onchange="window.handleItemSelect(this, '${rowId}')">
                         ${optionsHtml}
                     </select>
-                    <input type="text" class="w-full bg-transparent outline-none px-1 text-xs text-center mt-1 text-gray-500 item-custom-input" placeholder="自訂或備註細項" value="${customText}">
+                    <input type="text" class="w-full bg-transparent outline-none px-1 text-xs text-center mt-1 text-gray-500 item-custom-input" placeholder="療程細項/部位" value="${customText}">
                 </td>
                 <td class="py-2.5 px-1 border-r border-[#E8DCCB]"><input type="text" class="w-full bg-transparent outline-none px-1 text-sm text-center item-amount" placeholder="NT$" value="${data ? data.amount : ''}"></td>
                 <td class="py-2.5 px-1 border-r border-[#E8DCCB] h-12 relative cursor-pointer hover:bg-brand-bg transition" onclick="window.openSigModal('${rowId}')">
                     ${data && data.signature ? `<img src="${data.signature}" class="h-10 mx-auto pointer-events-none">` : `<span class="text-xs text-brand-primary pointer-events-none font-bold"><i class="fas fa-pen"></i> 點擊簽名</span>`}
                     <input type="hidden" class="sig-data" value="${data && data.signature ? data.signature : ''}">
                 </td>
-                <td class="py-2.5 px-1 border-r border-[#E8DCCB]"><input type="text" class="w-full bg-transparent outline-none px-2 text-sm text-center item-notes" placeholder="備註..." value="${data ? data.notes : ''}"></td>
+                <td class="py-2.5 px-1 border-r border-[#E8DCCB]"><input type="text" class="w-full bg-transparent outline-none px-2 text-sm text-center item-notes" placeholder="狀況記錄..." value="${data ? data.notes : ''}"></td>
                 <td class="py-2.5 px-1 export-hidden">
-                    <button type="button" onclick="window.requestDeleteRow('${rowId}')" class="delete-btn text-red-400 hover:text-red-600 hover:bg-red-50 rounded p-2.5 w-full h-full flex items-center justify-center transition cursor-pointer" title="刪除此筆紀錄">
+                    <button type="button" onclick="window.removeRow('${rowId}')" class="text-red-400 hover:text-red-600 transition p-2.5 w-full h-full flex items-center justify-center cursor-pointer">
                         <i class="fas fa-trash pointer-events-none text-base"></i>
                     </button>
                 </td>
             `;
+        }
+
+        window.addSkinLogRow = function(data = null) {
+            const tbody = document.getElementById('skinLogTableBody');
+            const rowId = data ? data.id : 'skinrow_' + Math.random().toString(36).substr(2, 9);
+            const tr = document.createElement('tr');
+            tr.id = rowId; tr.className = "border-b border-[#E8DCCB] hover:bg-gray-50 transition";
+            tr.innerHTML = createRowHTML(rowId, data, skinCareItems);
+            tbody.appendChild(tr);
+        };
+
+        window.addScalpLogRow = function(data = null) {
+            const tbody = document.getElementById('scalpLogTableBody');
+            const rowId = data ? data.id : 'scalprow_' + Math.random().toString(36).substr(2, 9);
+            const tr = document.createElement('tr');
+            tr.id = rowId; tr.className = "border-b border-[#E8DCCB] hover:bg-gray-50 transition";
+            tr.innerHTML = createRowHTML(rowId, data, scalpCareItems);
             tbody.appendChild(tr);
         };
 
@@ -644,47 +840,26 @@
             const val = selectEl.value;
             const tr = document.getElementById(rowId);
             const amountInput = tr.querySelector('.item-amount');
-            
-            if (val.includes('淨化調理') || val.includes('混合肌保養')) amountInput.value = '2500';
-            else if (val.includes('顏值煥膚')) amountInput.value = '1800';
-            else if (val.includes('按摩撥筋')) amountInput.value = '2000';
-            else if (val.includes('極致賦活養護')) amountInput.value = '3500';
-            else if (val.includes('美背')) amountInput.value = '3800';
+            if (val.includes('強韌養護')) amountInput.value = '2000';
             else if (val.includes('豐盈眉毛')) amountInput.value = '5000';
+            else if (val.includes('青春賦活髮絲')) amountInput.value = '3500';
+            else if (val.includes('保濕')) amountInput.value = '1500';
         };
 
-        window.requestDeleteRow = function(rowId) {
+        window.removeRow = function(rowId) {
             const tr = document.getElementById(rowId);
             if (!tr) return;
-
-            const tbody = document.getElementById('logTableBody');
+            const tbody = tr.parentElement;
             if (tbody.children.length <= 1) {
-                window.showConfirmModal({
-                    title: '清空服務紀錄',
-                    message: '目前僅剩一筆紀錄，確定要清空此筆紀錄的內容嗎？',
-                    confirmText: '確定清空',
-                    confirmClass: 'bg-amber-600 hover:bg-amber-700',
-                    onConfirm: () => {
-                        tr.querySelector('.item-select').value = "";
-                        tr.querySelector('.item-custom-input').value = "";
-                        tr.querySelector('.item-amount').value = "";
-                        tr.querySelector('.item-notes').value = "";
-                        tr.querySelector('td:nth-child(4)').innerHTML = `<span class="text-xs text-brand-primary pointer-events-none font-bold"><i class="fas fa-pen"></i> 點擊簽名</span><input type="hidden" class="sig-data" value="">`;
-                        showToast('已清空此列服務紀錄');
-                    }
-                });
-            } else {
-                window.showConfirmModal({
-                    title: '刪除服務紀錄',
-                    message: '確定要刪除這筆服務紀錄嗎？刪除後無法復原。',
-                    confirmText: '確定刪除',
-                    confirmClass: 'bg-red-600 hover:bg-red-700',
-                    onConfirm: () => {
-                        tr.remove();
-                        showToast('已成功刪除該筆服務紀錄');
-                    }
-                });
+                tr.querySelector('.item-select').value = "";
+                tr.querySelector('.item-custom-input').value = "";
+                tr.querySelector('.item-amount').value = "";
+                tr.querySelector('.item-notes').value = "";
+                tr.querySelector('td:nth-child(4)').innerHTML = `<span class="text-xs text-brand-primary pointer-events-none font-bold"><i class="fas fa-pen"></i> 點擊簽名</span><input type="hidden" class="sig-data" value="">`;
+                showToast('已清空此列紀錄');
+                return;
             }
+            if (confirm('確定要刪除此筆紀錄嗎？')) { tr.remove(); showToast('已刪除紀錄'); }
         };
 
         window.openSigModal = function(rowId) {
@@ -693,9 +868,7 @@
             const content = document.getElementById('sigModalContent');
             modal.classList.remove('hidden');
             content.classList.add('modal-enter');
-            setTimeout(() => {
-                content.classList.remove('modal-enter'); content.classList.add('modal-enter-active');
-            }, 10);
+            setTimeout(() => { content.classList.remove('modal-enter'); content.classList.add('modal-enter-active'); }, 10);
             clearModalCanvas();
             const existingSig = document.querySelector(`#${rowId} .sig-data`).value;
             if(existingSig) modalPad.loadBase64(existingSig);
@@ -708,154 +881,146 @@
         };
 
         window.saveModalSignature = function() {
-            if(!modalPad.hasSignature) {
-                showToast('請先簽名再儲存', 'error'); return;
-            }
+            if(!modalPad.hasSignature) { showToast('請先簽名再儲存', 'error'); return; }
             const sigData = modalPad.canvas.toDataURL('image/png');
             const td = document.querySelector(`#${currentRowIdForSign} td:nth-child(4)`);
             td.innerHTML = `<img src="${sigData}" class="h-10 mx-auto pointer-events-none"><input type="hidden" class="sig-data" value="${sigData}">`;
             closeSigModal();
         };
 
-        function gatherFormData() {
-            const getGroupValues = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
+        function getTableRowsData(tbodyId) {
             const rows = [];
-            document.querySelectorAll('#logTableBody tr').forEach(tr => {
+            document.querySelectorAll(`#${tbodyId} tr`).forEach(tr => {
                 const select = tr.querySelector('.item-select');
                 const customInput = tr.querySelector('.item-custom-input');
-                const dateInput = tr.querySelector('.item-date');
-                const amountInput = tr.querySelector('.item-amount');
-                const sigInput = tr.querySelector('.sig-data');
-                const notesInput = tr.querySelector('.item-notes');
-                
                 let itemName = select ? select.value : '';
-                if (customInput && customInput.value.trim()) {
-                    itemName += itemName ? ` (${customInput.value.trim()})` : customInput.value.trim();
-                }
-
+                if (customInput && customInput.value.trim()) itemName += itemName ? ` (${customInput.value.trim()})` : customInput.value.trim();
                 rows.push({
                     id: tr.id, 
-                    date: dateInput ? dateInput.value : '', 
+                    date: tr.querySelector('.item-date')?.value || '', 
                     item: itemName, 
-                    amount: amountInput ? amountInput.value : '',
-                    signature: sigInput ? sigInput.value : '', 
-                    notes: notesInput ? notesInput.value : ''
+                    amount: tr.querySelector('.item-amount')?.value || '',
+                    signature: tr.querySelector('.sig-data')?.value || '', 
+                    notes: tr.querySelector('.item-notes')?.value || ''
                 });
             });
+            return rows;
+        }
 
+        function gatherFormData() {
+            const getGroup = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
+            const getSub = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(i => i.value);
+            
             return {
-                intake: {
-                    name: document.getElementById('custName').value, birthday: document.getElementById('custBirthday').value,
-                    phone: document.getElementById('custPhone').value, line: document.getElementById('custLine').value,
-                    address: document.getElementById('custAddress').value, howKnow: getGroupValues('howKnow'),
-                    referralName: document.getElementById('referralName').value, otherKnowText: document.getElementById('otherKnowText').value,
-                    prefEnv: getGroupValues('prefEnv')[0] || "", makeupHabit: getGroupValues('makeupHabit')[0] || "",
-                    exfoliateHabit: getGroupValues('exfoliateHabit')[0] || "", medicalHistory: getGroupValues('medicalHistory')[0] || "",
-                    medicalDetail: document.getElementById('medicalDetail').value, allergyHistory: getGroupValues('allergyHistory')[0] || "",
-                    cleanser: getGroupValues('cleanser'), skincare: getGroupValues('skincare'), skinType: getGroupValues('skinType')[0] || "",
-                    skinCondition: getGroupValues('skinCondition'), healthCond: getGroupValues('healthCond'),
-                    pregnantWeeks: document.getElementById('pregnantWeeks').value, notes: document.getElementById('intakeNotes').value,
-                    photoConsent: document.getElementById('photoConsent').checked, marketingConsent: document.getElementById('marketingConsent').checked,
-                    intakeDate: document.getElementById('intakeDate').value, mainSignature: mainPad.hasSignature ? mainPad.canvas.toDataURL('image/png') : null
+                base: {
+                    name: document.getElementById('skinCustName').value,
+                    birthday: document.getElementById('skinCustBirthday').value,
+                    phone: document.getElementById('skinCustPhone').value,
+                    line: document.getElementById('skinCustLine').value,
+                    address: document.getElementById('skinCustAddress').value
                 },
-                log: {
-                    isVIP: document.getElementById('isVIP').checked, isVVIP: document.getElementById('isVVIP').checked,
-                    joinDate: document.getElementById('joinDate').value, rows: rows
+                skin: {
+                    intake: {
+                        howKnow: getGroup('skinHowKnow'),
+                        referralName: document.getElementById('skinReferralName').value,
+                        otherKnowText: document.getElementById('skinOtherKnowText').value,
+                        prefEnv: document.querySelector('input[name="prefEnv"]:checked')?.value || '',
+                        makeupHabit: document.querySelector('input[name="makeupHabit"]:checked')?.value || '',
+                        exfoliateHabit: document.querySelector('input[name="exfoliateHabit"]:checked')?.value || '',
+                        medicalHistory: document.querySelector('input[name="medicalHistory"]:checked')?.value || '',
+                        medicalDetail: document.getElementById('medicalDetail').value,
+                        allergyHistory: document.querySelector('input[name="allergyHistory"]:checked')?.value || '',
+                        cleanser: getGroup('cleanser'),
+                        skincare: getGroup('skincare'),
+                        skinType: document.querySelector('input[name="skinType"]:checked')?.value || '',
+                        skinCondition: getGroup('skinCondition'),
+                        healthCond: getGroup('healthCond'),
+                        pregnantWeeks: document.getElementById('pregnantWeeks').value,
+                        notes: document.getElementById('skinIntakeNotes').value,
+                        photoConsent: document.getElementById('photoConsent').checked,
+                        marketingConsent: document.getElementById('marketingConsent').checked,
+                        intakeDate: document.getElementById('skinIntakeDate').value,
+                        mainSignature: skinMainPad.hasSignature ? skinMainPad.canvas.toDataURL('image/png') : null
+                    },
+                    log: {
+                        isVIP: document.getElementById('skinIsVIP').checked,
+                        isVVIP: document.getElementById('skinIsVVIP').checked,
+                        joinDate: document.getElementById('skinJoinDate').value,
+                        rows: getTableRowsData('skinLogTableBody')
+                    }
+                },
+                scalp: {
+                    intake: {
+                        howKnow: getGroup('scalpHowKnow'),
+                        referralName: document.getElementById('scalpReferralName').value,
+                        otherKnowText: document.getElementById('scalpOtherKnowText').value,
+                        hairIssue: getGroup('hairIssue'),
+                        browCond: getGroup('browCond'),
+                        browSub: {
+                            稀疏: getSub('brow_稀疏'), 空洞: getSub('brow_空洞'),
+                            受損: getSub('brow_受損'), 細毛: getSub('brow_細毛')
+                        },
+                        otherBrowText: document.getElementById('otherBrowText').value,
+                        whiteHairCond: getGroup('whiteHairCond'),
+                        otherWhiteHairText: document.getElementById('otherWhiteHairText').value,
+                        scalpType: document.querySelector('input[name="scalpType"]:checked')?.value || '',
+                        lifestyle: getGroup('lifestyle'),
+                        noIssueConsent: document.getElementById('noIssueConsent').checked,
+                        blackHairNotice: getGroup('blackHairNotice'),
+                        notes: document.getElementById('scalpIntakeNotes').value,
+                        intakeDate: document.getElementById('scalpIntakeDate').value,
+                        mainSignature: scalpMainPad.hasSignature ? scalpMainPad.canvas.toDataURL('image/png') : null
+                    },
+                    log: {
+                        isVIP: document.getElementById('scalpIsVIP').checked,
+                        isVVIP: document.getElementById('scalpIsVVIP').checked,
+                        joinDate: document.getElementById('scalpJoinDate').value,
+                        rows: getTableRowsData('scalpLogTableBody')
+                    }
                 }
             };
         }
 
         window.saveToDB = async function() {
+            if (!currentUser) { showToast("尚未連線到資料庫", "error"); return; }
             const data = gatherFormData();
-            if(!data.intake.name) {
-                showToast('請至少填寫顧客姓名', 'error'); 
-                document.getElementById('custName').focus();
-                return;
-            }
+            if(!data.base.name) { showToast('請至少填寫顧客姓名', 'error'); document.getElementById('skinCustName').focus(); return; }
 
-            document.getElementById('loaderText').textContent = '儲存資料中...';
+            document.getElementById('loaderText').textContent = '雲端儲存中...';
             document.getElementById('globalLoader').classList.remove('hidden');
             document.getElementById('globalLoader').classList.add('flex');
 
             try {
-                if (!currentCustomerId) {
-                    currentCustomerId = 'cust_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                }
+                let docRef = currentCustomerId ? doc(db, 'artifacts', appId, 'users', currentUser.uid, 'customers', currentCustomerId) : doc(customersCollectionRef);
+                currentCustomerId = docRef.id;
 
-                const dbPayload = {
-                    ...data,
-                    searchName: data.intake.name.toLowerCase(),
-                    searchPhone: data.intake.phone,
-                    updatedAtISO: new Date().toISOString()
-                };
-
-                // 嘗試寫入雲端，離線時儲存至 LocalStorage
-                if (isFirebaseAvailable && currentUser && customersCollectionRef) {
-                    const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'customers', currentCustomerId);
-                    await setDoc(docRef, { ...dbPayload, updatedAt: serverTimestamp() });
-                }
-
-                updateLocalCache(currentCustomerId, dbPayload);
-                showToast('資料已成功儲存！');
-                window.syncData();
-            } catch (error) {
-                console.error("Save Error:", error);
-                // 防錯退回本機儲存
-                updateLocalCache(currentCustomerId, gatherFormData());
-                showToast('已儲存至本機資料庫', 'success');
-            } finally {
-                document.getElementById('globalLoader').classList.add('hidden');
-                document.getElementById('globalLoader').classList.remove('flex');
-            }
+                const dbPayload = { ...data, searchName: data.base.name.toLowerCase(), searchPhone: data.base.phone, updatedAt: serverTimestamp() };
+                await setDoc(docRef, dbPayload);
+                
+                showToast('雙系統資料已成功同步至雲端！');
+                window.syncData('skin');
+            } catch (error) { showToast('儲存失敗', 'error'); }
+            finally { document.getElementById('globalLoader').classList.add('hidden'); document.getElementById('globalLoader').classList.remove('flex'); }
         };
 
-        function updateLocalCache(id, payload) {
-            try {
-                let localDb = JSON.parse(localStorage.getItem('j57_local_cache') || '{}');
-                localDb[id] = { ...payload, id, cachedAt: new Date().toISOString() };
-                localStorage.setItem('j57_local_cache', JSON.stringify(localDb));
-            } catch (err) { console.warn("Local cache error", err); }
-        }
-
         window.openCustomerListModal = async function() {
+            if (!currentUser) { showToast("尚未連線", "error"); return; }
             const modal = document.getElementById('dbModal');
             const content = document.getElementById('dbModalContent');
             const container = document.getElementById('customerListContainer');
             
             modal.classList.remove('hidden');
             content.classList.add('modal-enter');
-            setTimeout(() => {
-                content.classList.remove('modal-enter'); content.classList.add('modal-enter-active');
-            }, 10);
-            
-            container.innerHTML = '<div class="text-center py-10 text-gray-400"><div class="loader mx-auto mb-2"></div>正在讀取顧客列表...</div>';
-            document.getElementById('searchInput').value = '';
+            setTimeout(() => { content.classList.remove('modal-enter'); content.classList.add('modal-enter-active'); }, 10);
+            container.innerHTML = '<div class="text-center py-10 text-gray-400"><div class="loader mx-auto mb-2"></div>載入中...</div>';
 
             try {
+                const querySnapshot = await getDocs(customersCollectionRef);
                 allCustomersCache = [];
-                if (isFirebaseAvailable && currentUser && customersCollectionRef) {
-                    const querySnapshot = await getDocs(customersCollectionRef);
-                    querySnapshot.forEach((docSnap) => {
-                        allCustomersCache.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                } else {
-                    // 離線讀取 LocalStorage
-                    const localDb = JSON.parse(localStorage.getItem('j57_local_cache') || '{}');
-                    allCustomersCache = Object.values(localDb);
-                }
-                
-                allCustomersCache.sort((a, b) => {
-                    const timeA = new Date(a.updatedAtISO || a.cachedAt || 0).getTime();
-                    const timeB = new Date(b.updatedAtISO || b.cachedAt || 0).getTime();
-                    return timeB - timeA;
-                });
-
+                querySnapshot.forEach((docSnap) => { allCustomersCache.push({ id: docSnap.id, ...docSnap.data() }); });
+                allCustomersCache.sort((a, b) => (b.updatedAt?.toMillis() || 0) - (a.updatedAt?.toMillis() || 0));
                 renderCustomerList(allCustomersCache);
-            } catch (error) {
-                console.warn("Load Error, falling back to local storage:", error);
-                const localDb = JSON.parse(localStorage.getItem('j57_local_cache') || '{}');
-                renderCustomerList(Object.values(localDb));
-            }
+            } catch (error) { container.innerHTML = '<div class="text-center py-10 text-red-400">讀取失敗</div>'; }
         };
 
         window.closeCustomerListModal = function() {
@@ -865,40 +1030,25 @@
 
         window.filterCustomers = function() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allCustomersCache.filter(c => 
-                (c.intake?.name && c.intake.name.toLowerCase().includes(term)) || 
-                (c.intake?.phone && c.intake.phone.includes(term))
-            );
+            const filtered = allCustomersCache.filter(c => (c.base?.name && c.base.name.toLowerCase().includes(term)) || (c.base?.phone && c.base.phone.includes(term)) || (c.intake?.name && c.intake.name.toLowerCase().includes(term)));
             renderCustomerList(filtered);
         };
 
         function renderCustomerList(list) {
             const container = document.getElementById('customerListContainer');
-            if(!list || list.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-gray-400">尚無顧客資料</div>';
-                return;
-            }
-
+            if(list.length === 0) { container.innerHTML = '<div class="text-center py-10 text-gray-400">找不到顧客資料</div>'; return; }
             let html = '<ul class="divide-y divide-gray-100">';
             list.forEach(cust => {
-                const name = cust.intake?.name || '未命名顧客';
-                const phone = cust.intake?.phone || '無電話';
-                let dateStr = '近期';
-                if (cust.updatedAtISO || cust.cachedAt) {
-                    const d = new Date(cust.updatedAtISO || cust.cachedAt);
-                    dateStr = `${d.getFullYear()}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getDate().toString().padStart(2,'0')}`;
-                }
-
+                const name = cust.base?.name || cust.intake?.name || '未命名';
+                const phone = cust.base?.phone || cust.intake?.phone || '無電話';
+                const date = cust.skin?.intake?.intakeDate || cust.scalp?.intake?.intakeDate || cust.intake?.intakeDate || '';
                 html += `
-                    <li class="p-3 hover:bg-brand-bg transition rounded-lg cursor-pointer flex justify-between items-center group" onclick="window.loadCustomerData('${cust.id}')">
+                    <li class="p-3 hover:bg-brand-bg transition rounded-lg cursor-pointer flex justify-between items-center" onclick="window.loadCustomerData('${cust.id}')">
                         <div>
-                            <div class="font-bold text-gray-800 text-lg group-hover:text-brand-primary transition">${name}</div>
+                            <div class="font-bold text-gray-800 text-lg">${name}</div>
                             <div class="text-sm text-gray-500"><i class="fas fa-phone-alt mr-1 text-xs"></i>${phone}</div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-xs text-gray-400 mb-1">紀錄時間</div>
-                            <div class="text-sm font-medium text-gray-600 bg-white px-2 py-1 rounded shadow-sm border border-gray-100">${dateStr}</div>
-                        </div>
+                        <div class="text-sm text-gray-500">${date}</div>
                     </li>
                 `;
             });
@@ -907,198 +1057,178 @@
         }
 
         window.loadCustomerData = function(docId) {
-            let dData = allCustomersCache.find(c => c.id === docId);
-            if (!dData) {
-                const localDb = JSON.parse(localStorage.getItem('j57_local_cache') || '{}');
-                dData = localDb[docId];
-            }
+            const dData = allCustomersCache.find(c => c.id === docId);
             if(!dData) return;
             currentCustomerId = docId;
 
-            const d = dData.intake || {};
-            document.getElementById('custName').value = d.name || '';
-            document.getElementById('custBirthday').value = d.birthday || '';
-            document.getElementById('custPhone').value = d.phone || '';
-            document.getElementById('custLine').value = d.line || '';
-            document.getElementById('custAddress').value = d.address || '';
-            document.getElementById('referralName').value = d.referralName || '';
-            document.getElementById('otherKnowText').value = d.otherKnowText || '';
-            document.getElementById('medicalDetail').value = d.medicalDetail || '';
-            document.getElementById('pregnantWeeks').value = d.pregnantWeeks || '';
-            document.getElementById('intakeNotes').value = d.notes || '';
-            document.getElementById('photoConsent').checked = d.photoConsent || false;
-            document.getElementById('marketingConsent').checked = d.marketingConsent || false;
-            document.getElementById('intakeDate').value = d.intakeDate || '';
+            // 讀取基本資料 (支援舊版 v1/v2 的 intake.name)
+            const bName = dData.base?.name || dData.intake?.name || '';
+            document.getElementById('skinCustName').value = bName;
+            document.getElementById('skinCustBirthday').value = dData.base?.birthday || dData.intake?.birthday || '';
+            document.getElementById('skinCustPhone').value = dData.base?.phone || dData.intake?.phone || '';
+            document.getElementById('skinCustLine').value = dData.base?.line || dData.intake?.line || '';
+            document.getElementById('skinCustAddress').value = dData.base?.address || dData.intake?.address || '';
+            window.syncData('skin');
+
+            // 讀取肌膚管理資料
+            const sIn = dData.skin?.intake || {};
+            document.getElementById('skinReferralName').value = sIn.referralName || '';
+            document.getElementById('skinOtherKnowText').value = sIn.otherKnowText || '';
+            document.getElementById('medicalDetail').value = sIn.medicalDetail || '';
+            document.getElementById('pregnantWeeks').value = sIn.pregnantWeeks || '';
+            document.getElementById('skinIntakeNotes').value = sIn.notes || '';
+            document.getElementById('photoConsent').checked = sIn.photoConsent || false;
+            document.getElementById('marketingConsent').checked = sIn.marketingConsent || false;
+            document.getElementById('skinIntakeDate').value = sIn.intakeDate || '';
+
+            // 讀取頭皮管理資料 (若為舊版，則直接映射)
+            const scIn = dData.scalp?.intake || dData.intake || {};
+            document.getElementById('scalpReferralName').value = scIn.referralName || '';
+            document.getElementById('scalpOtherKnowText').value = scIn.otherKnowText || '';
+            document.getElementById('otherBrowText').value = scIn.otherBrowText || '';
+            document.getElementById('otherWhiteHairText').value = scIn.otherWhiteHairText || '';
+            document.getElementById('scalpIntakeNotes').value = scIn.notes || '';
+            document.getElementById('noIssueConsent').checked = scIn.noIssueConsent || false;
+            document.getElementById('scalpIntakeDate').value = scIn.intakeDate || '';
 
             document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(el => {
-                if(!['isVIP','isVVIP','photoConsent','marketingConsent'].includes(el.id)) el.checked = false;
+                // Skin Checkboxes/Radios
+                if(['skinHowKnow', 'cleanser', 'skincare', 'skinCondition', 'healthCond'].includes(el.name)) { el.checked = sIn[el.name] && sIn[el.name].includes(el.value); }
+                else if(['prefEnv', 'makeupHabit', 'exfoliateHabit', 'medicalHistory', 'allergyHistory', 'skinType'].includes(el.name)) { el.checked = (sIn[el.name] === el.value); }
+                // Scalp Checkboxes/Radios
+                else if(['scalpHowKnow', 'hairIssue', 'browCond', 'whiteHairCond', 'lifestyle', 'blackHairNotice'].includes(el.name)) { el.checked = scIn[el.name] && scIn[el.name].includes(el.value); } 
+                else if(el.name === 'scalpType') { el.checked = (scIn[el.name] === el.value); } 
+                else if(el.name.startsWith('brow_')) { const key = el.name.replace('brow_', ''); el.checked = scIn.browSub && scIn.browSub[key] && scIn.browSub[key].includes(el.value); }
             });
 
-            document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(el => {
-                if(['isVIP','isVVIP','photoConsent','marketingConsent'].includes(el.id)) return;
-                const val = el.value; const name = el.name;
-                if(d[name]) {
-                    if(Array.isArray(d[name])) { el.checked = d[name].includes(val); } 
-                    else { el.checked = (d[name] === val); }
-                }
-            });
+            skinMainPad.clear(); if(sIn.mainSignature) skinMainPad.loadBase64(sIn.mainSignature);
+            scalpMainPad.clear(); if(scIn.mainSignature) scalpMainPad.loadBase64(scIn.mainSignature);
 
-            clearMainCanvas();
-            if(d.mainSignature) mainPad.loadBase64(d.mainSignature);
+            // 讀取紀錄表
+            const sLog = dData.skin?.log || {};
+            document.getElementById('skinIsVIP').checked = sLog.isVIP || false;
+            document.getElementById('skinIsVVIP').checked = sLog.isVVIP || false;
+            document.getElementById('skinJoinDate').value = sLog.joinDate || '';
+            document.getElementById('skinLogTableBody').innerHTML = ''; 
+            if(sLog.rows && sLog.rows.length > 0) { sLog.rows.forEach(r => addSkinLogRow(r)); } else { addSkinLogRow(); }
 
-            const l = dData.log || {};
-            document.getElementById('isVIP').checked = l.isVIP || false;
-            document.getElementById('isVVIP').checked = l.isVVIP || false;
-            document.getElementById('joinDate').value = l.joinDate || '';
-            
-            document.getElementById('logTableBody').innerHTML = ''; 
-            if(l.rows && l.rows.length > 0) {
-                l.rows.forEach(r => addLogRow(r));
-            } else {
-                addLogRow(); 
-            }
-            
-            window.syncData(); 
+            const scLog = dData.scalp?.log || dData.log || {};
+            document.getElementById('scalpIsVIP').checked = scLog.isVIP || false;
+            document.getElementById('scalpIsVVIP').checked = scLog.isVVIP || false;
+            document.getElementById('scalpJoinDate').value = scLog.joinDate || '';
+            document.getElementById('scalpLogTableBody').innerHTML = ''; 
+            if(scLog.rows && scLog.rows.length > 0) { scLog.rows.forEach(r => addScalpLogRow(r)); } else { addScalpLogRow(); }
+
             closeCustomerListModal();
-            showToast('已成功載入顧客資料！');
+            showToast('顧客資料載入成功！');
         };
 
         window.createNewCustomer = function() {
-            const hasData = currentCustomerId || document.getElementById('custName').value;
-            const doCreate = () => {
-                document.getElementById('intakeForm').reset();
-                document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(el => el.checked = false);
-                document.getElementById('logTableBody').innerHTML = '';
-                addLogRow(); 
-                clearMainCanvas();
-                document.getElementById('intakeDate').valueAsDate = new Date();
-                currentCustomerId = null;
-                window.syncData();
-                showToast('已開啟全新空白表單');
-            };
-
-            if (hasData) {
-                window.showConfirmModal({
-                    title: '建立新表單',
-                    message: '確定要開啟新表單嗎？未儲存的變更將會重置。',
-                    confirmText: '確定開啟',
-                    confirmClass: 'bg-brand-primary hover:bg-brand-secondary',
-                    onConfirm: doCreate
-                });
-            } else {
-                doCreate();
+            if(currentCustomerId || document.getElementById('skinCustName').value) {
+                if(!confirm('確定要開新表單嗎？未儲存的資料將會遺失。')) return;
             }
+            document.getElementById('skinIntakeForm').reset();
+            document.getElementById('scalpIntakeForm').reset();
+            document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(el => el.checked = false);
+            
+            document.getElementById('skinLogTableBody').innerHTML = ''; addSkinLogRow();
+            document.getElementById('scalpLogTableBody').innerHTML = ''; addScalpLogRow();
+            
+            skinMainPad.clear(); scalpMainPad.clear();
+            document.getElementById('skinIntakeDate').valueAsDate = new Date();
+            document.getElementById('scalpIntakeDate').valueAsDate = new Date();
+            currentCustomerId = null;
+            window.syncData('skin');
+            showToast('已開啟全新空白表單');
         };
 
-        window.exportDatabaseBackup = function() {
+        window.exportDatabaseBackup = async function() {
+            if (!currentUser) { showToast("尚未連線", "error"); return; }
             try {
-                const localDb = JSON.parse(localStorage.getItem('j57_local_cache') || '{}');
-                const backupList = Object.values(localDb);
-
-                const backupPackage = {
-                    system: "J.57Beauty_Backup",
-                    version: "2.8",
-                    exportDate: new Date().toISOString(),
-                    totalCustomers: backupList.length,
-                    data: backupList
-                };
-
-                const blob = new Blob([JSON.stringify(backupPackage, null, 2)], { type: 'application/json' });
+                const querySnapshot = await getDocs(customersCollectionRef);
+                const backupList = [];
+                querySnapshot.forEach((docSnap) => {
+                    const rawData = docSnap.data();
+                    const cleanData = JSON.parse(JSON.stringify(rawData, (k, v) => k === 'updatedAt' ? null : v));
+                    backupList.push({ id: docSnap.id, ...cleanData });
+                });
+                const pkg = { system: "J.57_System_Backup", version: "3.0", exportDate: new Date().toISOString(), data: backupList };
+                const blob = new Blob([JSON.stringify(pkg, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                const dateStr = new Date().toISOString().split('T')[0].replace(/-/g, '');
-                a.download = `J57_Database_Backup_${dateStr}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                const a = document.createElement('a'); a.href = url;
+                a.download = `J57_System_Backup_${new Date().toISOString().split('T')[0].replace(/-/g,'')}.json`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-
-                showToast(`備份成功！共匯出 ${backupList.length} 筆資料`);
-            } catch (error) {
-                console.error("Backup Error:", error);
-                showToast('備份失敗', 'error');
-            }
+                showToast(`備份成功！共匯出 ${backupList.length} 筆`);
+            } catch (e) { showToast('備份失敗', 'error'); }
         };
 
-        window.triggerRestoreBackup = function() {
-            document.getElementById('backupFileInput').click();
-        };
+        window.triggerRestoreBackup = function() { if (!currentUser) { showToast("尚未連線", "error"); return; } document.getElementById('backupFileInput').click(); };
 
         document.getElementById('backupFileInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
-            window.showConfirmModal({
-                title: '從檔案還原',
-                message: '還原將會更新資料庫內容，確定要繼續嗎？',
-                confirmText: '確定還原',
-                confirmClass: 'bg-blue-600 hover:bg-blue-700',
-                onConfirm: () => {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        try {
-                            const backupObj = JSON.parse(event.target.result);
-                            let itemsToRestore = Array.isArray(backupObj) ? backupObj : (backupObj.data || []);
-                            
-                            let localDb = JSON.parse(localStorage.getItem('j57_local_cache') || '{}');
-                            itemsToRestore.forEach(item => {
-                                const id = item.id || 'cust_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-                                localDb[id] = { ...item, id };
-                            });
-                            
-                            localStorage.setItem('j57_local_cache', JSON.stringify(localDb));
-                            showToast(`成功還原 ${itemsToRestore.length} 位顧客資料！`);
-                        } catch (err) {
-                            showToast('備份檔案格式不正確', 'error');
-                        } finally {
-                            e.target.value = '';
-                        }
-                    };
-                    reader.readAsText(file);
-                }
-            });
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const obj = JSON.parse(event.target.result);
+                    pendingRestoreData = Array.isArray(obj) ? obj : (obj.data || []);
+                    document.getElementById('resFileName').textContent = file.name;
+                    document.getElementById('resFileCount').textContent = pendingRestoreData.length;
+                    document.getElementById('resFileDate').textContent = obj.exportDate ? new Date(obj.exportDate).toLocaleString('zh-TW') : '未知';
+                    const modal = document.getElementById('restoreModal');
+                    const content = document.getElementById('restoreModalContent');
+                    modal.classList.remove('hidden'); content.classList.add('modal-enter');
+                    setTimeout(() => { content.classList.remove('modal-enter'); content.classList.add('modal-enter-active'); }, 10);
+                } catch (err) { showToast('檔案格式錯誤', 'error'); }
+                finally { e.target.value = ''; }
+            };
+            reader.readAsText(file);
         });
 
-        window.restoreFromLocalCache = function() {
-            const rawCache = localStorage.getItem('j57_local_cache');
-            if (!rawCache) {
-                showToast('尚無快取資料', 'error');
-                return;
-            }
-            showToast('已成功加載快取資料');
+        window.cancelRestore = function() {
+            pendingRestoreData = null; document.getElementById('restoreModalContent').classList.remove('modal-enter-active');
+            setTimeout(() => document.getElementById('restoreModal').classList.add('hidden'), 200);
+        };
+
+        window.confirmExecuteRestore = async function() {
+            if (!pendingRestoreData || !currentUser) { window.cancelRestore(); return; }
+            const items = pendingRestoreData; window.cancelRestore();
+            document.getElementById('loaderText').textContent = '還原中...';
+            document.getElementById('globalLoader').classList.remove('hidden'); document.getElementById('globalLoader').classList.add('flex');
+            try {
+                let count = 0;
+                for (const item of items) {
+                    const targetId = item.id || doc(customersCollectionRef).id;
+                    const docRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'customers', targetId);
+                    const { id, ...payload } = item;
+                    await setDoc(docRef, { ...payload, updatedAt: serverTimestamp() }, { merge: true });
+                    count++;
+                }
+                showToast(`成功還原 ${count} 筆顧客資料！`);
+            } catch (e) { showToast('還原失敗', 'error'); }
+            finally { document.getElementById('globalLoader').classList.add('hidden'); document.getElementById('globalLoader').classList.remove('flex'); pendingRestoreData = null; }
         };
 
         window.exportToImage = async function() {
-            const targetId = currentTab;
-            const targetElement = document.getElementById(targetId);
-            const name = document.getElementById('custName').value.trim() || '未命名';
-            
+            const targetElement = document.getElementById(currentTab);
+            const name = document.getElementById('skinCustName').value.trim() || '未命名';
             document.body.classList.add('exporting');
-            document.getElementById('loaderText').textContent = '正在產生高畫質圖片...';
-            document.getElementById('globalLoader').classList.remove('hidden');
-            document.getElementById('globalLoader').classList.add('flex');
-
+            document.getElementById('loaderText').textContent = '產生圖片中...';
+            document.getElementById('globalLoader').classList.remove('hidden'); document.getElementById('globalLoader').classList.add('flex');
             try {
-                const canvas = await html2canvas(targetElement, { 
-                    scale: 2, useCORS: true, backgroundColor: '#FAF6f0'
-                });
-                
-                const imgData = canvas.toDataURL('image/png');
-                const a = document.createElement('a'); a.href = imgData;
-                const tabName = currentTab === 'tab-intake' ? '初診表' : '服務紀錄';
+                const canvas = await html2canvas(targetElement, { scale: 2, useCORS: true, backgroundColor: '#FAF6f0' });
+                const a = document.createElement('a'); a.href = canvas.toDataURL('image/png');
+                let tabName = '紀錄表';
+                if(currentTab === 'tab-skin-intake') tabName = '肌膚管理資料表';
+                else if(currentTab === 'tab-skin-log') tabName = '肌膚服務紀錄';
+                else if(currentTab === 'tab-scalp-intake') tabName = '頭皮養護資料表';
+                else if(currentTab === 'tab-scalp-log') tabName = '頭皮服務紀錄';
                 a.download = `J57_${tabName}_${name}.png`;
-                
                 document.body.appendChild(a); a.click(); document.body.removeChild(a);
-                showToast(`${tabName} 圖片匯出成功！`);
-            } catch (err) {
-                console.error(err); showToast('圖片匯出失敗', 'error');
-            } finally {
-                document.body.classList.remove('exporting');
-                document.getElementById('loaderText').textContent = '系統同步中...';
-                document.getElementById('globalLoader').classList.add('hidden');
-                document.getElementById('globalLoader').classList.remove('flex');
-            }
+                showToast('圖片匯出成功！');
+            } catch (e) { showToast('匯出失敗', 'error'); }
+            finally { document.body.classList.remove('exporting'); document.getElementById('globalLoader').classList.add('hidden'); document.getElementById('globalLoader').classList.remove('flex'); }
         };
 
         window.showToast = function(msg, type = 'success') {
@@ -1107,11 +1237,8 @@
             document.getElementById('toastMsg').textContent = msg;
             icon.className = type === 'error' ? 'fas fa-exclamation-circle text-red-400 text-lg' : 'fas fa-check-circle text-green-400 text-lg';
             toast.classList.remove('opacity-0'); toast.classList.add('opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100'); toast.classList.add('opacity-0');
-            }, 3000);
+            setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0'); }, 3000);
         };
     </script>
 </body>
 </html>
-
