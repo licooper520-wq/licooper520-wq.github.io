@@ -1,44 +1,222 @@
-// ==========================================
-        // 補齊：防呆自動快取與還原功能 (Local Storage)
-        // ==========================================
-        
-        // 1. 自動儲存到瀏覽器快取
-        window.saveToLocalCache = function() {
-            try {
-                const data = gatherFormData();
-                localStorage.setItem('J57_AutoSave_Cache', JSON.stringify({
-                    timestamp: new Date().getTime(),
-                    data: data
-                }));
-            } catch (e) {
-                console.log("快取寫入暫時無法運作", e);
-            }
+div></div>
+                                </div>
+                            </div>
+
+                            <div class="flex mt-6">
+                                <label class="whitespace-nowrap font-bold mr-2">頭皮養護備註：</label>
+                                <textarea id="scalpIntakeNotes" rows="2" class="flex-1 input-line resize-none" placeholder="輸入備註..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 注意事項與簽名 -->
+                    <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10 bg-[#FAF6f0]">
+                        <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">注意事項與簽名</div>
+                        <ul class="space-y-2 text-sm md:text-base mt-2 list-disc pl-5">
+                            <li>如本身有頭皮發炎、嚴重過敏、曬傷或有傷口，請事先告知由養護師評估。</li>
+                            <li>如本身有任何疾病仍堅持施作，操作過程中若有微紅腫、刺痛等現象，須自行承擔風險。</li>
+                            <li>養護後成果依個人體質不同而異，無法保證最終效果。</li>
+                            <li class="list-none -ml-5 mt-3 mb-3 font-bold text-brand-text flex flex-col sm:flex-row gap-2">
+                                <label class="inline-flex items-center mr-4"><input type="checkbox" id="scalpPhotoConsent" class="mr-2"> 我同意養護前後拍照作為紀錄</label>
+                                <label class="inline-flex items-center"><input type="checkbox" id="scalpMarketingConsent" class="mr-2"> 我並同意作為網路行銷素材</label>
+                            </li>
+                            <li>我已充分了解以上注意事項，在此證明最佳認知狀態下填寫，並簽名同意。</li>
+                        </ul>
+                        <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                            <div class="flex-1 w-full relative">
+                                <div class="flex justify-between mb-1">
+                                    <label class="font-bold">顧客同意簽章：</label>
+                                    <button type="button" onclick="window.clearScalpMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border"><i class="fas fa-eraser"></i> 重簽</button>
+                                </div>
+                                <div class="border-2 border-brand-primary border-dashed bg-white relative rounded-lg overflow-hidden">
+                                    <canvas id="scalpMainSignaturePad" width="600" height="150" class="w-full h-28 cursor-crosshair"></canvas>
+                                    <div id="scalpMainSignPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-300 pointer-events-none tracking-widest text-lg">請在此處簽名</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 whitespace-nowrap">
+                                <label class="font-bold">填表日期：</label>
+                                <input type="date" id="scalpIntakeDate" class="input-line text-sm md:text-base bg-transparent">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- ==================== 分頁 4: 頭皮養護服務紀錄 ==================== -->
+            <div id="tab-scalp-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
+                <div class="text-center mb-8 relative">
+                    <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
+                    <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">頭皮服務紀錄表</h2>
+                    <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Care Treatment Log Sheet</p>
+                </div>
+
+                <!-- 表頭基本資料 -->
+                <div class="border border-brand-primary rounded-xl p-4 md:p-6 mb-6 text-sm md:text-base">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
+                        <div class="flex items-center gap-4">
+                            <span class="font-bold">會員：</span>
+                            <label><input type="checkbox" id="scalpIsVIP"> VIP</label>
+                            <label><input type="checkbox" id="scalpIsVVIP"> VVIP</label>
+                        </div>
+                        <div class="flex items-center md:justify-end">
+                            <label class="font-bold whitespace-nowrap mr-2">入會日期 (期限一年)：</label>
+                            <input type="date" id="scalpJoinDate" class="input-line text-sm">
+                        </div>
+                        <div class="flex items-center">
+                            <label class="font-bold whitespace-nowrap mr-2">顧客姓名：</label>
+                            <input type="text" id="scalpLogCustName" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                        </div>
+                        <div class="flex items-center">
+                            <label class="font-bold whitespace-nowrap mr-2">聯絡電話：</label>
+                            <input type="tel" id="scalpLogCustPhone" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                        </div>
+                        <div class="flex items-center md:col-span-2">
+                            <label class="font-bold whitespace-nowrap mr-2">LINE ID：</label>
+                            <input type="text" id="scalpLogCustLine" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border border-brand-primary rounded-lg overflow-x-auto">
+                    <table class="w-full text-center border-collapse min-w-[650px]">
+                        <thead>
+                            <tr class="bg-[#C4A484] text-white">
+                                <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
+                                <th class="py-3 px-2 border border-[#C4A484] w-52">療程項目</th>
+                                <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
+                                <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                                <th class="py-3 px-2 border border-[#C4A484]">備註</th>
+                                <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scalpLogTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="mt-6 text-center export-hidden">
+                    <button type="button" onclick="window.addScalpLogRow()" class="px-6 py-2.5 bg-brand-bg border border-brand-primary text-brand-text hover:bg-brand-secondary hover:text-white rounded-full transition font-bold shadow-sm">
+                        <i class="fas fa-plus mr-1"></i> 新增一筆服務紀錄
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // 切換分頁邏輯
+        window.switchTab = function(tabId) {
+            // 隱藏所有內容
+            document.querySelectorAll('.paper-container').forEach(el => {
+                el.classList.add('hidden');
+            });
+            // 移除所有按鈕的啟用樣式
+            document.querySelectorAll('[id^="btn-tab-"]').forEach(el => {
+                el.classList.remove('text-brand-primary', 'border-b-4', 'border-brand-primary');
+                el.classList.add('text-gray-400', 'border-transparent');
+            });
+
+            // 顯示目標內容與樣式
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.remove('text-gray-400', 'border-transparent');
+            document.getElementById('btn-' + tabId).classList.add('text-brand-primary', 'border-b-4', 'border-brand-primary');
         };
 
-        // 2. 監聽表單的任何輸入與點擊，只要有動作就自動暫存
-        document.addEventListener('input', window.saveToLocalCache);
-        document.addEventListener('change', window.saveToLocalCache);
-        
-        // 3. 實作選單中的「從瀏覽器安全快取還原」功能
-        window.restoreFromLocalCache = function() {
-            const cached = localStorage.getItem('J57_AutoSave_Cache');
-            if(!cached) {
-                showToast('目前沒有暫存的進度', 'error');
-                return;
-            }
-            try {
-                const parsed = JSON.parse(cached);
-                
-                // 產生一個虛擬的 ID，將暫存資料餵給載入函數
-                const dummyId = 'temp_cache_id';
-                allCustomersCache = [{ id: dummyId, ...parsed.data }];
-                window.loadCustomerData(dummyId);
-                
-                // 將 currentCustomerId 設為 null，避免不小心覆寫到雲端其他人的資料
-                currentCustomerId = null; 
-                
-                showToast('已成功還原先前的編輯進度！');
-            } catch(e) {
-                showToast('快取讀取失敗', 'error');
-            }
+        // 資料連動 (姓名、電話、LINE連動到紀錄表)
+        window.syncData = function(source) {
+            const name = document.getElementById(source + 'CustName')?.value || '';
+            const phone = document.getElementById(source + 'CustPhone')?.value || '';
+            const line = document.getElementById(source + 'CustLine')?.value || '';
+
+            // 更新頂部顯示名稱
+            document.getElementById('currentCustomerNameDisplay').innerText = name ? `當前客戶: ${name}` : '未命名表單';
+
+            // 跨系統連動紀錄表
+            const types = ['skin', 'scalp'];
+            types.forEach(type => {
+                if (document.getElementById(type + 'LogCustName')) document.getElementById(type + 'LogCustName').value = name;
+                if (document.getElementById(type + 'LogCustPhone')) document.getElementById(type + 'LogCustPhone').value = phone;
+                if (document.getElementById(type + 'LogCustLine')) document.getElementById(type + 'LogCustLine').value = line;
+            });
         };
+
+        // 字體調整邏輯
+        let currentFontSize = 16;
+        window.adjustFontSize = function(change) {
+            currentFontSize += change * 2;
+            if (currentFontSize < 12) currentFontSize = 12;
+            if (currentFontSize > 24) currentFontSize = 24;
+            
+            document.getElementById('main-content').style.setProperty('--app-font-size', currentFontSize + 'px');
+            document.getElementById('main-content').style.fontSize = currentFontSize + 'px';
+            document.getElementById('fontSizeIndicator').innerText = Math.round((currentFontSize / 16) * 100) + '%';
+        };
+
+        // 匯出為圖片 (依賴 html2canvas)
+        window.exportToImage = function() {
+            document.body.classList.add('exporting');
+            const activeTab = document.querySelector('.paper-container:not(.hidden)');
+            
+            html2canvas(activeTab, { 
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff'
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `J57_表單_${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                document.body.classList.remove('exporting');
+            }).catch(err => {
+                console.error("匯出失敗:", err);
+                alert("匯出圖片失敗，請再試一次。");
+                document.body.classList.remove('exporting');
+            });
+        };
+
+        // 新增服務紀錄列模板
+        const createRowTemplate = () => `
+            <td class="border border-[#E8DCCB] p-1"><input type="date" class="w-full text-center input-line bg-transparent text-sm"></td>
+            <td class="border border-[#E8DCCB] p-1"><input type="text" class="w-full text-center input-line bg-transparent"></td>
+            <td class="border border-[#E8DCCB] p-1"><input type="number" class="w-full text-center input-line bg-transparent"></td>
+            <td class="border border-[#E8DCCB] p-1">
+                <div class="h-10 border border-dashed border-gray-300 w-full bg-gray-50 text-xs flex items-center justify-center text-gray-400 cursor-pointer hover:bg-gray-100 transition">
+                    點擊簽名
+                </div>
+            </td>
+            <td class="border border-[#E8DCCB] p-1"><input type="text" class="w-full text-center input-line bg-transparent"></td>
+            <td class="border border-[#E8DCCB] p-1 export-hidden">
+                <button type="button" onclick="this.closest('tr').remove()" class="text-red-500 hover:text-red-700 transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </td>
+        `;
+
+        window.addSkinLogRow = function() {
+            const tbody = document.getElementById('skinLogTableBody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = createRowTemplate();
+            tbody.appendChild(tr);
+        };
+
+        window.addScalpLogRow = function() {
+            const tbody = document.getElementById('scalpLogTableBody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = createRowTemplate();
+            tbody.appendChild(tr);
+        };
+
+        // 初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            window.addSkinLogRow();
+            window.addScalpLogRow();
+            
+            // 預設日期為今日
+            const today = new Date().toISOString().split('T')[0];
+            if(document.getElementById('skinIntakeDate')) document.getElementById('skinIntakeDate').value = today;
+            if(document.getElementById('scalpIntakeDate')) document.getElementById('scalpIntakeDate').value = today;
+        });
+
+    </script>
+</body>
+</html>
