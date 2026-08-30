@@ -57,6 +57,15 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #main-content { font-size: var(--app-font-size, 1rem); }
+        
+        /* 修復：確保隱藏的 Modal 與 Loader 完全不阻擋滑鼠與觸控事件 */
+        #globalLoader.hidden,
+        #restoreModal.hidden,
+        #dbModal.hidden,
+        #signatureModal.hidden {
+            display: none !important;
+            pointer-events: none !important;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden text-brand-text relative">
@@ -100,10 +109,6 @@
                     </button>
                     <button type="button" onclick="window.triggerRestoreBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2">
                         <i class="fas fa-file-upload text-blue-600"></i> 從檔案還原資料
-                    </button>
-                    <div class="border-t border-gray-100 my-1"></div>
-                    <button type="button" onclick="window.restoreFromLocalCache()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2 text-green-700 font-medium">
-                        <i class="fas fa-history"></i> 從瀏覽器安全快取還原
                     </button>
                 </div>
             </div>
@@ -651,95 +656,93 @@
             showToast(`字體大小已調整為 ${percent}%`);
         };
 
-class SignaturePad {
-    constructor(canvasId, placeholderId) {
-        this.canvas = document.getElementById(canvasId);
-        if (!this.canvas) return;
-        this.ctx = this.canvas.getContext('2d');
-        this.placeholder = document.getElementById(placeholderId);
-        this.isDrawing = false;
-        this.hasSignature = false;
-        this.ctx.strokeStyle = '#000';
-        this.ctx.lineWidth = 4;
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-        this.bindEvents();
-    }
+        class SignaturePad {
+            constructor(canvasId, placeholderId) {
+                this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) return;
+                this.ctx = this.canvas.getContext('2d');
+                this.placeholder = document.getElementById(placeholderId);
+                this.isDrawing = false;
+                this.hasSignature = false;
+                this.ctx.strokeStyle = '#000';
+                this.ctx.lineWidth = 4;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+                this.bindEvents();
+            }
 
-    getCoordinates(e) {
-        const rect = this.canvas.getBoundingClientRect();
-        const scaleX = this.canvas.width / rect.width;
-        const scaleY = this.canvas.height / rect.height;
-        let clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        let clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { 
-            x: (clientX - rect.left) * scaleX, 
-            y: (clientY - rect.top) * scaleY 
-        };
-    }
+            getCoordinates(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const scaleX = this.canvas.width / rect.width;
+                const scaleY = this.canvas.height / rect.height;
+                let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { 
+                    x: (clientX - rect.left) * scaleX, 
+                    y: (clientY - rect.top) * scaleY 
+                };
+            }
 
-    startDrawing(e) {
-        // 只在觸碰/點擊 Canvas 本身時才阻止預設捲動/點擊行為
-        if (e.target !== this.canvas) return;
-        
-        // 阻止滑動頁面等預設行為
-        if (e.cancelable) e.preventDefault();
-        
-        this.isDrawing = true; 
-        this.hasSignature = true;
-        if (this.placeholder) this.placeholder.style.display = 'none';
-        
-        const coords = this.getCoordinates(e);
-        this.ctx.beginPath(); 
-        this.ctx.moveTo(coords.x, coords.y);
-    }
+            startDrawing(e) {
+                // 修復：只在點擊/觸碰 Canvas 內部時才阻擋滾動/點擊
+                if (e.target !== this.canvas) return;
+                if (e.cancelable) e.preventDefault();
+                
+                this.isDrawing = true; 
+                this.hasSignature = true;
+                if (this.placeholder) this.placeholder.style.display = 'none';
+                
+                const coords = this.getCoordinates(e);
+                this.ctx.beginPath(); 
+                this.ctx.moveTo(coords.x, coords.y);
+            }
 
-    draw(e) {
-        if (!this.isDrawing) return;
-        if (e.cancelable) e.preventDefault();
-        
-        const coords = this.getCoordinates(e);
-        this.ctx.lineTo(coords.x, coords.y); 
-        this.ctx.stroke();
-    }
+            draw(e) {
+                if (!this.isDrawing) return;
+                if (e.cancelable) e.preventDefault();
+                
+                const coords = this.getCoordinates(e);
+                this.ctx.lineTo(coords.x, coords.y); 
+                this.ctx.stroke();
+            }
 
-    stopDrawing(e) { 
-        if (this.isDrawing) {
-            this.isDrawing = false; 
+            stopDrawing(e) { 
+                if (this.isDrawing) {
+                    this.isDrawing = false; 
+                }
+            }
+
+            bindEvents() {
+                // 綁定事件至 Canvas 本身而非全域 Window
+                this.canvas.addEventListener('mousedown', this.startDrawing.bind(this));
+                this.canvas.addEventListener('mousemove', this.draw.bind(this));
+                this.canvas.addEventListener('mouseup', this.stopDrawing.bind(this));
+                this.canvas.addEventListener('mouseleave', this.stopDrawing.bind(this));
+
+                this.canvas.addEventListener('touchstart', this.startDrawing.bind(this), { passive: false });
+                this.canvas.addEventListener('touchmove', this.draw.bind(this), { passive: false });
+                this.canvas.addEventListener('touchend', this.stopDrawing.bind(this));
+            }
+
+            clear() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.hasSignature = false;
+                if (this.placeholder) this.placeholder.style.display = 'flex';
+            }
+
+            loadBase64(base64) {
+                if (!base64) { this.clear(); return; }
+                const img = new Image();
+                img.onload = () => {
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.ctx.drawImage(img, 0, 0);
+                    this.hasSignature = true;
+                    if (this.placeholder) this.placeholder.style.display = 'none';
+                };
+                img.src = base64;
+            }
         }
-    }
 
-    bindEvents() {
-        // 綁定事件至 Canvas 本身
-        this.canvas.addEventListener('mousedown', this.startDrawing.bind(this));
-        this.canvas.addEventListener('mousemove', this.draw.bind(this));
-        this.canvas.addEventListener('mouseup', this.stopDrawing.bind(this));
-        this.canvas.addEventListener('mouseleave', this.stopDrawing.bind(this));
-
-        // 針對行動裝置觸控事件
-        this.canvas.addEventListener('touchstart', this.startDrawing.bind(this), { passive: false });
-        this.canvas.addEventListener('touchmove', this.draw.bind(this), { passive: false });
-        this.canvas.addEventListener('touchend', this.stopDrawing.bind(this));
-    }
-
-    clear() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.hasSignature = false;
-        if (this.placeholder) this.placeholder.style.display = 'flex';
-    }
-
-    loadBase64(base64) {
-        if (!base64) { this.clear(); return; }
-        const img = new Image();
-        img.onload = () => {
-            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            this.ctx.drawImage(img, 0, 0);
-            this.hasSignature = true;
-            if (this.placeholder) this.placeholder.style.display = 'none';
-        };
-        img.src = base64;
-    }
-}
         let skinMainPad, scalpMainPad, modalPad;
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('skinIntakeDate').valueAsDate = new Date();
@@ -1088,7 +1091,6 @@ class SignaturePad {
             if(!dData) return;
             currentCustomerId = docId;
 
-            // 讀取基本資料 (支援舊版 v1/v2 的 intake.name)
             const bName = dData.base?.name || dData.intake?.name || '';
             document.getElementById('skinCustName').value = bName;
             document.getElementById('skinCustBirthday').value = dData.base?.birthday || dData.intake?.birthday || '';
@@ -1097,7 +1099,6 @@ class SignaturePad {
             document.getElementById('skinCustAddress').value = dData.base?.address || dData.intake?.address || '';
             window.syncData('skin');
 
-            // 讀取肌膚管理資料
             const sIn = dData.skin?.intake || {};
             document.getElementById('skinReferralName').value = sIn.referralName || '';
             document.getElementById('skinOtherKnowText').value = sIn.otherKnowText || '';
@@ -1108,7 +1109,6 @@ class SignaturePad {
             document.getElementById('marketingConsent').checked = sIn.marketingConsent || false;
             document.getElementById('skinIntakeDate').value = sIn.intakeDate || '';
 
-            // 讀取頭皮管理資料 (若為舊版，則直接映射)
             const scIn = dData.scalp?.intake || dData.intake || {};
             document.getElementById('scalpReferralName').value = scIn.referralName || '';
             document.getElementById('scalpOtherKnowText').value = scIn.otherKnowText || '';
@@ -1119,10 +1119,8 @@ class SignaturePad {
             document.getElementById('scalpIntakeDate').value = scIn.intakeDate || '';
 
             document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(el => {
-                // Skin Checkboxes/Radios
                 if(['skinHowKnow', 'cleanser', 'skincare', 'skinCondition', 'healthCond'].includes(el.name)) { el.checked = sIn[el.name] && sIn[el.name].includes(el.value); }
                 else if(['prefEnv', 'makeupHabit', 'exfoliateHabit', 'medicalHistory', 'allergyHistory', 'skinType'].includes(el.name)) { el.checked = (sIn[el.name] === el.value); }
-                // Scalp Checkboxes/Radios
                 else if(['scalpHowKnow', 'hairIssue', 'browCond', 'whiteHairCond', 'lifestyle', 'blackHairNotice'].includes(el.name)) { el.checked = scIn[el.name] && scIn[el.name].includes(el.value); } 
                 else if(el.name === 'scalpType') { el.checked = (scIn[el.name] === el.value); } 
                 else if(el.name.startsWith('brow_')) { const key = el.name.replace('brow_', ''); el.checked = scIn.browSub && scIn.browSub[key] && scIn.browSub[key].includes(el.value); }
@@ -1131,7 +1129,6 @@ class SignaturePad {
             skinMainPad.clear(); if(sIn.mainSignature) skinMainPad.loadBase64(sIn.mainSignature);
             scalpMainPad.clear(); if(scIn.mainSignature) scalpMainPad.loadBase64(scIn.mainSignature);
 
-            // 讀取紀錄表
             const sLog = dData.skin?.log || {};
             document.getElementById('skinIsVIP').checked = sLog.isVIP || false;
             document.getElementById('skinIsVVIP').checked = sLog.isVVIP || false;
