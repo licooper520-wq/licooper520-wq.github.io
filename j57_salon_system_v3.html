@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v3.6</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -49,8 +49,6 @@
         .export-hidden { display: flex; }
         body.exporting .export-hidden { display: none !important; }
         body.exporting .paper-container { box-shadow: none; border: none; border-radius: 0; margin: 0; padding: 2rem; max-width: none; }
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
         .loader {
             border: 3px solid #f3f3f3; border-top: 3px solid #B68D6A;
             border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;
@@ -130,7 +128,7 @@
             肌膚服務紀錄
         </button>
         <button type="button" onclick="window.switchTab('tab-scalp-intake')" id="btn-tab-scalp-intake" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
-            頭皮養護資料卡
+            頭皮養護顧客資料卡
         </button>
         <button type="button" onclick="window.switchTab('tab-scalp-log')" id="btn-tab-scalp-log" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
             頭皮服務紀錄
@@ -351,11 +349,12 @@
                     </div>
                 </div>
 
-                <!-- 頭皮與落髮狀況評估 -->
+                <!-- 頭皮與毛髮狀況評估 (補齊全部詳細欄位) -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">頭皮與毛髮狀況評估</div>
                     
                     <div class="space-y-4 mt-2 text-sm md:text-base leading-relaxed">
+                        <!-- 主要困擾 / 落髮區域 -->
                         <div>
                             <span class="font-bold block mb-1">● 主要困擾 / 落髮區域：</span>
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pl-4">
@@ -370,28 +369,91 @@
                             </div>
                         </div>
 
+                        <!-- 眉毛狀況 -->
                         <div>
                             <span class="font-bold block mb-2">● 眉毛狀況：</span>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-4">
                                 <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="稀疏"> 稀疏</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_稀疏" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_稀疏" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_稀疏" value="後" class="sub-checkbox"> 後</label></div></div>
                                 <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="空洞"> 空洞</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_空洞" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_空洞" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_空洞" value="後" class="sub-checkbox"> 後</label></div></div>
                                 <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="受損"> 受損</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_受損" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_受損" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_受損" value="後" class="sub-checkbox"> 後</label></div></div>
+                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="細毛"> 細毛</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_細毛" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_細毛" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_細毛" value="後" class="sub-checkbox"> 後</label></div></div>
                             </div>
+                            <div class="flex items-center mt-2 pl-4 gap-2">
+                                <label><input type="checkbox" name="browCond" value="其它"> 其它</label>
+                                <input type="text" id="browOtherText" class="input-line flex-1" placeholder="請填寫其他眉毛狀況...">
+                            </div>
+                        </div>
+
+                        <!-- 白髮狀況 -->
+                        <div>
+                            <span class="font-bold block mb-2">● 白髮狀況：</span>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pl-4 mb-2">
+                                <label><input type="checkbox" name="grayHair" value="瀏海(左、右)"> 瀏海 (左、右)</label>
+                                <label><input type="checkbox" name="grayHair" value="頭頂"> 頭頂</label>
+                                <label><input type="checkbox" name="grayHair" value="分髮線(左、中、右)"> 分髮線 (左、中、右)</label>
+                                <label><input type="checkbox" name="grayHair" value="上半頭"> 上半頭</label>
+                                <label><input type="checkbox" name="grayHair" value="整頭"> 整頭</label>
+                                <label><input type="checkbox" name="grayHair" value="下半頭"> 下半頭</label>
+                                <label><input type="checkbox" name="grayHair" value="少年白"> 少年白</label>
+                            </div>
+                            <div class="flex items-center pl-4 gap-2">
+                                <label><input type="checkbox" name="grayHair" value="其它"> 其它</label>
+                                <input type="text" id="grayHairOtherText" class="input-line flex-1" placeholder="請填寫其他白髮狀況...">
+                            </div>
+                        </div>
+
+                        <!-- 頭皮屬性 -->
+                        <div class="flex flex-wrap items-center gap-4">
+                            <span class="font-bold">● 頭皮屬性：</span>
+                            <label><input type="checkbox" name="scalpType" value="油性頭皮"> 油性頭皮</label>
+                            <label><input type="checkbox" name="scalpType" value="乾性頭皮"> 乾性頭皮</label>
+                            <label><input type="checkbox" name="scalpType" value="敏感性頭皮"> 敏感性頭皮</label>
+                            <label><input type="checkbox" name="scalpType" value="混合性頭皮"> 混合性頭皮</label>
+                        </div>
+
+                        <!-- 生活與作息習慣 -->
+                        <div class="flex flex-wrap items-center gap-4">
+                            <span class="font-bold">● 生活與作息習慣：</span>
+                            <label><input type="checkbox" name="lifeHabit" value="經常熬夜"> 經常熬夜</label>
+                            <label><input type="checkbox" name="lifeHabit" value="壓力大"> 壓力大</label>
+                            <label><input type="checkbox" name="lifeHabit" value="經常燙染"> 經常燙染</label>
+                            <label><input type="checkbox" name="lifeHabit" value="抽菸/飲酒"> 抽菸/飲酒</label>
+                            <label><input type="checkbox" name="lifeHabit" value="睡眠品質不佳"> 睡眠品質不佳</label>
+                        </div>
+
+                        <!-- 頭皮養護專員備註 -->
+                        <div class="mt-3">
+                            <span class="font-bold block mb-1">頭皮養護專員備註：</span>
+                            <input type="text" id="scalpSpecialNotes" class="input-line w-full" placeholder="輸入頭皮檢測狀況或特殊需求...">
                         </div>
                     </div>
                 </div>
 
-                <!-- 頭皮注意事項與簽名 -->
+                <!-- 頭皮養護服務聲明與注意事項及簽名 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10 bg-[#FAF6f0]">
-                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">注意事項與簽名</div>
-                    <ul class="space-y-2 text-sm md:text-base mt-2 list-disc pl-5">
-                        <li>如頭皮有嚴重傷口、皮膚炎、急性感染或過敏反應，請事先告知由專人評估是否適合進行養護。</li>
-                        <li>頭皮養護與改善效果因個人體質、生活作息及毛囊健康狀況而異，恕無法完全保證單次見效。</li>
-                        <li class="list-none -ml-5 mt-3 mb-3 font-bold text-brand-text flex flex-col sm:flex-row gap-2">
-                            <label class="inline-flex items-center mr-4"><input type="checkbox" id="scalpPhotoConsent" class="mr-2"> 我同意頭皮養護前後拍照作為紀錄</label>
+                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">頭皮養護服務聲明與注意事項</div>
+                    
+                    <div class="text-sm font-bold mb-2">【顧客注意事項（同意下列敘述請在框內打勾✔，代表「每次」服務皆同意下列敘述）】</div>
+                    <ul class="space-y-2 text-sm md:text-base mt-2 list-none pl-2">
+                        <li>① 施作部位過敏、長痘痘者不適合。</li>
+                        <li>② 懷孕、哺乳不能施作。</li>
+                        <li>③ 曾罹癌症問題、紅斑性狼瘡或其他免疫疾病者、糖尿病患者皆不能施作。</li>
+                        <li class="mt-2"><label class="inline-flex items-center font-bold"><input type="checkbox" id="scalpConfirmNoIssues" class="mr-2"> 本人皆無以上狀況</label></li>
+                    </ul>
+
+                    <div class="mt-4 pt-4 border-t border-brand-border text-sm font-bold mb-2">💡 青春賦活髮絲 保養注意事項</div>
+                    <ul class="space-y-1 text-xs md:text-sm text-gray-700 pl-2">
+                        <li><label><input type="checkbox" class="mr-1 sub-checkbox" name="careNote" value="1"> 產品每日使用一次晚（洗完頭或晚上），建議後續可以持續使用作為保養。</label></li>
+                        <li><label><input type="checkbox" class="mr-1 sub-checkbox" name="careNote" value="2"> 產品使用後需按摩3-5分鐘再靜置5分鐘，不要直接吹乾！</label></li>
+                    </ul>
+
+                    <ul class="space-y-2 text-sm md:text-base mt-4 list-disc pl-5">
+                        <li class="list-none -ml-5 mt-3 mb-3 font-bold text-brand-text">
+                            <label class="inline-flex items-center"><input type="checkbox" id="scalpPhotoConsent" class="mr-2"> 我同意頭皮養護前後拍照作為紀錄</label>
                         </li>
                         <li>我已充分了解以上注意事項，並在最佳認知狀態下填寫，簽名以茲證明。</li>
                     </ul>
+
                     <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div class="flex-1 w-full relative">
                             <div class="flex justify-between mb-1">
@@ -489,7 +551,7 @@
         </div>
     </div>
 
-    <!-- 簽名細節跳窗 (用於服務紀錄列表內的小簽名畫布) -->
+    <!-- 簽名細節跳窗 -->
     <div id="signatureModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
             <h3 class="font-bold text-lg mb-3 text-brand-text">請顧客簽名</h3>
@@ -509,9 +571,8 @@
         let currentActiveTab = 'tab-skin-intake';
         let currentCustomerId = 'cust_' + Date.now();
         let currentFontSizeScale = 1.0;
-        let activeModalTarget = null; // 紀錄目前是哪一行表格在簽名
+        let activeModalTarget = null;
 
-        // 療程與養護項目選單選項清單
         const treatmentOptions = [
             "淨化調理 (改善痘、粉刺+杏仁酸)",
             "混合肌保養 (改善痘、粉刺+保濕)",
@@ -525,7 +586,6 @@
             "客製化綜合療程"
         ];
 
-        // 初始化畫布與預設日期
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date().toISOString().split('T')[0];
             if(document.getElementById('skinIntakeDate')) document.getElementById('skinIntakeDate').value = today;
@@ -537,13 +597,11 @@
             initSignCanvas('scalpMainSignaturePad', 'scalpMainSignPlaceholder');
             initSignCanvas('modalSignaturePad', null);
 
-            // 初始化載入或建立空白資料
             loadCustomerData(currentCustomerId);
             addSkinLogRow();
             addScalpLogRow();
         });
 
-        // 分頁切換函式
         window.switchTab = function(tabId) {
             ['tab-skin-intake', 'tab-skin-log', 'tab-scalp-intake', 'tab-scalp-log'].forEach(id => {
                 const el = document.getElementById(id);
@@ -559,7 +617,6 @@
             currentActiveTab = tabId;
         };
 
-        // 資料同步（肌膚與頭皮表單基本資料互相連動）
         window.syncData = function(source) {
             if (source === 'skin') {
                 const name = document.getElementById('skinCustName').value;
@@ -592,7 +649,6 @@
             }
         };
 
-        // 字體大小調整
         window.adjustFontSize = function(direction) {
             currentFontSizeScale += direction * 0.1;
             if (currentFontSizeScale < 0.8) currentFontSizeScale = 0.8;
@@ -601,7 +657,6 @@
             document.getElementById('fontSizeIndicator').textContent = Math.round(currentFontSizeScale * 100) + '%';
         };
 
-        // 簽名畫布初始化通用邏輯
         function initSignCanvas(canvasId, placeholderId) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
@@ -664,7 +719,6 @@
             document.getElementById('scalpMainSignPlaceholder').style.display = 'flex';
         };
 
-        // 產生療程選項下拉選單與備註輸入框的 HTML 結構
         function createTreatmentSelectHTML() {
             let optionsHTML = `<option value="">-- 選擇療程項目 --</option>`;
             treatmentOptions.forEach(opt => {
@@ -680,7 +734,6 @@
             `;
         }
 
-        // 服務紀錄動態加列 (肌膚)
         window.addSkinLogRow = function() {
             const tbody = document.getElementById('skinLogTableBody');
             const tr = document.createElement('tr');
@@ -701,7 +754,6 @@
             tbody.appendChild(tr);
         };
 
-        // 服務紀錄動態加列 (頭皮)
         window.addScalpLogRow = function() {
             const tbody = document.getElementById('scalpLogTableBody');
             const tr = document.createElement('tr');
@@ -722,7 +774,6 @@
             tbody.appendChild(tr);
         };
 
-        // 簽名跳窗控制
         window.openSignatureModal = function(containerDiv) {
             activeModalTarget = containerDiv;
             document.getElementById('signatureModal').classList.remove('hidden');
@@ -758,7 +809,6 @@
             activeModalTarget = null;
         };
 
-        // 雲端儲存與資料庫功能 (LocalStorage)
         window.saveToDB = function() {
             const loader = document.getElementById('globalLoader');
             document.getElementById('loaderText').textContent = "雲端資料同步儲存中...";
@@ -882,11 +932,8 @@
             }
         };
 
-        function loadCustomerData(id) {
-            // 初始化預留
-        }
+        function loadCustomerData(id) {}
 
-        // 智慧備份與匯出
         window.exportDatabaseBackup = function() {
             const db = localStorage.getItem('j57_beauty_db') || '{}';
             const blob = new Blob([db], { type: 'application/json' });
@@ -917,7 +964,6 @@
             reader.readAsText(file);
         };
 
-        // 圖片匯出
         window.exportToImage = function() {
             const loader = document.getElementById('globalLoader');
             document.getElementById('loaderText').textContent = "正在產生高畫質圖片...";
