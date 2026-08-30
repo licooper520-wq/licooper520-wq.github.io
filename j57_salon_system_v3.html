@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v3.5</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -215,8 +215,7 @@
                             <label><input type="checkbox" name="skinCondition" value="肉芽"> 肉芽</label><label><input type="checkbox" name="skinCondition" value="鬆弛"> 鬆弛</label>
                             <label><input type="checkbox" name="skinCondition" value="缺水"> 缺水</label><label><input type="checkbox" name="skinCondition" value="黑斑斑點"> 黑斑斑點</label>
                             <label><input type="checkbox" name="skinCondition" value="雀斑"> 雀斑</label><label><input type="checkbox" name="skinCondition" value="痘疤"> 痘疤</label>
-                            <label><input type="checkbox" name="skinCondition" value="黑眼圈"> 黑眼圈</label><label><input type="checkbox" name="skinCondition" value="角質厚"> 角質厚</label>
-                            <label><input type="checkbox" name="skinCondition" value="毛孔粗大"> 毛孔粗大</label><label><input type="checkbox" name="skinCondition" value="細小紋路"> 細小紋路</label>
+                            <label><input type="checkbox" name="skinCondition" value="黑眼圈"> 黑眼圈</label><label><input type="checkbox" name="skinCondition" value="角質厚"> 角質厚</label><label><input type="checkbox" name="skinCondition" value="毛孔粗大"> 毛孔粗大</label><label><input type="checkbox" name="skinCondition" value="細小紋路"> 細小紋路</label>
                             <label><input type="checkbox" name="skinCondition" value="膚色不均"> 膚色不均</label><label><input type="checkbox" name="skinCondition" value="其他"> 其他</label>
                         </div>
 
@@ -304,7 +303,7 @@
                     <thead>
                         <tr class="bg-[#C4A484] text-white">
                             <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-52">療程項目</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-56">療程項目</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
                             <th class="py-3 px-2 border border-[#C4A484]">備註</th>
@@ -435,7 +434,7 @@
                     <thead>
                         <tr class="bg-[#C4A484] text-white">
                             <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-52">養護項目</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-56">養護項目</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
                             <th class="py-3 px-2 border border-[#C4A484]">備註</th>
@@ -494,6 +493,20 @@
         let currentCustomerId = 'cust_' + Date.now();
         let currentFontSizeScale = 1.0;
         let activeModalTarget = null; // 紀錄目前是哪一行表格在簽名
+
+        // 療程與養護項目選單選項清單
+        const treatmentOptions = [
+            "淨化調理 (改善痘、粉刺+杏仁酸)",
+            "混合肌保養 (改善痘、粉刺+保濕)",
+            "顏值煥膚 杏仁酸",
+            "按摩撥筋",
+            "極致賦活養護 (調理肌膚紋理、提升保濕)",
+            "美背 (全背/上或下背)",
+            "髮絲強韌養護",
+            "豐盈眉毛",
+            "青春賦活髮絲",
+            "客製化綜合療程"
+        ];
 
         // 初始化畫布與預設日期
         window.addEventListener('DOMContentLoaded', () => {
@@ -632,14 +645,30 @@
             document.getElementById('scalpMainSignPlaceholder').style.display = 'flex';
         };
 
-        // 服務紀錄動態加列
+        // 產生療程選項下拉選單與備註輸入框的 HTML 結構
+        function createTreatmentSelectHTML() {
+            let optionsHTML = `<option value="">-- 選擇療程項目 --</option>`;
+            treatmentOptions.forEach(opt => {
+                optionsHTML += `<option value="${opt}">${opt}</option>`;
+            });
+            return `
+                <div class="flex flex-col gap-1 w-full">
+                    <select class="input-line text-xs w-full bg-transparent font-medium py-1">
+                        ${optionsHTML}
+                    </select>
+                    <input type="text" class="input-line text-[11px] w-full text-gray-500" placeholder="自訂或備註細項">
+                </div>
+            `;
+        }
+
+        // 服務紀錄動態加列 (肌膚)
         window.addSkinLogRow = function() {
             const tbody = document.getElementById('skinLogTableBody');
             const tr = document.createElement('tr');
             tr.className = "border-b border-gray-200 hover:bg-gray-50";
             tr.innerHTML = `
                 <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
-                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入療程項目"></td>
+                <td class="p-2 border">${createTreatmentSelectHTML()}</td>
                 <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
                 <td class="p-2 border text-center align-middle">
                     <div class="signature-container flex flex-col items-center justify-center cursor-pointer" onclick="window.openSignatureModal(this)">
@@ -653,13 +682,14 @@
             tbody.appendChild(tr);
         };
 
+        // 服務紀錄動態加列 (頭皮)
         window.addScalpLogRow = function() {
             const tbody = document.getElementById('scalpLogTableBody');
             const tr = document.createElement('tr');
             tr.className = "border-b border-gray-200 hover:bg-gray-50";
             tr.innerHTML = `
                 <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
-                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入養護項目"></td>
+                <td class="p-2 border">${createTreatmentSelectHTML()}</td>
                 <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
                 <td class="p-2 border text-center align-middle">
                     <div class="signature-container flex flex-col items-center justify-center cursor-pointer" onclick="window.openSignatureModal(this)">
