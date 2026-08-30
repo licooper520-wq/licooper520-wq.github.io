@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v3.3</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -475,7 +475,7 @@
             document.getElementById('scalpMainSignPlaceholder').style.display = 'flex';
         };
 
-        // 肌膚服務紀錄加列（支援簽名縮圖顯示）
+        // 肌膚服務紀錄加列（已支援直接顯示手寫簽名縮圖與重簽）
         window.addSkinLogRow = function() {
             const tbody = document.getElementById('skinLogTableBody');
             const tr = document.createElement('tr');
@@ -496,7 +496,7 @@
             tbody.appendChild(tr);
         };
 
-        // 頭皮服務紀錄加列（支援簽名縮圖顯示）
+        // 頭皮服務紀錄加列（已支援直接顯示手寫簽名縮圖與重簽）
         window.addScalpLogRow = function() {
             const tbody = document.getElementById('scalpLogTableBody');
             const tr = document.createElement('tr');
