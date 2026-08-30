@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v8.30</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -49,8 +49,6 @@
         .export-hidden { display: flex; }
         body.exporting .export-hidden { display: none !important; }
         body.exporting .paper-container { box-shadow: none; border: none; border-radius: 0; margin: 0; padding: 2rem; max-width: none; }
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
         .loader {
             border: 3px solid #f3f3f3; border-top: 3px solid #B68D6A;
             border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;
@@ -121,7 +119,7 @@
         </div>
     </header>
 
-    <!-- 分頁切換標籤 (四大分頁) -->
+    <!-- 分頁切換標籤 -->
     <div class="bg-white border-b border-gray-200 flex justify-center flex-wrap gap-2 sm:gap-6 shrink-0 px-2 pt-2">
         <button type="button" onclick="window.switchTab('tab-skin-intake')" id="btn-tab-skin-intake" class="py-2.5 px-3 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base">
             肌膚管理資料表
@@ -145,7 +143,7 @@
             <p class="font-bold text-brand-text tracking-widest text-sm" id="loaderText">系統同步中...</p>
         </div>
 
-        <!-- ==================== 分頁 1: 肌膚管理顧客資料表 ==================== -->
+        <!-- 分頁 1: 肌膚管理顧客資料表 -->
         <div id="tab-skin-intake" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border">
             <div class="text-center mb-8 relative">
                 <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
@@ -154,7 +152,6 @@
             </div>
 
             <form id="skinIntakeForm" class="space-y-6">
-                <!-- 基本資料 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">基本資料</div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 mt-2">
@@ -163,88 +160,11 @@
                         <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">電話：</label><input type="tel" id="skinCustPhone" class="input-line flex-1" oninput="window.syncData('skin')"></div>
                         <div class="flex items-center lg:col-span-1"><label class="whitespace-nowrap mr-2 font-bold">LINE ID：</label><input type="text" id="skinCustLine" class="input-line flex-1" oninput="window.syncData('skin')"></div>
                         <div class="flex items-center lg:col-span-2"><label class="whitespace-nowrap mr-2 font-bold">地址：</label><input type="text" id="skinCustAddress" class="input-line flex-1" oninput="window.syncData('skin')"></div>
-                        
-                        <div class="col-span-full flex flex-wrap items-center gap-3 mt-2 text-sm md:text-base">
-                            <label class="whitespace-nowrap font-bold">如何得知本店：</label>
-                            <label><input type="checkbox" name="skinHowKnow" value="IG"> IG</label>
-                            <label><input type="checkbox" name="skinHowKnow" value="FB"> FB</label>
-                            <label><input type="checkbox" name="skinHowKnow" value="Google"> Google</label>
-                            <div class="flex items-center"><label><input type="checkbox" name="skinHowKnow" value="親友介紹"> 親友介紹，介紹人</label><input type="text" id="skinReferralName" class="input-line w-20 ml-1"></div>
-                            <div class="flex items-center"><label><input type="checkbox" name="skinHowKnow" value="其他"> 其他</label><input type="text" id="skinOtherKnowText" class="input-line w-20 ml-1"></div>
-                        </div>
-
-                        <div class="col-span-full flex flex-wrap items-center gap-4 mt-1 text-sm md:text-base">
-                            <label class="whitespace-nowrap font-bold">希望的美容環境：</label>
-                            <label><input type="radio" name="prefEnv" value="安靜"> 安靜</label>
-                            <label><input type="radio" name="prefEnv" value="喜歡聊天"> 喜歡聊天</label>
-                            <label><input type="radio" name="prefEnv" value="依狀況而定"> 依狀況而定</label>
-                        </div>
                     </div>
                 </div>
 
-                <!-- 基本狀況 -->
-                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
-                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">基本狀況</div>
-                    <div class="space-y-3 mt-2 text-sm md:text-base leading-relaxed">
-                        <div class="flex items-center gap-4"><span class="font-bold">● 是否有化妝習慣：</span><label><input type="radio" name="makeupHabit" value="是"> 是</label><label><input type="radio" name="makeupHabit" value="否"> 否</label></div>
-                        <div class="flex items-center gap-4"><span class="font-bold">● 是否有去角質習慣：</span><label><input type="radio" name="exfoliateHabit" value="是"> 是</label><label><input type="radio" name="exfoliateHabit" value="否"> 否</label></div>
-                        <div class="flex flex-wrap items-center gap-2"><span class="font-bold">● 是否做過手術/醫美：</span><label><input type="radio" name="medicalHistory" value="是"> 是</label><input type="text" id="medicalDetail" class="input-line w-24 md:w-48"><label class="ml-2"><input type="radio" name="medicalHistory" value="否"> 否</label></div>
-                        <div class="flex items-center gap-4"><span class="font-bold">● 皮膚過敏/病史：</span><label><input type="radio" name="allergyHistory" value="是"> 是</label><label><input type="radio" name="allergyHistory" value="否"> 否</label></div>
-
-                        <div class="flex flex-wrap items-center gap-3"><span class="font-bold">● 洗臉/卸妝產品：</span>
-                            <label><input type="checkbox" name="cleanser" value="無使用"> 無使用</label><label><input type="checkbox" name="cleanser" value="洗面乳"> 洗面乳</label>
-                            <label><input type="checkbox" name="cleanser" value="洗面皂"> 洗面皂</label><label><input type="checkbox" name="cleanser" value="卸妝兩用洗面乳"> 卸妝兩用洗面乳</label>
-                            <label><input type="checkbox" name="cleanser" value="卸妝水"> 卸妝水</label><label><input type="checkbox" name="cleanser" value="卸妝凝露"> 卸妝凝露</label>
-                            <label><input type="checkbox" name="cleanser" value="卸妝乳"> 卸妝乳</label><label><input type="checkbox" name="cleanser" value="卸妝油"> 卸妝油</label><label><input type="checkbox" name="cleanser" value="其他"> 其他</label>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-3"><span class="font-bold">● 目前保養品：</span>
-                            <label><input type="checkbox" name="skincare" value="化妝水"> 化妝水</label><label><input type="checkbox" name="skincare" value="精華液"> 精華液</label>
-                            <label><input type="checkbox" name="skincare" value="乳液"> 乳液</label><label><input type="checkbox" name="skincare" value="面膜"> 面膜</label>
-                            <label><input type="checkbox" name="skincare" value="乳霜"> 乳霜</label><label><input type="checkbox" name="skincare" value="其他"> 其他</label>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-3"><span class="font-bold">● 肌膚類型：</span>
-                            <label><input type="radio" name="skinType" value="中性"> 中性</label><label><input type="radio" name="skinType" value="油性"> 油性</label>
-                            <label><input type="radio" name="skinType" value="乾性"> 乾性</label><label><input type="radio" name="skinType" value="混合性"> 混合性</label>
-                            <label><input type="radio" name="skinType" value="敏感性"> 敏感性</label><label><input type="radio" name="skinType" value="其他"> 其他</label>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-3"><span class="font-bold">● 皮膚狀況：</span>
-                            <label><input type="checkbox" name="skinCondition" value="面皰"> 面皰</label><label><input type="checkbox" name="skinCondition" value="粉刺"> 粉刺</label>
-                            <label><input type="checkbox" name="skinCondition" value="肉芽"> 肉芽</label><label><input type="checkbox" name="skinCondition" value="鬆弛"> 鬆弛</label>
-                            <label><input type="checkbox" name="skinCondition" value="缺水"> 缺水</label><label><input type="checkbox" name="skinCondition" value="黑斑斑點"> 黑斑斑點</label>
-                            <label><input type="checkbox" name="skinCondition" value="雀斑"> 雀斑</label><label><input type="checkbox" name="skinCondition" value="痘疤"> 痘疤</label>
-                            <label><input type="checkbox" name="skinCondition" value="黑眼圈"> 黑眼圈</label><label><input type="checkbox" name="skinCondition" value="角質厚"> 角質厚</label>
-                            <label><input type="checkbox" name="skinCondition" value="毛孔粗大"> 毛孔粗大</label><label><input type="checkbox" name="skinCondition" value="細小紋路"> 細小紋路</label>
-                            <label><input type="checkbox" name="skinCondition" value="膚色不均"> 膚色不均</label><label><input type="checkbox" name="skinCondition" value="其他"> 其他</label>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-3"><span class="font-bold">● 健康狀況：</span>
-                            <div class="flex items-center"><label><input type="checkbox" name="healthCond" value="懷孕"> 懷孕</label><input type="text" id="pregnantWeeks" class="input-line w-8 text-center mx-1"> 週</div>
-                            <label><input type="checkbox" name="healthCond" value="哺乳"> 哺乳</label><label><input type="checkbox" name="healthCond" value="服用A酸"> 服用A酸</label>
-                            <label><input type="checkbox" name="healthCond" value="睡眠品質不佳"> 睡眠品質不佳</label><label><input type="checkbox" name="healthCond" value="服用藥物"> 服用藥物</label>
-                            <label><input type="checkbox" name="healthCond" value="長期疲勞"> 長期疲勞</label><label><input type="checkbox" name="healthCond" value="肝臟機能不佳"> 肝臟機能不佳</label>
-                            <label><input type="checkbox" name="healthCond" value="腸胃機能不佳"> 腸胃機能不佳</label><label><input type="checkbox" name="healthCond" value="其他"> 其他</label>
-                        </div>
-
-                        <div class="flex mt-3"><label class="whitespace-nowrap font-bold mr-2">備註：</label><textarea id="skinIntakeNotes" rows="2" class="flex-1 input-line resize-none" placeholder="輸入備註..."></textarea></div>
-                    </div>
-                </div>
-
-                <!-- 注意事項與簽名 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10 bg-[#FAF6f0]">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">注意事項與簽名</div>
-                    <ul class="space-y-2 text-sm md:text-base mt-2 list-disc pl-5">
-                        <li>如本身有癲癇、皮膚發炎、過敏、曬傷或有傷口，請事先告知由美容師評估。</li>
-                        <li>如本身有任何疾病仍堅持施作，操作過程中若有微紅腫、刺痛等現象，須自行承擔風險。</li>
-                        <li>美容後成果依皮膚體質不同而異，無法保證最終效果。</li>
-                        <li class="list-none -ml-5 mt-3 mb-3 font-bold text-brand-text flex flex-col sm:flex-row gap-2">
-                            <label class="inline-flex items-center mr-4"><input type="checkbox" id="photoConsent" class="mr-2"> 我同意美容前後拍照作為紀錄</label>
-                            <label class="inline-flex items-center"><input type="checkbox" id="marketingConsent" class="mr-2"> 我並同意作為網路行銷素材</label>
-                        </li>
-                        <li>我已充分了解以上注意事項，在此證明最佳認知狀態下填寫，並簽名同意。</li>
-                    </ul>
                     <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div class="flex-1 w-full relative">
                             <div class="flex justify-between mb-1">
@@ -265,7 +185,7 @@
             </form>
         </div>
 
-        <!-- ==================== 分頁 2: 肌膚管理服務紀錄表 ==================== -->
+        <!-- 分頁 2: 肌膚管理服務紀錄表 -->
         <div id="tab-skin-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
             <div class="text-center mb-8 relative">
                 <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
@@ -275,15 +195,6 @@
 
             <div class="border border-brand-primary rounded-xl p-4 md:p-6 mb-6 text-sm md:text-base">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
-                    <div class="flex items-center gap-4">
-                        <span class="font-bold">會員：</span>
-                        <label><input type="checkbox" id="skinIsVIP"> VIP</label>
-                        <label><input type="checkbox" id="skinIsVVIP"> VVIP</label>
-                    </div>
-                    <div class="flex items-center md:justify-end">
-                        <label class="font-bold whitespace-nowrap mr-2">入會日期 (期限一年)：</label>
-                        <input type="date" id="skinJoinDate" class="input-line text-sm">
-                    </div>
                     <div class="flex items-center">
                         <label class="font-bold whitespace-nowrap mr-2">顧客姓名：</label>
                         <input type="text" id="skinLogCustName" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
@@ -291,10 +202,6 @@
                     <div class="flex items-center">
                         <label class="font-bold whitespace-nowrap mr-2">聯絡電話：</label>
                         <input type="tel" id="skinLogCustPhone" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
-                    </div>
-                    <div class="flex items-center md:col-span-2">
-                        <label class="font-bold whitespace-nowrap mr-2">LINE ID：</label>
-                        <input type="text" id="skinLogCustLine" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
                     </div>
                 </div>
             </div>
@@ -306,7 +213,7 @@
                             <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-52">療程項目</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-40">顧客簽名</th>
                             <th class="py-3 px-2 border border-[#C4A484]">備註</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
                         </tr>
@@ -322,7 +229,7 @@
             </div>
         </div>
 
-        <!-- ==================== 分頁 3: 頭皮養護顧客資料卡 ==================== -->
+        <!-- 分頁 3: 頭皮養護顧客資料卡 -->
         <div id="tab-scalp-intake" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
             <div class="text-center mb-8 relative">
                 <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
@@ -331,64 +238,17 @@
             </div>
 
             <form id="scalpIntakeForm" class="space-y-6">
-                <!-- 基本資料 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">基本資料 (已連動)</div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 mt-2">
                         <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">姓名：</label><input type="text" id="scalpCustName" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
                         <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">生日：</label><input type="date" id="scalpCustBirthday" class="input-line flex-1 text-sm" oninput="window.syncData('scalp')"></div>
                         <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">電話：</label><input type="tel" id="scalpCustPhone" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
-                        <div class="flex items-center lg:col-span-1"><label class="whitespace-nowrap mr-2 font-bold">LINE ID：</label><input type="text" id="scalpCustLine" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
-                        <div class="flex items-center lg:col-span-2"><label class="whitespace-nowrap mr-2 font-bold">地址：</label><input type="text" id="scalpCustAddress" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
-                        
-                        <div class="col-span-full flex flex-wrap items-center gap-3 mt-2 text-sm md:text-base">
-                            <label class="whitespace-nowrap font-bold">如何得知本店：</label>
-                            <label><input type="checkbox" name="scalpHowKnow" value="IG"> IG</label>
-                            <label><input type="checkbox" name="scalpHowKnow" value="FB"> FB</label>
-                            <label><input type="checkbox" name="scalpHowKnow" value="Google"> Google</label>
-                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="親友介紹"> 親友介紹，介紹人</label><input type="text" id="scalpReferralName" class="input-line w-20 ml-1"></div>
-                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="其他"> 其他</label><input type="text" id="scalpOtherKnowText" class="input-line w-20 ml-1"></div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- 頭皮與落髮狀況評估 -->
-                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
-                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">頭皮與毛髮狀況評估</div>
-                    
-                    <div class="space-y-4 mt-2 text-sm md:text-base leading-relaxed">
-                        <div>
-                            <span class="font-bold block mb-1">● 主要困擾 / 落髮區域：</span>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pl-4">
-                                <label><input type="checkbox" name="hairIssue" value="M字額"> M字額</label>
-                                <label><input type="checkbox" name="hairIssue" value="頭頂稀疏"> 頭頂稀疏</label>
-                                <label><input type="checkbox" name="hairIssue" value="分髮線變寬"> 分髮線變寬</label>
-                                <label><input type="checkbox" name="hairIssue" value="產後落髮"> 產後落髮</label>
-                                <label><input type="checkbox" name="hairIssue" value="壓力型落髮"> 壓力型落髮</label>
-                                <label><input type="checkbox" name="hairIssue" value="白髮增多"> 白髮增多</label>
-                                <label><input type="checkbox" name="hairIssue" value="頭皮屑/搔癢"> 頭皮屑/搔癢</label>
-                                <label><input type="checkbox" name="hairIssue" value="頭皮容易出油"> 頭皮容易出油</label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <span class="font-bold block mb-2">● 眉毛狀況：</span>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-4">
-                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="稀疏"> 稀疏</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_稀疏" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_稀疏" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_稀疏" value="後" class="sub-checkbox"> 後</label></div></div>
-                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="空洞"> 空洞</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_空洞" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_空洞" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_空洞" value="後" class="sub-checkbox"> 後</label></div></div>
-                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="受損"> 受損</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_受損" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_受損" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_受損" value="後" class="sub-checkbox"> 後</label></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 頭皮注意事項與簽名 -->
                 <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10 bg-[#FAF6f0]">
                     <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">注意事項與簽名</div>
-                    <ul class="space-y-2 text-sm md:text-base mt-2 list-disc pl-5">
-                        <li>頭皮養護前若有嚴重傷口、皮膚感染或過敏現象請先行告知。</li>
-                        <li>我已充分了解相關護理注意事項，並同意由店家進行專業操作。</li>
-                    </ul>
                     <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div class="flex-1 w-full relative">
                             <div class="flex justify-between mb-1">
@@ -409,7 +269,7 @@
             </form>
         </div>
 
-        <!-- ==================== 分頁 4: 頭皮服務紀錄 ==================== -->
+        <!-- 分頁 4: 頭皮服務紀錄 -->
         <div id="tab-scalp-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
             <div class="text-center mb-8 relative">
                 <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
@@ -437,7 +297,7 @@
                             <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-52">養護項目</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-40">顧客簽名</th>
                             <th class="py-3 px-2 border border-[#C4A484]">備註</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
                         </tr>
@@ -454,7 +314,7 @@
         </div>
     </main>
 
-    <!-- 資料庫管理視窗 (Modal) -->
+    <!-- 資料庫管理視窗 -->
     <div id="dbModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl max-w-2xl w-full p-6 shadow-2xl border border-brand-border max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-4 pb-2 border-b">
@@ -464,16 +324,14 @@
             <div class="mb-4">
                 <input type="text" id="dbSearchInput" oninput="window.filterCustomerList()" placeholder="搜尋顧客姓名或電話..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-brand-primary text-sm">
             </div>
-            <div class="flex-1 overflow-y-auto divide-y divide-gray-100" id="customerListContainer">
-                <!-- 動態載入客戶列表 -->
-            </div>
+            <div class="flex-1 overflow-y-auto divide-y divide-gray-100" id="customerListContainer"></div>
             <div class="mt-4 pt-3 border-t flex justify-end">
                 <button type="button" onclick="window.closeCustomerListModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-bold hover:bg-gray-300">關閉</button>
             </div>
         </div>
     </div>
 
-    <!-- 簽名細節跳窗 (用於服務紀錄列表內的小簽名畫布) -->
+    <!-- 簽名跳窗 -->
     <div id="signatureModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl">
             <h3 class="font-bold text-lg mb-3 text-brand-text">請顧客簽名</h3>
@@ -493,26 +351,22 @@
         let currentActiveTab = 'tab-skin-intake';
         let currentCustomerId = 'cust_' + Date.now();
         let currentFontSizeScale = 1.0;
-        let activeModalTarget = null; // 紀錄目前是哪一行表格在簽名
+        let activeModalTarget = null;
 
-        // 初始化畫布與預設日期
         window.addEventListener('DOMContentLoaded', () => {
-            const today = new Date().toISOString().split('T5')[0].substring(0, 10);
+            const today = new Date().toISOString().split('T')[0];
             if(document.getElementById('skinIntakeDate')) document.getElementById('skinIntakeDate').value = today;
             if(document.getElementById('scalpIntakeDate')) document.getElementById('scalpIntakeDate').value = today;
-            if(document.getElementById('skinJoinDate')) document.getElementById('skinJoinDate').value = today;
 
             initSignCanvas('skinMainSignaturePad', 'skinMainSignPlaceholder');
             initSignCanvas('scalpMainSignaturePad', 'scalpMainSignPlaceholder');
             initSignCanvas('modalSignaturePad', null);
 
-            // 初始化載入或建立空白資料
             loadCustomerData(currentCustomerId);
             addSkinLogRow();
             addScalpLogRow();
         });
 
-        // 分頁切換函式
         window.switchTab = function(tabId) {
             ['tab-skin-intake', 'tab-skin-log', 'tab-scalp-intake', 'tab-scalp-log'].forEach(id => {
                 const el = document.getElementById(id);
@@ -528,7 +382,6 @@
             currentActiveTab = tabId;
         };
 
-        // 資料同步（肌膚與頭皮表單基本資料互相連動）
         window.syncData = function(source) {
             if (source === 'skin') {
                 const name = document.getElementById('skinCustName').value;
@@ -537,30 +390,21 @@
                 
                 document.getElementById('scalpCustName').value = name;
                 document.getElementById('scalpCustPhone').value = phone;
-                document.getElementById('scalpCustLine').value = line;
-
                 document.getElementById('skinLogCustName').value = name;
                 document.getElementById('skinLogCustPhone').value = phone;
-                document.getElementById('skinLogCustLine').value = line;
-
                 document.getElementById('currentCustomerNameDisplay').textContent = name ? `當前顧客：${name}` : '正在建立新表單...';
             } else if (source === 'scalp') {
                 const name = document.getElementById('scalpCustName').value;
                 const phone = document.getElementById('scalpCustPhone').value;
-                const line = document.getElementById('scalpCustLine').value;
                 
                 document.getElementById('skinCustName').value = name;
                 document.getElementById('skinCustPhone').value = phone;
-                document.getElementById('skinCustLine').value = line;
-
                 document.getElementById('scalpLogCustName').value = name;
                 document.getElementById('scalpLogCustPhone').value = phone;
-
                 document.getElementById('currentCustomerNameDisplay').textContent = name ? `當前顧客：${name}` : '正在建立新表單...';
             }
         };
 
-        // 字體大小調整
         window.adjustFontSize = function(direction) {
             currentFontSizeScale += direction * 0.1;
             if (currentFontSizeScale < 0.8) currentFontSizeScale = 0.8;
@@ -569,7 +413,6 @@
             document.getElementById('fontSizeIndicator').textContent = Math.round(currentFontSizeScale * 100) + '%';
         };
 
-        // 簽名畫布初始化通用邏輯
         function initSignCanvas(canvasId, placeholderId) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
@@ -632,7 +475,7 @@
             document.getElementById('scalpMainSignPlaceholder').style.display = 'flex';
         };
 
-        // 服務紀錄動態加列
+        // 肌膚服務紀錄加列（支援簽名縮圖顯示）
         window.addSkinLogRow = function() {
             const tbody = document.getElementById('skinLogTableBody');
             const tr = document.createElement('tr');
@@ -641,9 +484,11 @@
                 <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
                 <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入療程項目"></td>
                 <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
-                <td class="p-2 border text-center">
-                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition">點擊簽名</button>
-                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold"><i class="fas fa-check"></i> 已簽名</div>
+                <td class="p-2 border text-center relative" data-signature="">
+                    <div class="signature-display mb-1 flex justify-center">
+                        <img src="" class="sig-img max-h-12 hidden border border-gray-300 bg-white rounded p-0.5 shadow-sm" alt="簽名縮圖">
+                    </div>
+                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2.5 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition">點擊簽名</button>
                 </td>
                 <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="備註..."></td>
                 <td class="p-2 border text-center export-hidden"><button type="button" onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600"><i class="fas fa-trash-alt"></i></button></td>
@@ -651,6 +496,7 @@
             tbody.appendChild(tr);
         };
 
+        // 頭皮服務紀錄加列（支援簽名縮圖顯示）
         window.addScalpLogRow = function() {
             const tbody = document.getElementById('scalpLogTableBody');
             const tr = document.createElement('tr');
@@ -659,9 +505,11 @@
                 <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
                 <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入養護項目"></td>
                 <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
-                <td class="p-2 border text-center">
-                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition">點擊簽名</button>
-                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold"><i class="fas fa-check"></i> 已簽名</div>
+                <td class="p-2 border text-center relative" data-signature="">
+                    <div class="signature-display mb-1 flex justify-center">
+                        <img src="" class="sig-img max-h-12 hidden border border-gray-300 bg-white rounded p-0.5 shadow-sm" alt="簽名縮圖">
+                    </div>
+                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2.5 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition">點擊簽名</button>
                 </td>
                 <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="備註..."></td>
                 <td class="p-2 border text-center export-hidden"><button type="button" onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600"><i class="fas fa-trash-alt"></i></button></td>
@@ -669,7 +517,6 @@
             tbody.appendChild(tr);
         };
 
-        // 簽名跳窗控制
         window.openSignatureModal = function(btn) {
             activeModalTarget = btn.parentNode;
             document.getElementById('signatureModal').classList.remove('hidden');
@@ -689,16 +536,19 @@
                 const canvas = document.getElementById('modalSignaturePad');
                 const dataURL = canvas.toDataURL();
                 activeModalTarget.dataset.signature = dataURL;
-                const preview = activeModalTarget.querySelector('.signature-preview');
+                
+                const img = activeModalTarget.querySelector('.sig-img');
                 const btn = activeModalTarget.querySelector('button');
-                if (preview) preview.classList.remove('hidden');
-                if (btn) btn.textContent = "重新簽名";
+                if (img) {
+                    img.src = dataURL;
+                    img.classList.remove('hidden');
+                }
+                if (btn) btn.textContent = "重簽";
             }
             document.getElementById('signatureModal').classList.add('hidden');
             activeModalTarget = null;
         };
 
-        // 雲端儲存與資料庫功能 (LocalStorage)
         window.saveToDB = function() {
             const loader = document.getElementById('globalLoader');
             document.getElementById('loaderText').textContent = "雲端資料同步儲存中...";
@@ -713,8 +563,6 @@
                     name: custName,
                     phone: custPhone,
                     updatedAt: new Date().toLocaleString(),
-                    skinIntake: getFormValues('skinIntakeForm'),
-                    scalpIntake: getFormValues('scalpIntakeForm')
                 };
 
                 let db = JSON.parse(localStorage.getItem('j57_beauty_db') || '{}');
@@ -725,24 +573,6 @@
                 alert('✨ 雲端/本機資料儲存成功！');
             }, 600);
         };
-
-        function getFormValues(formId) {
-            const form = document.getElementById(formId);
-            if (!form) return {};
-            const obj = {};
-            const inputs = form.querySelectorAll('input, textarea, select');
-            inputs.forEach(input => {
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    if (input.checked) {
-                        if (!obj[input.name]) obj[input.name] = [];
-                        obj[input.name].push(input.value);
-                    }
-                } else if (input.id) {
-                    obj[input.id] = input.value;
-                }
-            });
-            return obj;
-        }
 
         window.createNewCustomer = function() {
             if (confirm('確定要開新表單嗎？未儲存的變更將會重設。')) {
@@ -805,9 +635,8 @@
             if (db[id]) {
                 currentCustomerId = id;
                 const cust = db[id];
-                // 載入邏輯簡化對應
-                document.getElementById('skinCustName').value = cust.skinIntake?.skinCustName || cust.name || '';
-                document.getElementById('skinCustPhone').value = cust.skinIntake?.skinCustPhone || cust.phone || '';
+                document.getElementById('skinCustName').value = cust.name || '';
+                document.getElementById('skinCustPhone').value = cust.phone || '';
                 window.syncData('skin');
                 closeCustomerListModal();
                 alert(`已成功載入 ${cust.name} 的資料！`);
@@ -823,11 +652,8 @@
             }
         };
 
-        function loadCustomerData(id) {
-            // 初始化預留
-        }
+        function loadCustomerData(id) {}
 
-        // 智慧備份與匯出
         window.exportDatabaseBackup = function() {
             const db = localStorage.getItem('j57_beauty_db') || '{}';
             const blob = new Blob([db], { type: 'application/json' });
@@ -858,7 +684,6 @@
             reader.readAsText(file);
         };
 
-        // 圖片匯出
         window.exportToImage = function() {
             const loader = document.getElementById('globalLoader');
             document.getElementById('loaderText').textContent = "正在產生高畫質圖片...";
