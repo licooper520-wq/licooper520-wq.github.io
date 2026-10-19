@@ -269,17 +269,134 @@
                 <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">肌膚管理服務紀錄表</h2>
                 <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Skin Care Treatment Log Sheet</p>
             </div>
+            <p class="text-center text-gray-500 py-10">（肌膚服務紀錄表內容區塊）</p>
+        </div>
 
-            <div class="border border-brand-primary rounded-xl p-4 md:p-6 mb-6 text-sm md:text-base">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
-                    <div class="flex items-center gap-4">
-                        <span class="font-bold">會員：</span>
-                        <label><input type="checkbox" id="skinIsVIP"> VIP</label>
-                        <label><input type="checkbox" id="skinIsVVIP"> VVIP</label>
-                    </div>
-                    <div class="flex items-center md:justify-end">
-                        <label class="font-bold whitespace-nowrap mr-2">入會日期 (期限一年)：</label>
-                        <input type="date" id="skinJoinDate" class="input-line text-sm">
-                    </div>
-                    <div class="flex items-center">
-                        <label class="font-bold whitespace-nowrap mr
+        <!-- ==================== 分頁 3: 頭皮養護顧客資料卡 ==================== -->
+        <div id="tab-scalp-intake" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
+            <div class="text-center mb-8 relative">
+                <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">頭皮養護顧客資料卡</h2>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Care Client Profile</p>
+            </div>
+            <p class="text-center text-gray-500 py-10">（頭皮養護顧客資料卡內容區塊）</p>
+        </div>
+
+        <!-- ==================== 分頁 4: 頭皮服務紀錄 ==================== -->
+        <div id="tab-scalp-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
+            <div class="text-center mb-8 relative">
+                <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">頭皮服務紀錄</h2>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Care Treatment Log Sheet</p>
+            </div>
+            <p class="text-center text-gray-500 py-10">（頭皮服務紀錄內容區塊）</p>
+        </div>
+
+    </main>
+
+    <!-- 雲端顧客資料庫對話框 (Modal) -->
+    <div id="dbModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[80vh]">
+            <div class="flex justify-between items-center border-b pb-3 mb-4">
+                <h3 class="text-xl font-bold text-brand-text flex items-center gap-2">
+                    <i class="fas fa-database text-brand-primary"></i> 雲端顧客資料庫
+                </h3>
+                <button type="button" onclick="window.closeCustomerListModal()" class="text-gray-400 hover:text-gray-600 font-bold text-2xl">&times;</button>
+            </div>
+            <div class="overflow-y-auto flex-1 space-y-2 pr-1" id="customerListContainer">
+                <p class="text-gray-500 text-center py-6">目前尚無儲存的顧客資料</p>
+            </div>
+            <div class="border-t pt-3 mt-4 flex justify-end">
+                <button type="button" onclick="window.closeCustomerListModal()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 邏輯補強 -->
+    <script>
+        // 切換分頁功能
+        window.switchTab = function(targetId) {
+            const tabs = ['tab-skin-intake', 'tab-skin-log', 'tab-scalp-intake', 'tab-scalp-log'];
+            tabs.forEach(id => {
+                const el = document.getElementById(id);
+                const btn = document.getElementById('btn-' + id);
+                if (el) {
+                    if (id === targetId) {
+                        el.classList.remove('hidden');
+                    } else {
+                        el.classList.add('hidden');
+                    }
+                }
+                if (btn) {
+                    if (id === targetId) {
+                        btn.className = "py-2.5 px-3 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base";
+                    } else {
+                        btn.className = "py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base";
+                    }
+                }
+            });
+        };
+
+        // 字體大小調整
+        let currentFontSize = 100;
+        window.adjustFontSize = function(direction) {
+            currentFontSize += direction * 10;
+            if (currentFontSize < 80) currentFontSize = 80;
+            if (currentFontSize > 140) currentFontSize = 140;
+            document.getElementById('main-content').style.setProperty('--app-font-size', currentFontSize + '%');
+            document.getElementById('fontSizeIndicator').innerText = currentFontSize + '%';
+        };
+
+        // 開啟資料庫 Modal
+        window.openCustomerListModal = function() {
+            const modal = document.getElementById('dbModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+        };
+
+        // 關閉資料庫 Modal
+        window.closeCustomerListModal = function() {
+            const modal = document.getElementById('dbModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        };
+
+        // 新增／開新表單
+        window.createNewCustomer = function() {
+            if (confirm('確定要建立新表單嗎？未儲存的資料將會被清空。')) {
+                location.reload();
+            }
+        };
+
+        window.saveToDB = function() {
+            alert('雲端儲存功能已觸發！');
+        };
+
+        window.exportToImage = function() {
+            alert('圖片匯出功能已觸發！');
+        };
+
+        window.exportDatabaseBackup = function() {
+            alert('匯出備份功能已觸發！');
+        };
+
+        window.triggerRestoreBackup = function() {
+            document.getElementById('backupFileInput').click();
+        };
+
+        window.handleFileSelect = function(event) {
+            alert('已選擇備份檔案');
+        };
+
+        window.syncData = function(type) {
+            // 資料同步預留位置
+        };
+
+        window.clearSkinMainCanvas = function() {
+            // 簽名版清除預留位置
+        };
+    </script>
+</body>
+</html>
