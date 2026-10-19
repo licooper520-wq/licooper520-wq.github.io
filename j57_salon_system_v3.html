@@ -100,28 +100,3 @@
                 <button type="button" class="px-3 py-2 bg-brand-secondary hover:bg-brand-primary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5">
                     <i class="fas fa-shield-alt"></i> <span class="hidden sm:inline">智慧備份</span> <i class="fas fa-caret-down text-xs"></i>
                 </button>
-                <div class="absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-xl py-2 hidden group-hover:block z-30 text-gray-800 border border-gray-200">
-                    <button type="button" onclick="window.exportDatabaseBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2">
-                        <i class="fas fa-file-download text-brand-primary"></i> 匯出本機備份檔 (.json)
-                    </button>
-                    <button type="button" onclick="window.triggerRestoreBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2">
-                        <i class="fas fa-file-upload text-blue-600"></i> 從檔案還原資料
-                    </button>
-                </div>
-            </div>
-
-            <button type="button" onclick="window.saveToDB()" class="px-3.5 py-2 bg-brand-primary hover:bg-brand-secondary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 shadow-lg">
-                <i class="fas fa-cloud-upload-alt"></i> <span class="hidden sm:inline">雲端儲存</span>
-            </button>
-            <button type="button" onclick="window.exportToImage()" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5">
-                <i class="fas fa-image"></i> <span class="hidden lg:inline">匯出圖片</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- 分頁切換標籤 (四大分頁) -->
-    <div class="bg-white border-b border-gray-200 flex justify-center flex-wrap gap-2 sm:gap-6 shrink-0 px-2 pt-2">
-        <button type="button" onclick="window.switchTab('tab-skin-intake')" id="btn-tab-skin-intake" class="py-2.5 px-3 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base">
-            肌膚管理資料表
-        </button>
-        <button type="button" onclick
