@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v3.8</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.9</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -31,7 +31,7 @@
         }
     </script>
     <style>
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: #f3f4f6; }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: #f3f4f6; min-height: 100vh; display: flex; flex-direction: column; }
         canvas { touch-action: none; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -49,8 +49,6 @@
         .export-hidden { display: flex; }
         body.exporting .export-hidden { display: none !important; }
         body.exporting .paper-container { box-shadow: none; border: none; border-radius: 0; margin: 0; padding: 2rem; max-width: none; }
-        .modal-enter { opacity: 0; transform: scale(0.95); }
-        .modal-enter-active { opacity: 1; transform: scale(1); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
         .loader {
             border: 3px solid #f3f3f3; border-top: 3px solid #B68D6A;
             border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;
@@ -58,8 +56,8 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #main-content { font-size: var(--app-font-size, 1rem); }
         
+        /* 確保隱藏時完全不影響點擊 */
         #globalLoader.hidden,
-        #restoreModal.hidden,
         #dbModal.hidden,
         #signatureModal.hidden {
             display: none !important;
@@ -67,10 +65,10 @@
         }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden text-brand-text relative">
+<body class="bg-brand-bg text-brand-text relative">
 
     <!-- 系統導覽列 -->
-    <header class="bg-brand-text text-white shadow-md px-3 md:px-6 py-3 flex justify-between items-center z-20 shrink-0">
+    <header class="bg-brand-text text-white shadow-md px-3 md:px-6 py-3 flex justify-between items-center z-30 sticky top-0">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 bg-brand-primary rounded flex items-center justify-center font-bold text-lg text-white shadow-inner">
                 J
@@ -102,7 +100,7 @@
                 <button type="button" class="px-3 py-2 bg-brand-secondary hover:bg-brand-primary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5">
                     <i class="fas fa-shield-alt"></i> <span class="hidden sm:inline">智慧備份</span> <i class="fas fa-caret-down text-xs"></i>
                 </button>
-                <div class="absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-xl py-2 hidden group-hover:block z-30 text-gray-800 border border-gray-200">
+                <div class="absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-xl py-2 hidden group-hover:block z-40 text-gray-800 border border-gray-200">
                     <button type="button" onclick="window.exportDatabaseBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2">
                         <i class="fas fa-file-download text-brand-primary"></i> 匯出本機備份檔 (.json)
                     </button>
@@ -121,26 +119,26 @@
         </div>
     </header>
 
-    <!-- 分頁切換標籤 (四大分頁) -->
-    <div class="bg-white border-b border-gray-200 flex justify-center flex-wrap gap-2 sm:gap-6 shrink-0 px-2 pt-2">
-        <button type="button" onclick="window.switchTab('tab-skin-intake')" id="btn-tab-skin-intake" class="py-2.5 px-3 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base">
+    <!-- 分頁切換標籤 (四大分頁) - 確保提升層級與絕對可點擊 -->
+    <div class="bg-white border-b border-gray-200 flex justify-center flex-wrap gap-2 sm:gap-6 shrink-0 px-2 pt-2 sticky top-[57px] z-20 shadow-sm">
+        <button type="button" onclick="window.switchTab('tab-skin-intake')" id="btn-tab-skin-intake" class="py-2.5 px-3 font-bold text-brand-primary border-b-4 border-brand-primary transition text-sm sm:text-base cursor-pointer">
             肌膚管理資料表
         </button>
-        <button type="button" onclick="window.switchTab('tab-skin-log')" id="btn-tab-skin-log" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
+        <button type="button" onclick="window.switchTab('tab-skin-log')" id="btn-tab-skin-log" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base cursor-pointer">
             肌膚服務紀錄
         </button>
-        <button type="button" onclick="window.switchTab('tab-scalp-intake')" id="btn-tab-scalp-intake" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
+        <button type="button" onclick="window.switchTab('tab-scalp-intake')" id="btn-tab-scalp-intake" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base cursor-pointer">
             頭皮養護資料卡
         </button>
-        <button type="button" onclick="window.switchTab('tab-scalp-log')" id="btn-tab-scalp-log" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base">
+        <button type="button" onclick="window.switchTab('tab-scalp-log')" id="btn-tab-scalp-log" class="py-2.5 px-3 font-bold text-gray-400 border-b-4 border-transparent hover:text-brand-primary transition text-sm sm:text-base cursor-pointer">
             頭皮服務紀錄
         </button>
     </div>
 
     <!-- 主要內容區 -->
-    <main class="flex-1 overflow-y-auto p-4 md:p-8 no-scrollbar bg-brand-bg relative" id="main-content">
+    <main class="flex-1 p-4 md:p-8 bg-brand-bg relative min-h-[80vh]" id="main-content">
         
-        <div id="globalLoader" class="absolute inset-0 bg-brand-bg bg-opacity-85 z-40 hidden flex-col items-center justify-center">
+        <div id="globalLoader" class="absolute inset-0 bg-brand-bg bg-opacity-85 z-50 hidden flex-col items-center justify-center">
             <div class="loader mb-3"></div>
             <p class="font-bold text-brand-text tracking-widest text-sm" id="loaderText">系統同步中...</p>
         </div>
@@ -248,25 +246,4 @@
                     <div class="mt-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div class="flex-1 w-full relative">
                             <div class="flex justify-between mb-1">
-                                <label class="font-bold">顧客同意簽章：</label>
-                                <button type="button" onclick="window.clearSkinMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border"><i class="fas fa-eraser"></i> 重簽</button>
-                            </div>
-                            <div class="border-2 border-brand-primary border-dashed bg-white relative rounded-lg overflow-hidden">
-                                <canvas id="skinMainSignaturePad" width="600" height="150" class="w-full h-28 cursor-crosshair"></canvas>
-                                <div id="skinMainSignPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-300 pointer-events-none tracking-widest text-lg">請在此處簽名</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 whitespace-nowrap">
-                            <label class="font-bold">填表日期：</label>
-                            <input type="date" id="skinIntakeDate" class="input-line text-sm md:text-base bg-transparent">
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- ==================== 分頁 2: 肌膚管理服務紀錄表 ==================== -->
-        <div id="tab-skin-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
-            <div class="text-center mb-8 relative">
-                <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
-                <h2 class="text-2xl md:text
+                                <label class="font-
