@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v3.9 完整整合版</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.9 完整修正版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -81,38 +81,38 @@
         <div class="flex items-center gap-1.5 md:gap-2">
             <div class="flex items-center bg-gray-700 rounded px-1.5 py-1 text-xs md:text-sm mr-1">
                 <span class="text-gray-300 mr-1 hidden sm:inline"><i class="fas fa-text-height"></i></span>
-                <button type="button" onclick="window.adjustFontSize(-1)" class="px-2 py-0.5 hover:bg-gray-600 rounded font-bold transition" title="縮小字體">A-</button>
+                <button type="button" onclick="window.adjustFontSize(-1)" class="px-2 py-0.5 hover:bg-gray-600 rounded font-bold transition cursor-pointer" title="縮小字體">A-</button>
                 <span id="fontSizeIndicator" class="px-1 text-brand-secondary font-medium">100%</span>
-                <button type="button" onclick="window.adjustFontSize(1)" class="px-2 py-0.5 hover:bg-gray-600 rounded font-bold transition" title="放大字體">A+</button>
+                <button type="button" onclick="window.adjustFontSize(1)" class="px-2 py-0.5 hover:bg-gray-600 rounded font-bold transition cursor-pointer" title="放大字體">A+</button>
             </div>
 
             <input type="file" id="backupFileInput" class="hidden" accept=".json" onchange="window.handleFileSelect(event)">
 
-            <button type="button" onclick="window.createNewCustomer()" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5" title="開新表單">
+            <button type="button" onclick="window.createNewCustomer()" class="px-3 py-2 bg-gray-600 hover:bg-gray-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 cursor-pointer" title="開新表單">
                 <i class="fas fa-plus"></i> <span class="hidden sm:inline">新表單</span>
             </button>
-            <button type="button" onclick="window.openCustomerListModal()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 border border-gray-500" title="開啟雲端資料庫">
+            <button type="button" onclick="window.openCustomerListModal()" class="px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 border border-gray-500 cursor-pointer" title="開啟雲端資料庫">
                 <i class="fas fa-database"></i> <span class="hidden sm:inline">資料庫</span>
             </button>
             
             <div class="relative group">
-                <button type="button" class="px-3 py-2 bg-brand-secondary hover:bg-brand-primary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5">
+                <button type="button" class="px-3 py-2 bg-brand-secondary hover:bg-brand-primary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 cursor-pointer">
                     <i class="fas fa-shield-alt"></i> <span class="hidden sm:inline">智慧備份</span> <i class="fas fa-caret-down text-xs"></i>
                 </button>
                 <div class="absolute right-0 mt-1 w-52 bg-white rounded-lg shadow-xl py-2 hidden group-hover:block z-40 text-gray-800 border border-gray-200">
-                    <button type="button" onclick="window.exportDatabaseBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2">
+                    <button type="button" onclick="window.exportDatabaseBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2 cursor-pointer">
                         <i class="fas fa-file-download text-brand-primary"></i> 匯出本機備份檔 (.json)
                     </button>
-                    <button type="button" onclick="window.triggerRestoreBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2">
+                    <button type="button" onclick="window.triggerRestoreBackup()" class="w-full text-left px-4 py-2.5 hover:bg-brand-bg text-xs md:text-sm flex items-center gap-2 cursor-pointer">
                         <i class="fas fa-file-upload text-blue-600"></i> 從檔案還原資料
                     </button>
                 </div>
             </div>
 
-            <button type="button" onclick="window.saveToDB()" class="px-3.5 py-2 bg-brand-primary hover:bg-brand-secondary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 shadow-lg">
+            <button type="button" onclick="window.saveToDB()" class="px-3.5 py-2 bg-brand-primary hover:bg-brand-secondary text-white rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 shadow-lg cursor-pointer">
                 <i class="fas fa-cloud-upload-alt"></i> <span class="hidden sm:inline">雲端儲存</span>
             </button>
-            <button type="button" onclick="window.exportToImage()" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5">
+            <button type="button" onclick="window.exportToImage()" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 rounded text-xs md:text-sm font-medium transition flex items-center gap-1.5 cursor-pointer">
                 <i class="fas fa-image"></i> <span class="hidden lg:inline">匯出圖片</span>
             </button>
         </div>
@@ -246,6 +246,130 @@
                         <div class="flex-1 w-full relative">
                             <div class="flex justify-between mb-1">
                                 <label class="font-bold">顧客同意簽章：</label>
-                                <button type="button" onclick="window.clearSkinMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border"><i class="fas fa-eraser"></i> 重簽</button>
+                                <button type="button" onclick="window.clearSkinMainCanvas()" class="export-hidden text-sm text-red-500 hover:text-red-700 bg-white px-2.5 py-1 rounded border cursor-pointer"><i class="fas fa-eraser"></i> 重簽</button>
                             </div>
                             <div class="border-2 border-brand-primary border-dashed bg-white relative rounded-lg overflow-hidden">
+                                <canvas id="skinMainSignaturePad" width="600" height="150" class="w-full h-28 cursor-crosshair"></canvas>
+                                <div id="skinMainSignPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-300 pointer-events-none tracking-widest text-lg">請在此處簽名</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 whitespace-nowrap">
+                            <label class="font-bold">填表日期：</label>
+                            <input type="date" id="skinIntakeDate" class="input-line text-sm md:text-base bg-transparent">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- ==================== 分頁 2: 肌膚管理服務紀錄表 ==================== -->
+        <div id="tab-skin-log" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
+            <div class="text-center mb-8 relative">
+                <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">肌膚管理服務紀錄表</h2>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Skin Care Treatment Log Sheet</p>
+            </div>
+
+            <div class="border border-brand-primary rounded-xl p-4 md:p-6 mb-6 text-sm md:text-base">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
+                    <div class="flex items-center gap-4">
+                        <span class="font-bold">會員：</span>
+                        <label><input type="checkbox" id="skinIsVIP"> VIP</label>
+                        <label><input type="checkbox" id="skinIsVVIP"> VVIP</label>
+                    </div>
+                    <div class="flex items-center md:justify-end">
+                        <label class="font-bold whitespace-nowrap mr-2">入會日期 (期限一年)：</label>
+                        <input type="date" id="skinJoinDate" class="input-line text-sm">
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-bold whitespace-nowrap mr-2">顧客姓名：</label>
+                        <input type="text" id="skinLogCustName" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-bold whitespace-nowrap mr-2">聯絡電話：</label>
+                        <input type="tel" id="skinLogCustPhone" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                    </div>
+                    <div class="flex items-center md:col-span-2">
+                        <label class="font-bold whitespace-nowrap mr-2">LINE ID：</label>
+                        <input type="text" id="skinLogCustLine" class="input-line flex-1 bg-gray-50 text-gray-500" readonly placeholder="由初診表連動">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border border-brand-primary rounded-lg overflow-x-auto">
+                <table class="w-full text-center border-collapse min-w-[650px]">
+                    <thead>
+                        <tr class="bg-[#C4A484] text-white">
+                            <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-52">療程項目</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                            <th class="py-3 px-2 border border-[#C4A484]">備註</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
+                        </tr>
+                    </thead>
+                    <tbody id="skinLogTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="mt-6 text-center export-hidden">
+                <button type="button" onclick="window.addSkinLogRow()" class="px-6 py-2.5 bg-brand-bg border border-brand-primary text-brand-text hover:bg-brand-secondary hover:text-white rounded-full transition font-bold shadow-sm cursor-pointer">
+                    <i class="fas fa-plus mr-1"></i> 新增一筆服務紀錄
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== 分頁 3: 頭皮養護顧客資料卡 ==================== -->
+        <div id="tab-scalp-intake" class="paper-container max-w-4xl mx-auto bg-white p-6 md:p-12 rounded-xl shadow-lg border border-brand-border hidden">
+            <div class="text-center mb-8 relative">
+                <p class="text-sm tracking-[0.3em] text-gray-500 mb-1">J.57 BEAUTY SKIN</p>
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-brand-text tracking-widest mb-1">頭皮養護顧客資料卡</h2>
+                <p class="text-xs tracking-[0.2em] text-gray-400 uppercase">Scalp Care & Hair Management Profile</p>
+            </div>
+
+            <form id="scalpIntakeForm" class="space-y-6">
+                <!-- 基本資料 -->
+                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
+                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">基本資料 (已連動)</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 mt-2">
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">姓名：</label><input type="text" id="scalpCustName" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">生日：</label><input type="date" id="scalpCustBirthday" class="input-line flex-1 text-sm" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">電話：</label><input type="tel" id="scalpCustPhone" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center lg:col-span-1"><label class="whitespace-nowrap mr-2 font-bold">LINE ID：</label><input type="text" id="scalpCustLine" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        <div class="flex items-center lg:col-span-2"><label class="whitespace-nowrap mr-2 font-bold">地址：</label><input type="text" id="scalpCustAddress" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
+                        
+                        <div class="col-span-full flex flex-wrap items-center gap-3 mt-2 text-sm md:text-base">
+                            <label class="whitespace-nowrap font-bold">如何得知本店：</label>
+                            <label><input type="checkbox" name="scalpHowKnow" value="IG"> IG</label>
+                            <label><input type="checkbox" name="scalpHowKnow" value="FB"> FB</label>
+                            <label><input type="checkbox" name="scalpHowKnow" value="Google"> Google</label>
+                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="親友介紹"> 親友介紹，介紹人</label><input type="text" id="scalpReferralName" class="input-line w-20 ml-1"></div>
+                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="其他"> 其他</label><input type="text" id="scalpOtherKnowText" class="input-line w-20 ml-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 頭皮與落髮狀況評估 -->
+                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
+                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">頭皮與毛髮狀況評估</div>
+                    
+                    <div class="space-y-4 mt-2 text-sm md:text-base leading-relaxed">
+                        <div>
+                            <span class="font-bold block mb-1">● 主要困擾 / 落髮區域：</span>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pl-4">
+                                <label><input type="checkbox" name="hairIssue" value="M字額"> M字額</label>
+                                <label><input type="checkbox" name="hairIssue" value="頭頂稀疏"> 頭頂稀疏</label>
+                                <label><input type="checkbox" name="hairIssue" value="分髮線變寬"> 分髮線變寬</label>
+                                <label><input type="checkbox" name="hairIssue" value="產後落髮"> 產後落髮</label>
+                                <label><input type="checkbox" name="hairIssue" value="壓力型落髮"> 壓力型落髮</label>
+                                <label><input type="checkbox" name="hairIssue" value="白髮增多"> 白髮增多</label>
+                                <label><input type="checkbox" name="hairIssue" value="頭皮屑/搔癢"> 頭皮屑/搔癢</label>
+                                <label><input type="checkbox" name="hairIssue" value="頭皮容易出油"> 頭皮容易出油</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <span class="font-bold block mb-2">● 眉毛狀況：</span>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-4">
+                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="稀疏"> 稀疏</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_稀疏" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_稀疏" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_稀疏" value="後" class="sub-checkbox"> 後</label></div></div>
+                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="空洞"> 空洞</label><div
