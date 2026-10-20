@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v3.9 完整修正版</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v3.9 最終點擊修正版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -40,11 +40,17 @@
             border-radius: 0; padding: 0 4px; outline: none; color: #4A3B32;
         }
         .input-line:focus { border-bottom: 2px solid #B68D6A; }
+        
+        /* 強制確保所有選項皆可點擊 */
+        input[type="checkbox"], input[type="radio"], label {
+            cursor: pointer !important;
+            pointer-events: auto !important;
+        }
         input[type="checkbox"], input[type="radio"] {
-            accent-color: #B68D6A; width: 1.1rem; height: 1.1rem; cursor: pointer;
+            accent-color: #B68D6A; width: 1.1rem; height: 1.1rem;
         }
         .sub-checkbox {
-            accent-color: #B68D6A; width: 0.95rem; height: 0.95rem; cursor: pointer;
+            accent-color: #B68D6A; width: 0.95rem; height: 0.95rem; cursor: pointer !important;
         }
         .export-hidden { display: flex; }
         body.exporting .export-hidden { display: none !important; }
@@ -334,42 +340,4 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 mt-2">
                         <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">姓名：</label><input type="text" id="scalpCustName" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
                         <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">生日：</label><input type="date" id="scalpCustBirthday" class="input-line flex-1 text-sm" oninput="window.syncData('scalp')"></div>
-                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">電話：</label><input type="tel" id="scalpCustPhone" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
-                        <div class="flex items-center lg:col-span-1"><label class="whitespace-nowrap mr-2 font-bold">LINE ID：</label><input type="text" id="scalpCustLine" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
-                        <div class="flex items-center lg:col-span-2"><label class="whitespace-nowrap mr-2 font-bold">地址：</label><input type="text" id="scalpCustAddress" class="input-line flex-1" oninput="window.syncData('scalp')"></div>
-                        
-                        <div class="col-span-full flex flex-wrap items-center gap-3 mt-2 text-sm md:text-base">
-                            <label class="whitespace-nowrap font-bold">如何得知本店：</label>
-                            <label><input type="checkbox" name="scalpHowKnow" value="IG"> IG</label>
-                            <label><input type="checkbox" name="scalpHowKnow" value="FB"> FB</label>
-                            <label><input type="checkbox" name="scalpHowKnow" value="Google"> Google</label>
-                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="親友介紹"> 親友介紹，介紹人</label><input type="text" id="scalpReferralName" class="input-line w-20 ml-1"></div>
-                            <div class="flex items-center"><label><input type="checkbox" name="scalpHowKnow" value="其他"> 其他</label><input type="text" id="scalpOtherKnowText" class="input-line w-20 ml-1"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 頭皮與落髮狀況評估 -->
-                <div class="border border-brand-border rounded-xl p-4 md:p-6 relative mt-10">
-                    <div class="absolute -top-4 left-6 bg-brand-secondary text-white px-4 py-1 rounded-full text-sm font-bold tracking-wider">頭皮與毛髮狀況評估</div>
-                    
-                    <div class="space-y-4 mt-2 text-sm md:text-base leading-relaxed">
-                        <div>
-                            <span class="font-bold block mb-1">● 主要困擾 / 落髮區域：</span>
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pl-4">
-                                <label><input type="checkbox" name="hairIssue" value="M字額"> M字額</label>
-                                <label><input type="checkbox" name="hairIssue" value="頭頂稀疏"> 頭頂稀疏</label>
-                                <label><input type="checkbox" name="hairIssue" value="分髮線變寬"> 分髮線變寬</label>
-                                <label><input type="checkbox" name="hairIssue" value="產後落髮"> 產後落髮</label>
-                                <label><input type="checkbox" name="hairIssue" value="壓力型落髮"> 壓力型落髮</label>
-                                <label><input type="checkbox" name="hairIssue" value="白髮增多"> 白髮增多</label>
-                                <label><input type="checkbox" name="hairIssue" value="頭皮屑/搔癢"> 頭皮屑/搔癢</label>
-                                <label><input type="checkbox" name="hairIssue" value="頭皮容易出油"> 頭皮容易出油</label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <span class="font-bold block mb-2">● 眉毛狀況：</span>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pl-4">
-                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="稀疏"> 稀疏</label><div class="flex items-center gap-2 text-xs bg-brand-bg px-2.5 py-1 rounded border border-brand-border"><label><input type="checkbox" name="brow_稀疏" value="前" class="sub-checkbox"> 前</label><label><input type="checkbox" name="brow_稀疏" value="中" class="sub-checkbox"> 中</label><label><input type="checkbox" name="brow_稀疏" value="後" class="sub-checkbox"> 後</label></div></div>
-                                <div class="flex items-center gap-3"><label class="w-16"><input type="checkbox" name="browCond" value="空洞"> 空洞</label><div
+                        <div class="flex items-center"><label class="whitespace-nowrap mr-2 font-bold">
