@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v4.2 整合擴充版</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v4.3 修正完整版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -811,7 +811,6 @@
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 若已有歷史筆劃，自動帶入跳窗方便檢視
             if (activeModalTarget && activeModalTarget.dataset.signature) {
                 const img = new Image();
                 img.onload = function() {
@@ -845,30 +844,51 @@
             activeModalTarget = null;
         };
 
-        // 表單資料收集與還原
+        // 修正後的表單資料收集 (完整儲存所有 input, textarea, select 與勾選狀態)
         function getFormValues(formId) {
             const form = document.getElementById(formId);
             if (!form) return {};
             const obj = {};
-            const inputs = form.querySelectorAll('input, textarea, select');
-            inputs.forEach(input => {
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    if (input.checked) {
-                        if (!obj[input.name]) obj[input.name] = [];
-                        obj[input.name].push(input.value);
-                    }
-                } else if (input.id) {
-                    obj[input.id] = input.value;
+            
+            // 收集所有一般的 input, textarea, select
+            const fields = form.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), textarea, select');
+            fields.forEach(field => {
+                if (field.id) {
+                    obj[field.id] = field.value;
                 }
             });
+
+            // 收集所有 checkbox 與 radio 的群組勾選狀態
+            const checkboxesAndRadios = form.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+            checkboxesAndRadios.forEach(item => {
+                const name = item.name;
+                if (name) {
+                    if (!obj[name]) obj[name] = [];
+                    if (item.checked) {
+                        if (!obj[name].includes(item.value)) {
+                            obj[name].push(item.value);
+                        }
+                    }
+                }
+            });
+
+            // 額外獨立記錄服務紀錄分頁上的 VIP / VVIP 勾選狀態與入會日期
+            if (formId === 'skinIntakeForm') {
+                obj['skinIsVIP'] = document.getElementById('skinIsVIP')?.checked || false;
+                obj['skinIsVVIP'] = document.getElementById('skinIsVVIP')?.checked || false;
+                obj['skinJoinDate'] = document.getElementById('skinJoinDate')?.value || '';
+            }
+
             return obj;
         }
 
+        // 修正後的表單還原 (完美對應所有多選框、單選框與文字欄位)
         function setFormValues(formId, data) {
             if (!data) return;
             const form = document.getElementById(formId);
             if (!form) return;
             
+            // 還原一般文字、日期與文字區域
             Object.keys(data).forEach(key => {
                 const el = form.querySelector(`#${key}`);
                 if (el && el.type !== 'checkbox' && el.type !== 'radio') {
@@ -876,17 +896,23 @@
                 }
             });
 
-            const inputs = form.querySelectorAll('input, textarea, select');
-            inputs.forEach(input => {
-                if (input.type === 'checkbox' || input.type === 'radio') {
-                    const groupValues = data[input.name];
-                    if (groupValues && Array.isArray(groupValues)) {
-                        input.checked = groupValues.includes(input.value);
-                    } else {
-                        input.checked = false;
+            // 還原 checkbox 與 radio 的勾選狀態
+            const checkboxesAndRadios = form.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+            checkboxesAndRadios.forEach(item => {
+                const name = item.name;
+                if (name && data[name]) {
+                    if (Array.isArray(data[name])) {
+                        item.checked = data[name].includes(item.value);
                     }
                 }
             });
+
+            // 還原獨立欄位 (如 VIP 狀態與入會日期)
+            if (formId === 'skinIntakeForm') {
+                if (document.getElementById('skinIsVIP')) document.getElementById('skinIsVIP').checked = !!data['skinIsVIP'];
+                if (document.getElementById('skinIsVVIP')) document.getElementById('skinIsVVIP').checked = !!data['skinIsVVIP'];
+                if (document.getElementById('skinJoinDate') && data['skinJoinDate']) document.getElementById('skinJoinDate').value = data['skinJoinDate'];
+            }
         }
 
         // 雲端儲存與資料庫功能 (LocalStorage)
@@ -920,7 +946,7 @@
                 localStorage.setItem('j57_beauty_db', JSON.stringify(db));
 
                 loader.classList.add('hidden');
-                alert('✨ 雲端/本機資料、療程與簽名紀錄儲存成功！');
+                alert('✨ 雲端/本機資料、所有勾選項目與簽名儲存成功！');
             }, 600);
         };
 
@@ -992,6 +1018,7 @@
                 currentCustomerId = id;
                 const cust = db[id];
                 
+                // 還原表單欄位與勾選項目
                 setFormValues('skinIntakeForm', cust.skinIntake);
                 setFormValues('scalpIntakeForm', cust.scalpIntake);
                 window.syncData('skin');
@@ -1011,13 +1038,14 @@
                     addScalpLogRow();
                 }
 
+                // 還原肌膚表單主簽名
                 if (cust.skinSignature) {
                     const canvas = document.getElementById('skinMainSignaturePad');
                     const ctx = canvas.getContext('2d');
                     const img = new Image();
                     img.onload = function() {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(img, 0, 0);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         document.getElementById('skinMainSignPlaceholder').style.display = 'none';
                     };
                     img.src = cust.skinSignature;
@@ -1025,13 +1053,14 @@
                     window.clearSkinMainCanvas();
                 }
 
+                // 還原頭皮表單主簽名
                 if (cust.scalpSignature) {
                     const canvas = document.getElementById('scalpMainSignaturePad');
                     const ctx = canvas.getContext('2d');
                     const img = new Image();
                     img.onload = function() {
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(img, 0, 0);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         document.getElementById('scalpMainSignPlaceholder').style.display = 'none';
                     };
                     img.src = cust.scalpSignature;
@@ -1040,7 +1069,7 @@
                 }
 
                 closeCustomerListModal();
-                alert(`✨ 已成功載入 ${cust.name} 的完整資料、紀錄與簽名！`);
+                alert(`✨ 已成功載入 ${cust.name} 的完整資料、所有勾選項目與簽名！`);
             }
         };
 
