@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>J.57Beauty Skin - 雙系統美學管理 v4.1 全功能完整整合版</title>
+    <title>J.57Beauty Skin - 雙系統美學管理 v4.2 整合擴充版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -40,6 +40,11 @@
             border-radius: 0; padding: 0 4px; outline: none; color: #4A3B32;
         }
         .input-line:focus { border-bottom: 2px solid #B68D6A; }
+        
+        select.input-line {
+            background-color: transparent;
+            cursor: pointer;
+        }
         
         /* 強制確保所有表單選項、按鈕與標籤皆可正常點擊 */
         input[type="checkbox"], input[type="radio"], label, button {
@@ -307,9 +312,9 @@
                     <thead>
                         <tr class="bg-[#C4A484] text-white">
                             <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-52">療程項目</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-56">療程項目</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-40">顧客簽名</th>
                             <th class="py-3 px-2 border border-[#C4A484]">備註</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
                         </tr>
@@ -438,9 +443,9 @@
                     <thead>
                         <tr class="bg-[#C4A484] text-white">
                             <th class="py-3 px-2 border border-[#C4A484] w-28">日期</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-52">養護項目</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-56">養護項目</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-24">金額</th>
-                            <th class="py-3 px-2 border border-[#C4A484] w-36">顧客簽名</th>
+                            <th class="py-3 px-2 border border-[#C4A484] w-40">顧客簽名</th>
                             <th class="py-3 px-2 border border-[#C4A484]">備註</th>
                             <th class="py-3 px-2 border border-[#C4A484] w-14 export-hidden">刪</th>
                         </tr>
@@ -497,6 +502,22 @@
         let currentCustomerId = 'cust_' + Date.now();
         let currentFontSizeScale = 1.0;
         let activeModalTarget = null;
+
+        // 價目表選單定義
+        const TREATMENT_OPTIONS = [
+            "請選擇療程 / 養護項目",
+            "淨化調理 ($2500)",
+            "混合肌保養 ($2500)",
+            "顏值煥膚 ($1800)",
+            "按摩撥筋 ($2000)",
+            "極致賦活養護 ($3500)",
+            "韓式皮膚管理 ($2500)",
+            "美背 ($3800/$2800)",
+            "髮絲強韌養護 (依範圍估價)",
+            "豐盈眉毛 ($5000)",
+            "青春賦活髮絲 (依範圍估價)",
+            "其他（自行輸入）"
+        ];
 
         // 初始化畫布與預設日期
         window.addEventListener('DOMContentLoaded', () => {
@@ -651,50 +672,153 @@
             document.getElementById('scalpMainSignPlaceholder').style.display = 'flex';
         };
 
-        // 服務紀錄動態加列
-        window.addSkinLogRow = function() {
+        // 下拉選單變化處理 (切換為自訂輸入)
+        window.handleTreatmentSelectChange = function(selectEl) {
+            const customInput = selectEl.parentNode.querySelector('.custom-treatment-input');
+            if (selectEl.value === '其他（自行輸入）') {
+                customInput.classList.remove('hidden');
+                customInput.focus();
+            } else {
+                customInput.classList.add('hidden');
+            }
+        };
+
+        // 建立療程選單 HTML 結構
+        function generateTreatmentSelectHtml() {
+            let optionsHtml = TREATMENT_OPTIONS.map((opt, i) => `<option value="${i === 0 ? '' : opt}">${opt}</option>`).join('');
+            return `
+                <select class="input-line text-xs w-full mb-1 treatment-select" onchange="window.handleTreatmentSelectChange(this)">
+                    ${optionsHtml}
+                </select>
+                <input type="text" class="input-line text-xs w-full hidden custom-treatment-input" placeholder="請輸入自訂療程項目...">
+            `;
+        }
+
+        // 服務紀錄動態加列 (整合下拉選單與簽名預覽縮圖)
+        window.addSkinLogRow = function(data = null) {
             const tbody = document.getElementById('skinLogTableBody');
             const tr = document.createElement('tr');
             tr.className = "border-b border-gray-200 hover:bg-gray-50";
+            
+            const treatmentHtml = generateTreatmentSelectHtml();
+
             tr.innerHTML = `
-                <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
-                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入療程項目"></td>
-                <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
-                <td class="p-2 border text-center">
-                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition cursor-pointer">點擊簽名</button>
-                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold"><i class="fas fa-check"></i> 已簽名</div>
+                <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center log-date"></td>
+                <td class="p-2 border text-left">${treatmentHtml}</td>
+                <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center log-amount" placeholder="金額"></td>
+                <td class="p-2 border text-center log-sign-td">
+                    <button type="button" onclick="window.openSignatureModal(this)" class="sign-btn px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition cursor-pointer">點擊簽名</button>
+                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold flex flex-col items-center gap-1">
+                        <img src="" class="sign-img h-9 max-w-full object-contain border border-gray-300 rounded bg-white p-0.5 shadow-sm cursor-pointer" onclick="window.openSignatureModal(this)" title="點擊重新簽名">
+                        <span><i class="fas fa-check-circle"></i> 已簽名</span>
+                    </div>
                 </td>
-                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="備註..."></td>
+                <td class="p-2 border"><input type="text" class="input-line text-xs w-full log-note" placeholder="備註..."></td>
                 <td class="p-2 border text-center export-hidden"><button type="button" onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600 cursor-pointer"><i class="fas fa-trash-alt"></i></button></td>
             `;
             tbody.appendChild(tr);
+
+            if (data) {
+                fillLogRowData(tr, data);
+            }
         };
 
-        window.addScalpLogRow = function() {
+        window.addScalpLogRow = function(data = null) {
             const tbody = document.getElementById('scalpLogTableBody');
             const tr = document.createElement('tr');
             tr.className = "border-b border-gray-200 hover:bg-gray-50";
+            
+            const treatmentHtml = generateTreatmentSelectHtml();
+
             tr.innerHTML = `
-                <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center"></td>
-                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="輸入養護項目"></td>
-                <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center" placeholder="金額"></td>
-                <td class="p-2 border text-center">
-                    <button type="button" onclick="window.openSignatureModal(this)" class="px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition cursor-pointer">點擊簽名</button>
-                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold"><i class="fas fa-check"></i> 已簽名</div>
+                <td class="p-2 border"><input type="date" class="input-line text-xs w-full text-center log-date"></td>
+                <td class="p-2 border text-left">${treatmentHtml}</td>
+                <td class="p-2 border"><input type="number" class="input-line text-xs w-full text-center log-amount" placeholder="金額"></td>
+                <td class="p-2 border text-center log-sign-td">
+                    <button type="button" onclick="window.openSignatureModal(this)" class="sign-btn px-2 py-1 bg-brand-bg text-brand-primary border border-brand-primary rounded text-xs hover:bg-brand-primary hover:text-white transition cursor-pointer">點擊簽名</button>
+                    <div class="signature-preview mt-1 hidden text-xs text-green-600 font-bold flex flex-col items-center gap-1">
+                        <img src="" class="sign-img h-9 max-w-full object-contain border border-gray-300 rounded bg-white p-0.5 shadow-sm cursor-pointer" onclick="window.openSignatureModal(this)" title="點擊重新簽名">
+                        <span><i class="fas fa-check-circle"></i> 已簽名</span>
+                    </div>
                 </td>
-                <td class="p-2 border"><input type="text" class="input-line text-xs w-full" placeholder="備註..."></td>
+                <td class="p-2 border"><input type="text" class="input-line text-xs w-full log-note" placeholder="備註..."></td>
                 <td class="p-2 border text-center export-hidden"><button type="button" onclick="this.closest('tr').remove()" class="text-red-400 hover:text-red-600 cursor-pointer"><i class="fas fa-trash-alt"></i></button></td>
             `;
             tbody.appendChild(tr);
+
+            if (data) {
+                fillLogRowData(tr, data);
+            }
         };
 
-        // 簽名跳窗控制
-        window.openSignatureModal = function(btn) {
-            activeModalTarget = btn.parentNode;
+        function fillLogRowData(tr, data) {
+            if (data.date) tr.querySelector('.log-date').value = data.date;
+            if (data.amount) tr.querySelector('.log-amount').value = data.amount;
+            if (data.note) tr.querySelector('.log-note').value = data.note;
+
+            const selectEl = tr.querySelector('.treatment-select');
+            const customInput = tr.querySelector('.custom-treatment-input');
+            if (data.treatment) {
+                if (TREATMENT_OPTIONS.includes(data.treatment)) {
+                    selectEl.value = data.treatment;
+                } else {
+                    selectEl.value = '其他（自行輸入）';
+                    customInput.classList.remove('hidden');
+                    customInput.value = data.treatment;
+                }
+            }
+
+            if (data.signature) {
+                const signTd = tr.querySelector('.log-sign-td');
+                signTd.dataset.signature = data.signature;
+                const preview = signTd.querySelector('.signature-preview');
+                const btn = signTd.querySelector('.sign-btn');
+                const img = signTd.querySelector('.sign-img');
+                
+                img.src = data.signature;
+                preview.classList.remove('hidden');
+                btn.classList.add('hidden');
+            }
+        }
+
+        // 收集表格紀錄資料
+        function getLogTableValues(tableBodyId) {
+            const rows = document.querySelectorAll(`#${tableBodyId} tr`);
+            const logs = [];
+            rows.forEach(row => {
+                const date = row.querySelector('.log-date')?.value || '';
+                const selectVal = row.querySelector('.treatment-select')?.value || '';
+                const customVal = row.querySelector('.custom-treatment-input')?.value || '';
+                const treatment = (selectVal === '其他（自行輸入）') ? customVal : selectVal;
+                
+                const amount = row.querySelector('.log-amount')?.value || '';
+                const note = row.querySelector('.log-note')?.value || '';
+                const signTd = row.querySelector('.log-sign-td');
+                const signature = signTd ? (signTd.dataset.signature || '') : '';
+
+                if (date || treatment || amount || note || signature) {
+                    logs.push({ date, treatment, amount, note, signature });
+                }
+            });
+            return logs;
+        }
+
+        // 簽名跳窗控制 (相容按鈕與點擊縮圖)
+        window.openSignatureModal = function(el) {
+            activeModalTarget = el.closest('.log-sign-td');
             document.getElementById('signatureModal').classList.remove('hidden');
             const canvas = document.getElementById('modalSignaturePad');
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 若已有歷史筆劃，自動帶入跳窗方便檢視
+            if (activeModalTarget && activeModalTarget.dataset.signature) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                };
+                img.src = activeModalTarget.dataset.signature;
+            }
         };
 
         window.clearModalCanvas = function() {
@@ -708,10 +832,14 @@
                 const canvas = document.getElementById('modalSignaturePad');
                 const dataURL = canvas.toDataURL();
                 activeModalTarget.dataset.signature = dataURL;
+                
                 const preview = activeModalTarget.querySelector('.signature-preview');
-                const btn = activeModalTarget.querySelector('button');
+                const btn = activeModalTarget.querySelector('.sign-btn');
+                const img = activeModalTarget.querySelector('.sign-img');
+                
+                if (img) img.src = dataURL;
                 if (preview) preview.classList.remove('hidden');
-                if (btn) btn.textContent = "重新簽名";
+                if (btn) btn.classList.add('hidden');
             }
             document.getElementById('signatureModal').classList.add('hidden');
             activeModalTarget = null;
@@ -781,6 +909,8 @@
                     updatedAt: new Date().toLocaleString(),
                     skinIntake: getFormValues('skinIntakeForm'),
                     scalpIntake: getFormValues('scalpIntakeForm'),
+                    skinLogs: getLogTableValues('skinLogTableBody'),
+                    scalpLogs: getLogTableValues('scalpLogTableBody'),
                     skinSignature: skinCanvas ? skinCanvas.toDataURL() : '',
                     scalpSignature: scalpCanvas ? scalpCanvas.toDataURL() : ''
                 };
@@ -790,7 +920,7 @@
                 localStorage.setItem('j57_beauty_db', JSON.stringify(db));
 
                 loader.classList.add('hidden');
-                alert('✨ 雲端/本機資料與勾選狀態儲存成功！');
+                alert('✨ 雲端/本機資料、療程與簽名紀錄儲存成功！');
             }, 600);
         };
 
@@ -799,6 +929,12 @@
                 currentCustomerId = 'cust_' + Date.now();
                 document.getElementById('skinIntakeForm').reset();
                 document.getElementById('scalpIntakeForm').reset();
+                
+                document.getElementById('skinLogTableBody').innerHTML = '';
+                document.getElementById('scalpLogTableBody').innerHTML = '';
+                addSkinLogRow();
+                addScalpLogRow();
+
                 window.clearSkinMainCanvas();
                 window.clearScalpMainCanvas();
                 document.getElementById('currentCustomerNameDisplay').textContent = "正在建立新表單...";
@@ -860,6 +996,21 @@
                 setFormValues('scalpIntakeForm', cust.scalpIntake);
                 window.syncData('skin');
 
+                // 還原服務紀錄
+                document.getElementById('skinLogTableBody').innerHTML = '';
+                if (cust.skinLogs && cust.skinLogs.length > 0) {
+                    cust.skinLogs.forEach(log => addSkinLogRow(log));
+                } else {
+                    addSkinLogRow();
+                }
+
+                document.getElementById('scalpLogTableBody').innerHTML = '';
+                if (cust.scalpLogs && cust.scalpLogs.length > 0) {
+                    cust.scalpLogs.forEach(log => addScalpLogRow(log));
+                } else {
+                    addScalpLogRow();
+                }
+
                 if (cust.skinSignature) {
                     const canvas = document.getElementById('skinMainSignaturePad');
                     const ctx = canvas.getContext('2d');
@@ -889,7 +1040,7 @@
                 }
 
                 closeCustomerListModal();
-                alert(`✨ 已成功載入 ${cust.name} 的完整資料與勾選項目！`);
+                alert(`✨ 已成功載入 ${cust.name} 的完整資料、紀錄與簽名！`);
             }
         };
 
